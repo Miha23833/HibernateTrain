@@ -5,9 +5,6 @@ import com.exactpro.crutches.DBConnection;
 import com.exactpro.entities.Customer;
 import org.junit.After;
 import org.junit.Assert;
-import org.junit.Before;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -16,7 +13,6 @@ import java.sql.SQLException;
 
 class GenericDAOTest {
 
-    GenericDAO genericDAO = new GenericDAO();
     Customer customer;
 
     @BeforeEach
@@ -25,7 +21,7 @@ class GenericDAOTest {
         customer = new Customer("TEST", "UNIT", (short) 20, 0);
     }
 
-    @AfterAll
+    @After
     public void tearDown() throws SQLException, ClassNotFoundException {
         customer = null;
         DBConnection.executeNonResult("DELETE FROM CUSTOMERS");
@@ -38,16 +34,16 @@ class GenericDAOTest {
 
     @Test
     void insertEntity() {
-        genericDAO.insertEntity(customer);
+        GenericDAO.insertEntity(customer);
     }
 
     @Test
     void updateTableByEntity() throws SQLException, ClassNotFoundException {
-        genericDAO.insertEntity(customer);
+        GenericDAO.insertEntity(customer);
         customer.setName("UPDATED TEST");
         customer.setSurname("UPDATED UNIT");
         customer.setAge((short) 12);
-        genericDAO.updateTableByEntity(customer);
+        GenericDAO.updateTableByEntity(customer);
 
         ResultSet resultSet = DBConnection.executeWithResult(
                 String.format(
@@ -66,18 +62,18 @@ class GenericDAOTest {
 
     @Test
     void selectByID() {
-        int selectingID = genericDAO.insertEntity(customer);
-        Assert.assertEquals(customer, genericDAO.selectByID(Customer.class, selectingID));
+        int selectingID = GenericDAO.insertEntity(customer);
+        Assert.assertEquals(customer, GenericDAO.selectByID(Customer.class, selectingID));
     }
 
     @Test
     void gelAllEntities() throws SQLException, ClassNotFoundException {
 
-        genericDAO.insertEntity(customer);
-        genericDAO.insertEntity(customer);
-        genericDAO.insertEntity(customer);
+        GenericDAO.insertEntity(customer);
+        GenericDAO.insertEntity(customer);
+        GenericDAO.insertEntity(customer);
 
-        int hibernateResultSize = genericDAO.gelAllEntities(Customer.class).size();
+        int hibernateResultSize = GenericDAO.gelAllEntities(Customer.class).size();
 
         ResultSet resultSet = DBConnection.executeWithResult("SELECT COUNT(*) AS count FROM customers");
         resultSet.next();
@@ -88,8 +84,8 @@ class GenericDAOTest {
 
     @Test
     void deleteEntityFromTable() throws SQLException, ClassNotFoundException {
-        int customerID = genericDAO.insertEntity(customer);
-        genericDAO.deleteEntityFromTable(customer);
+        int customerID = GenericDAO.insertEntity(customer);
+        GenericDAO.deleteEntityFromTable(customer);
 
         ResultSet resultSet = DBConnection.executeWithResult(
                 String.format("SELECT EXISTS(SELECT 1 FROM CUSTOMERS C WHERE CUSTOMER_ID = %s) AS exist", customerID));
