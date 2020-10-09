@@ -4,13 +4,10 @@ package com.exactpro;
 import com.exactpro.entities.Customer;
 import com.exactpro.entities.Deal;
 import com.exactpro.entities.Product;
-import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
-
-import com.exactpro.entities.*;
 
 import java.math.BigDecimal;
 import java.sql.Date;
