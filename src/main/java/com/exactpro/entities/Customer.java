@@ -8,22 +8,16 @@ import java.io.Serializable;
 @Table(name = "customers")
 public class Customer implements Serializable {
 
-    // Columns
+//     Columns
     @Id
     @ManyToOne(fetch = FetchType.LAZY, targetEntity = Deal.class)
     @JoinColumn(name = "customerID", nullable = false)
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private int customerID;
 
-    @Column(name = "name")
     private String name;
-
-    @Column(name = "surname")
     private String surname;
-
-    @Column(name = "age")
     private short age;
-
     private long favouriteProduct;
 
     public Customer(){}
@@ -48,6 +42,7 @@ public class Customer implements Serializable {
     }
 
     // name
+    @Column(name = "name")
     public String getName() {
         return name;
     }
@@ -57,6 +52,7 @@ public class Customer implements Serializable {
     }
 
     // surname
+    @Column(name = "surname")
     public String getSurname() {
         return surname;
     }
@@ -66,6 +62,7 @@ public class Customer implements Serializable {
     }
 
     // age
+    @Column(name = "age")
     public short getAge() {
         return age;
     }

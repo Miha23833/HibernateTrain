@@ -15,23 +15,11 @@ public class Deal implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int dealID;
 
-    @OneToMany(mappedBy = "customerID", targetEntity = Customer.class)
-    @Column(name = "customer_id")
     private List<Customer> customerID = new ArrayList<>();
-
-    @OneToMany(mappedBy = "productID", targetEntity = Product.class)
-    @Column(name = "product_id")
     private List<Product> productID;
-
-    @Column(name = "deal_date")
     private Date dealDate;
-
-    @Column(name = "discount")
     private BigDecimal discount;
-
-    @Column(name = "price")
     private BigDecimal price;
-
 
     public Deal() {}
 
@@ -48,6 +36,7 @@ public class Deal implements Serializable {
 
     // customerID
     @OneToMany(mappedBy = "customerID", targetEntity = Customer.class)
+    @Column(name = "customer_id")
     public List<Customer> getCustomerID() {
         return customerID;
     }
@@ -58,6 +47,7 @@ public class Deal implements Serializable {
 
     // productID
     @OneToMany(mappedBy = "productID", targetEntity = Product.class)
+    @Column(name = "product_id")
     public List<Product> getProductID() {
         return productID;
     }
@@ -67,6 +57,7 @@ public class Deal implements Serializable {
     }
 
     // dealDate
+    @Column(name = "deal_date")
     public Date getDealDate() {
         return dealDate;
     }
@@ -76,6 +67,7 @@ public class Deal implements Serializable {
     }
 
     // discount
+    @Column(name = "discount")
     public BigDecimal getDiscount() {
         return discount;
     }
@@ -85,6 +77,7 @@ public class Deal implements Serializable {
     }
 
     // price
+    @Column(name = "price")
     public BigDecimal getPrice() {
         return price;
     }

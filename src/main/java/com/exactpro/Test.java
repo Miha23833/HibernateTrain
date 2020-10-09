@@ -42,7 +42,7 @@ public class Test {
         Customer customer = new Customer();
         customer.setName("M");
         customer.setSurname("K");
-        customer.setAge((short) 15);
+        customer.setAge((short) 125);
         customers.add(customer);
 
         List<Product> products = new ArrayList<>();
@@ -61,6 +61,8 @@ public class Test {
 
         try(Session session = sessionFactory.openSession()){
             Transaction transaction = session.beginTransaction();
+            session.save(customer);
+            session.save(product);
             session.save(product);
             transaction.commit();
         }

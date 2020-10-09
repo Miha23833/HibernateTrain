@@ -15,11 +15,7 @@ public class Product implements Serializable {
     private int productID;
 
     private String productName;
-
-    @Column(name = "description")
     private String description;
-
-    @Column(name = "price")
     private BigDecimal price;
 
     public Product() {}
@@ -46,6 +42,7 @@ public class Product implements Serializable {
     }
 
     // description
+    @Column(name = "description")
     public String getDescription() {
         return description;
     }
@@ -55,6 +52,7 @@ public class Product implements Serializable {
     }
 
     // price
+    @Column(name = "price")
     public BigDecimal getPrice() {
         return price;
     }
