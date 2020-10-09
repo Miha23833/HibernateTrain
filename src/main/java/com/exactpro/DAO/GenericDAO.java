@@ -17,12 +17,12 @@ import java.util.List;
 public class GenericDAO {
 //    private final SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
 
-    public <T> Integer insertEntity(T entity) throws SQLException {
+    public <T> int insertEntity(T entity) throws SQLException {
         SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
         try(Session session = sessionFactory.openSession()){
             Transaction transaction = session.beginTransaction();
             transaction.commit();
-            return (Integer) session.save(entity);
+            return (int) session.save(entity);
         }
     }
 

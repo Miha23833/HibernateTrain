@@ -12,7 +12,6 @@ import java.util.List;
 public class Deal implements Serializable {
     @Id
     @Column(name = "deal_id", unique = true, nullable = false)
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int dealID;
 
     private List<Customer> customerID = new ArrayList<>();

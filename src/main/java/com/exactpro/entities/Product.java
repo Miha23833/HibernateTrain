@@ -11,7 +11,6 @@ public class Product implements Serializable {
     @Id
     @ManyToOne(fetch = FetchType.LAZY, targetEntity = Deal.class)
     @JoinColumn(name = "productID")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int productID;
 
     private String productName;
@@ -23,6 +22,7 @@ public class Product implements Serializable {
     // productID
     @Id
     @Column(name = "product_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public int getProductID() {
         return productID;
     }

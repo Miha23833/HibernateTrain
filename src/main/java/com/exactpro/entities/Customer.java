@@ -12,7 +12,6 @@ public class Customer implements Serializable {
     @Id
     @ManyToOne(fetch = FetchType.LAZY, targetEntity = Deal.class)
     @JoinColumn(name = "customerID", nullable = false)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private int customerID;
 
     private String name;
@@ -33,6 +32,7 @@ public class Customer implements Serializable {
     // customerID
     @Id
     @Column(name = "customer_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public int getCustomerID() {
         return customerID;
     }
