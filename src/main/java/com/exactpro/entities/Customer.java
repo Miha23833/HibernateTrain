@@ -17,11 +17,11 @@ public class Customer implements Serializable {
     private String name;
     private String surname;
     private short age;
-    private long favouriteProduct;
+    private Integer favouriteProduct;
 
     public Customer(){}
 
-    public Customer(String name, String surname, short age, long favouriteProduct){
+    public Customer(String name, String surname, short age, Integer favouriteProduct){
         this.name = name;
         this.surname = surname;
         this.age = age;
@@ -73,11 +73,26 @@ public class Customer implements Serializable {
 
     // favouriteProduct
     @Column(name = "favourite_product")
-    public long getFavouriteProduct() {
+    public Integer getFavouriteProduct() {
         return favouriteProduct;
     }
 
-    public void setFavouriteProduct(long favouriteProduct) {
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof Customer))
+            return false;
+
+        return
+                ((Customer) obj).getAge() == this.age &&
+                ((Customer) obj).getCustomerID() == this.customerID &&
+                ((Customer) obj).getName().equals(this.name) &&
+                ((Customer) obj).getSurname().equals(this.surname) &&
+                ((Customer) obj).getFavouriteProduct().equals(this.favouriteProduct);
+
+
+    }
+
+    public void setFavouriteProduct(Integer favouriteProduct) {
         this.favouriteProduct = favouriteProduct;
     }
 }

@@ -7,6 +7,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 //TODO: сделать логирование
+import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
@@ -15,9 +16,7 @@ import java.util.List;
 
 
 public class GenericDAO {
-//    private final SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
-
-    public <T> int insertEntity(T entity) throws SQLException {
+    public <T> int insertEntity(T entity) {
         SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
         try(Session session = sessionFactory.openSession()){
             Transaction transaction = session.beginTransaction();
@@ -26,7 +25,7 @@ public class GenericDAO {
         }
     }
 
-    public <T> void updateTableByEntity(T entity) throws SQLException {
+    public <T> void updateTableByEntity(T entity) {
         SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
         try(Session session = sessionFactory.openSession()){
             Transaction transaction = session.beginTransaction();
@@ -36,20 +35,20 @@ public class GenericDAO {
     }
 
     //Перегрузки
-    public <T> T selectByID(Class<T> clazz, Long id) throws SQLException {
+    public <T> T selectByID(Class<T> clazz, Long id) {
         SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
         try(Session session = sessionFactory.openSession()){
             return session.load(clazz, id);
         }
     }
-    public <T> T selectByID(Class<T> clazz, Integer id) throws SQLException {
+    public <T> T selectByID(Class<T> clazz, Integer id) {
         SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
         try(Session session = sessionFactory.openSession()){
             return session.load(clazz, id);
         }
     }
 
-    public <T> List<T> gelAllEntities(Class<T> clazz) throws SQLException {
+    public <T> List<T> gelAllEntities(Class<T> clazz) {
         SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
         try(Session session = sessionFactory.openSession()){
             CriteriaBuilder builder = session.getCriteriaBuilder();
@@ -60,7 +59,7 @@ public class GenericDAO {
         }
     }
 
-    public <T> void deleteEntityFromTable(T entity) throws SQLException {
+    public <T> void deleteEntityFromTable(T entity) {
         SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
         try (Session session = sessionFactory.openSession()){
             Transaction transaction = session.beginTransaction();
