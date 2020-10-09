@@ -13,7 +13,7 @@ public class Deal implements Serializable {
     @Id
     @Column(name = "deal_id", unique = true, nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer dealID;
+    private int dealID;
 
     @OneToMany(mappedBy = "customerID", targetEntity = Customer.class)
     @Column(name = "customer_id")
@@ -36,15 +36,18 @@ public class Deal implements Serializable {
     public Deal() {}
 
     // dealID
-    public Integer getDealID() {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    public int getDealID() {
         return dealID;
     }
 
-    public void setDealID(Integer dealID) {
+    public void setDealID(int dealID) {
         this.dealID = dealID;
     }
 
     // customerID
+    @OneToMany(mappedBy = "customerID", targetEntity = Customer.class)
     public List<Customer> getCustomerID() {
         return customerID;
     }
@@ -54,6 +57,7 @@ public class Deal implements Serializable {
     }
 
     // productID
+    @OneToMany(mappedBy = "productID", targetEntity = Product.class)
     public List<Product> getProductID() {
         return productID;
     }

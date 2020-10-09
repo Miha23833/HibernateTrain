@@ -14,7 +14,6 @@ public class Product implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int productID;
 
-    @Column(name = "product_name")
     private String productName;
 
     @Column(name = "description")
@@ -26,6 +25,8 @@ public class Product implements Serializable {
     public Product() {}
 
     // productID
+    @Id
+    @Column(name = "product_id")
     public int getProductID() {
         return productID;
     }
@@ -35,6 +36,7 @@ public class Product implements Serializable {
     }
 
     // productName
+    @Column(name = "product_name")
     public String getProductName() {
         return productName;
     }

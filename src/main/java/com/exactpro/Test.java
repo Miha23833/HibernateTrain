@@ -12,6 +12,11 @@ import org.hibernate.cfg.Configuration;
 
 import com.exactpro.entities.*;
 
+import java.math.BigDecimal;
+import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
+
 
 class Factory{
     private static Customer customer;
@@ -33,14 +38,30 @@ public class Test {
 
     public static void main(String[] args) {
 
+        List<Customer> customers = new ArrayList<>();
         Customer customer = new Customer();
-        customer.setAge((short) 20);
-        customer.setName("Mikhail");
-        customer.setSurname("Korepanov");
+        customer.setName("M");
+        customer.setSurname("K");
+        customer.setAge((short) 15);
+        customers.add(customer);
+
+        List<Product> products = new ArrayList<>();
+        Product product = new Product();
+        product.setPrice(new BigDecimal(2));
+        product.setProductName("Жвачка по рублу");
+        product.setDescription("Да");
+        products.add(product);
+
+        Deal deal = new Deal();
+        deal.setDealDate(new Date(System.currentTimeMillis()));
+        deal.setCustomerID(customers);
+        deal.setProductID(products);
+        deal.setDiscount(new BigDecimal(0));
+        deal.setPrice(new BigDecimal("2"));
 
         try(Session session = sessionFactory.openSession()){
             Transaction transaction = session.beginTransaction();
-            session.save(customer);
+            session.save(product);
             transaction.commit();
         }
 

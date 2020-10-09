@@ -24,7 +24,6 @@ public class Customer implements Serializable {
     @Column(name = "age")
     private short age;
 
-    @Column(name = "favourite_product")
     private long favouriteProduct;
 
     public Customer(){}
@@ -38,6 +37,8 @@ public class Customer implements Serializable {
 
 
     // customerID
+    @Id
+    @Column(name = "customer_id")
     public int getCustomerID() {
         return customerID;
     }
@@ -74,6 +75,7 @@ public class Customer implements Serializable {
     }
 
     // favouriteProduct
+    @Column(name = "favourite_product")
     public long getFavouriteProduct() {
         return favouriteProduct;
     }
