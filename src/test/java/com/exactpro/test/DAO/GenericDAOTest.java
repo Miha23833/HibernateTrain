@@ -63,7 +63,8 @@ class GenericDAOTest {
     @Test
     void selectByID() {
         int selectingID = GenericDAO.insertEntity(customer);
-        Assert.assertEquals(customer, GenericDAO.selectByID(Customer.class, selectingID));
+        Customer newCustomer = GenericDAO.selectByID(Customer.class, selectingID);
+        Assert.assertEquals(customer, newCustomer);
     }
 
     @Test

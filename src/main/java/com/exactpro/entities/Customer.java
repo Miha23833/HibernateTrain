@@ -79,26 +79,12 @@ public class Customer implements Serializable {
         return favouriteProduct;
     }
 
-    @Override
-    public boolean equals(Object obj) {
-        if (!(obj instanceof Customer))
-            return false;
-
-        return
-                ((Customer) obj).getAge() == this.age &&
-                ((Customer) obj).getCustomerID() == this.customerID &&
-                ((Customer) obj).getName().equals(this.name) &&
-                ((Customer) obj).getSurname().equals(this.surname) &&
-                ((Customer) obj).getFavouriteProduct().equals(this.favouriteProduct);
-
-
-    }
     public void setFavouriteProduct(Integer favouriteProduct) {
         this.favouriteProduct = favouriteProduct;
     }
 
     // deals
-    @OneToMany(mappedBy = "customer", targetEntity = Deal.class, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "customer", targetEntity = Deal.class, cascade = CascadeType.ALL)
     public Set<Deal> getDeals() {
         return deals;
     }
@@ -106,4 +92,24 @@ public class Customer implements Serializable {
     public void setDeals(Set<Deal> deals) {
         this.deals = deals;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof Customer))
+            return false;
+
+        Customer guest = (Customer) obj;
+
+        return guest.getAge() == this.age &&
+                guest.getCustomerID() == this.customerID &&
+                guest.getName().equals(this.name) &&
+                guest.getSurname().equals(this.surname) &&
+                guest.getFavouriteProduct().equals(this.favouriteProduct);
+
+
+
+    }
+
+
+
 }
