@@ -14,8 +14,8 @@ public class Deal implements Serializable {
     @Column(name = "deal_id", unique = true, nullable = false)
     private int dealID;
 
-    private List<Customer> customerID = new ArrayList<>();
-    private List<Product> productID;
+    private Customer customer;
+    private Product product;
     private Date dealDate;
     private BigDecimal discount;
     private BigDecimal price;
@@ -33,26 +33,26 @@ public class Deal implements Serializable {
         this.dealID = dealID;
     }
 
-    // customerID
-    @OneToMany(mappedBy = "customerID", targetEntity = Customer.class)
-    @Column(name = "customer_id")
-    public List<Customer> getCustomerID() {
-        return customerID;
+    // customer
+    @ManyToOne(fetch = FetchType.LAZY, targetEntity = Customer.class)
+    @JoinColumn(name = "customerID", nullable = false)
+    public Customer getCustomer() {
+        return customer;
     }
 
-    public void setCustomerID(List<Customer> customerID) {
-        this.customerID = customerID;
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
     }
 
-    // productID
-    @OneToMany(mappedBy = "productID", targetEntity = Product.class)
-    @Column(name = "product_id")
-    public List<Product> getProductID() {
-        return productID;
+    // product
+    @ManyToOne(fetch = FetchType.LAZY, targetEntity = Product.class)
+    @JoinColumn(name = "productID", nullable = false)
+    public Product getProduct() {
+        return product;
     }
 
-    public void setProductID(List<Product> productID) {
-        this.productID = productID;
+    public void setProduct(Product product) {
+        this.product = product;
     }
 
     // dealDate

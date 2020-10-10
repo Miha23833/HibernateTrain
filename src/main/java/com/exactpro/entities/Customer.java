@@ -3,6 +3,9 @@ package com.exactpro.entities;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "customers")
@@ -10,14 +13,13 @@ public class Customer implements Serializable {
 
 //     Columns
     @Id
-    @ManyToOne(fetch = FetchType.LAZY, targetEntity = Deal.class)
-    @JoinColumn(name = "customerID", nullable = false)
     private int customerID;
 
     private String name;
     private String surname;
     private short age;
     private Integer favouriteProduct;
+    private Set<Deal> deals = new HashSet<>();
 
     public Customer(){}
 
@@ -91,8 +93,17 @@ public class Customer implements Serializable {
 
 
     }
-
     public void setFavouriteProduct(Integer favouriteProduct) {
         this.favouriteProduct = favouriteProduct;
+    }
+
+    // deals
+    @OneToMany(mappedBy = "customer", targetEntity = Deal.class, cascade = CascadeType.ALL, orphanRemoval = true)
+    public Set<Deal> getDeals() {
+        return deals;
+    }
+
+    public void setDeals(Set<Deal> deals) {
+        this.deals = deals;
     }
 }

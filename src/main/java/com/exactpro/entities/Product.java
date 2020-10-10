@@ -3,19 +3,20 @@ package com.exactpro.entities;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "products")
 public class Product implements Serializable {
 
     @Id
-    @ManyToOne(fetch = FetchType.LAZY, targetEntity = Deal.class)
-    @JoinColumn(name = "productID")
     private int productID;
 
     private String productName;
     private String description;
     private BigDecimal price;
+    private Set<Deal> deals = new HashSet<>();
 
     public Product() {}
 
@@ -59,5 +60,16 @@ public class Product implements Serializable {
 
     public void setPrice(BigDecimal price) {
         this.price = price;
+    }
+
+
+    // deals
+    @OneToMany(mappedBy = "customer", targetEntity = Deal.class, cascade = CascadeType.ALL, orphanRemoval = true)
+    public Set<Deal> getDeals() {
+        return deals;
+    }
+
+    public void setDeals(Set<Deal> deals) {
+        this.deals = deals;
     }
 }
