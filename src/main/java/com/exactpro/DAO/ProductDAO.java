@@ -1,7 +1,5 @@
 package com.exactpro.DAO;
 
-import com.exactpro.entities.Customer;
-import com.exactpro.entities.Deal;
 import com.exactpro.entities.Product;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -13,8 +11,6 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.math.BigDecimal;
-import java.sql.SQLException;
-import java.util.Collection;
 import java.util.List;
 
 public class ProductDAO {
