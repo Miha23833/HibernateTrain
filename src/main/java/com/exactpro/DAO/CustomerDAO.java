@@ -102,10 +102,10 @@ public class CustomerDAO {
             return session.createNativeQuery(
                     "SELECT DISTINCT\n" +
                             "customers.*\n" +
-                            "FROM customers\n" +
-                            "JOIN deals\n" +
+                        "FROM customers\n" +
+                        "JOIN deals\n" +
                             "USING(customer_id)\n" +
-                            "WHERE deals.product_id = ?\n" +
+                        "WHERE deals.product_id = ?\n" +
                             "GROUP BY 1,2,3,4,5",
                     Customer.class
             ).setParameter(1, product.getProductID())
