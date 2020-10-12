@@ -1,7 +1,7 @@
 package com.exactpro.test.DAO;
 
 import com.exactpro.DAO.GenericDAO;
-import com.exactpro.crutches.DBConnection;
+import com.exactpro.connection.DBConnection;
 import com.exactpro.entities.Customer;
 import org.junit.After;
 import org.junit.Assert;
