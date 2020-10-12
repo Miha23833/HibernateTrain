@@ -1,12 +1,9 @@
 package com.exactpro.connection;
 
-import org.apache.log4j.Logger;
-
 import java.sql.*;
 
-public final class DBConnection {
-    private static final Logger logger = Logger.getLogger(DBConnection.class);
-    private static String url = "jdbc:mysql://localhost:3306/HelloWorld";
+public class DBConnection {
+    private static String url = "jdbc:mysql://localhost:3306/hibernate";
     private static String user = "root";
     private static String password = "password";
 
@@ -17,7 +14,6 @@ public final class DBConnection {
         url = newUrl;
         user = newUser;
         password = newPassword;
-        logger.info(String.format("Connection data changed. User: %s, Url: %s", user, url));
     }
 
     public static ResultSet executeWithResult(String query) throws ClassNotFoundException, SQLException {
@@ -28,12 +24,12 @@ public final class DBConnection {
             Statement statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
             resultSet = statement.executeQuery(query);
         } catch (SQLException e) {
-            logger.error("Error trying executeWithResult\n" + e.getMessage(), e);
             throw new SQLException();
         }
 
         return resultSet;
     }
+
 
     public static void executeNonResult(String query) throws ClassNotFoundException, SQLException {
         Class.forName("com.mysql.cj.jdbc.Driver");
@@ -44,8 +40,9 @@ public final class DBConnection {
             statement.execute(query);
             connection.close();
         } catch (SQLException e) {
-            logger.error("Error trying executeNonResult\n" + e.getMessage(), e);
             throw new SQLException();
         }
     }
+
+
 }
