@@ -11,7 +11,6 @@ import java.util.List;
 @Table(name = "deals")
 public class Deal implements Serializable {
     @Id
-    @Column(name = "deal_id", unique = true, nullable = false)
     private int dealID;
 
     private Customer customer;
@@ -24,6 +23,7 @@ public class Deal implements Serializable {
 
     // dealID
     @Id
+    @Column(name = "deal_id", unique = true, nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public int getDealID() {
         return dealID;
