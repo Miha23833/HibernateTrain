@@ -95,7 +95,7 @@ public class CustomerDAO {
         }
     }
 
-    public static List<Customer> getWhoBoughtProduct(Product product){
+    public static List<Customer> getWhoBoughtProduct(Integer productID){
         SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
 
         try (Session session = sessionFactory.openSession()) {
@@ -108,7 +108,7 @@ public class CustomerDAO {
                         "WHERE deals.product_id = ?\n" +
                             "GROUP BY 1,2,3,4,5",
                     Customer.class
-            ).setParameter(1, product.getProductID())
+            ).setParameter(1, productID)
              .list();
         }
     }
