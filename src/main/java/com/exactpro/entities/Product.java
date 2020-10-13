@@ -72,4 +72,19 @@ public class Product implements Serializable {
     public void setDeals(Set<Deal> deals) {
         this.deals = deals;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof Product))
+            return false;
+
+        Product guest = (Product) obj;
+
+        return guest.getDeals().equals(this.deals) &&
+                guest.getPrice().compareTo(this.price) == 0 &&
+                guest.getDescription().equals(this.description) &&
+                guest.getProductID() == (this.productID) &&
+                guest.getProductName().equals(this.productName);
+    }
+
 }

@@ -84,4 +84,20 @@ public class Deal implements Serializable {
     public void setPrice(BigDecimal price) {
         this.price = price;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof Deal))
+            return false;
+
+        Deal guest = (Deal) obj;
+
+        return guest.getCustomer().equals(this.customer) &&
+                guest.getProduct().equals(this.product) &&
+                guest.getDealDate() == this.dealDate &&
+                guest.getDealID() == (this.dealID) &&
+                guest.getDiscount().compareTo(this.discount) == 0 &&
+                guest.getPrice().compareTo(this.price) == 0;
+    }
+
 }

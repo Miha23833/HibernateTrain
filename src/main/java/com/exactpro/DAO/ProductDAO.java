@@ -4,6 +4,7 @@ import com.exactpro.entities.Product;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
+import org.hibernate.query.Query;
 
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -31,10 +32,11 @@ public class ProductDAO {
             CriteriaQuery<Product> criteriaQuery = builder.createQuery(Product.class);
             Root<Product> product = criteriaQuery.from(Product.class);
 
-            Predicate predicate = builder.equal(product.get("name"), name);
+            Predicate predicate = builder.equal(product.get("productName"), name);
             criteriaQuery.select(product).where(predicate);
 
             TypedQuery<Product> query = session.createQuery(criteriaQuery);
+            String a = query.unwrap(Query.class).getQueryString();
             return query.getResultList();
         }
     }
@@ -55,13 +57,13 @@ public class ProductDAO {
                     predicate = builder.notEqual(product.get("price"), price);
                     break;
                 case GREATHER_THAN:
-                    predicate = builder.gt(product.get("price"), price);
+                    predicate = builder.greaterThan(product.get("price"), price);
                     break;
                 case GREATHER_THAN_OR_EQUAL:
                     predicate = builder.greaterThanOrEqualTo(product.get("price"), price);
                     break;
                 case LESS_THAN:
-                    predicate = builder.le(product.get("price"), price);
+                    predicate = builder.lessThan(product.get("price"), price);
                     break;
                 case LESS_THAN_OR_EQUAL:
                     predicate = builder.lessThanOrEqualTo(product.get("price"), price);
@@ -88,7 +90,7 @@ public class ProductDAO {
                             "FROM deals\n" +
                             "JOIN products\n" +
                             "USING(product_id)\n" +
-                            "WHERE deals.customer_id = 26\n" +
+                            "WHERE deals.customer_id = ?\n" +
                             "GROUP BY 1,2,3,4",
                     Product.class
             ).setParameter(1, customerID)

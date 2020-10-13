@@ -105,9 +105,6 @@ public class Customer implements Serializable {
                 guest.getName().equals(this.name) &&
                 guest.getSurname().equals(this.surname) &&
                 guest.getFavouriteProduct().equals(this.favouriteProduct);
-
-
-
     }
 
 
