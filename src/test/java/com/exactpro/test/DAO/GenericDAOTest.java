@@ -3,6 +3,7 @@ package com.exactpro.test.DAO;
 import com.exactpro.DAO.GenericDAO;
 import com.exactpro.connection.DBConnection;
 import com.exactpro.entities.Customer;
+import com.exactpro.test.common.CommonUnitTests;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,20 +17,15 @@ class GenericDAOTest {
     Customer customer;
 
     @BeforeEach
-    void setUp() {
-        DBConnection.setConnectionData("jdbc:mysql://localhost:3306/hibernate_unittests", "root", "password");
+    void setUp() throws SQLException, ClassNotFoundException {
+        CommonUnitTests.cleanDB("jdbc:mysql://localhost:3306/hibernate_unittests", "root", "password");
         customer = new Customer("TEST", "UNIT", (short) 20, 0);
     }
 
     @After
     public void tearDown() throws SQLException, ClassNotFoundException {
         customer = null;
-        DBConnection.executeNonResult("DELETE FROM CUSTOMERS");
-        DBConnection.executeNonResult("ALTER TABLE CUSTOMERS AUTO_INCREMENT = 0");
-        DBConnection.executeNonResult("DELETE FROM PRODUCTS");
-        DBConnection.executeNonResult("ALTER TABLE PRODUCTS AUTO_INCREMENT = 0");
-        DBConnection.executeNonResult("DELETE FROM DEALS");
-        DBConnection.executeNonResult("ALTER TABLE DEALS AUTO_INCREMENT = 0");
+        CommonUnitTests.cleanDB("jdbc:mysql://localhost:3306/hibernate_unittests", "root", "password");
     }
 
     @Test

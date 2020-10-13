@@ -20,6 +20,12 @@ public class Product implements Serializable {
 
     public Product() {}
 
+    public Product(String productName, String description, BigDecimal price){
+        this.productName = productName;
+        this.description = description;
+        this.price = price;
+    }
+
     // productID
     @Id
     @Column(name = "product_id")

@@ -17,8 +17,6 @@ public class GenericDAO {
     public static <T> int insertEntity(T entity) {
         SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
         try(Session session = sessionFactory.openSession()){
-            Transaction transaction = session.beginTransaction();
-            transaction.commit();
             return (int) session.save(entity);
         }
     }

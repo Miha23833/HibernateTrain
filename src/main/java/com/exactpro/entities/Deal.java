@@ -4,8 +4,8 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.sql.Date;
-import java.util.ArrayList;
-import java.util.List;
+import java.sql.Time;
+import java.sql.Timestamp;
 
 @Entity
 @Table(name = "deals")
@@ -15,11 +15,19 @@ public class Deal implements Serializable {
 
     private Customer customer;
     private Product product;
-    private Date dealDate;
+    private Timestamp dealDate;
     private BigDecimal discount;
     private BigDecimal price;
 
     public Deal() {}
+
+    public Deal(Customer customer, Product product, Timestamp dealDate, BigDecimal price, BigDecimal discount) {
+        this.customer = customer;
+        this.product = product;
+        this.dealDate = dealDate;
+        this.discount = discount;
+        this.price = price;
+    }
 
     // dealID
     @Id
@@ -45,8 +53,8 @@ public class Deal implements Serializable {
     }
 
     // product
-    @ManyToOne(fetch = FetchType.LAZY, targetEntity = Product.class)
     @JoinColumn(name = "product_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY, targetEntity = Product.class)
     public Product getProduct() {
         return product;
     }
@@ -57,11 +65,11 @@ public class Deal implements Serializable {
 
     // dealDate
     @Column(name = "deal_date")
-    public Date getDealDate() {
+    public Timestamp getDealDate() {
         return dealDate;
     }
 
-    public void setDealDate(Date dealDate) {
+    public void setDealDate(Timestamp dealDate) {
         this.dealDate = dealDate;
     }
 

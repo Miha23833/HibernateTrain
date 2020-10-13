@@ -74,13 +74,13 @@ public class CustomerDAO {
                     agePredicate = builder.notEqual(customer.get("age"), age);
                     break;
                 case GREATHER_THAN:
-                    agePredicate = builder.gt(customer.get("age"), age);
+                    agePredicate = builder.greaterThan(customer.get("age"), age);
                     break;
                 case GREATHER_THAN_OR_EQUAL:
                     agePredicate = builder.greaterThanOrEqualTo(customer.get("age"), age);
                     break;
                 case LESS_THAN:
-                    agePredicate = builder.le(customer.get("age"), age);
+                    agePredicate = builder.lessThan(customer.get("age"), age);
                     break;
                 case LESS_THAN_OR_EQUAL:
                     agePredicate = builder.lessThanOrEqualTo(customer.get("age"), age);

@@ -7,6 +7,7 @@ import com.exactpro.connection.DBConnection;
 import com.exactpro.entities.Customer;
 import com.exactpro.entities.Deal;
 import com.exactpro.entities.Product;
+import com.exactpro.test.common.CommonUnitTests;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.jupiter.api.AfterEach;
@@ -14,7 +15,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
-import java.sql.Date;
+import java.sql.Timestamp;
+import java.util.Date;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
@@ -25,14 +27,7 @@ class ProductDAOTest {
 
     @Before
     public void launchAllTests() throws SQLException, ClassNotFoundException {
-        DBConnection.setConnectionData("jdbc:mysql://localhost:3306/hibernate_unittests", "root", "password");
-
-        DBConnection.executeNonResult("DELETE FROM CUSTOMERS");
-        DBConnection.executeNonResult("ALTER TABLE CUSTOMERS AUTO_INCREMENT = 0");
-        DBConnection.executeNonResult("DELETE FROM PRODUCTS");
-        DBConnection.executeNonResult("ALTER TABLE PRODUCTS AUTO_INCREMENT = 0");
-        DBConnection.executeNonResult("DELETE FROM DEALS");
-        DBConnection.executeNonResult("ALTER TABLE DEALS AUTO_INCREMENT = 0");
+        CommonUnitTests.cleanDB("jdbc:mysql://localhost:3306/hibernate_unittests", "root", "password");
     }
 
 
@@ -48,13 +43,7 @@ class ProductDAOTest {
     @AfterEach
     void cleanTest() throws SQLException, ClassNotFoundException {
         product = null;
-        DBConnection.setConnectionData("jdbc:mysql://localhost:3306/hibernate_unittests", "root", "password");
-        DBConnection.executeNonResult("DELETE FROM CUSTOMERS");
-        DBConnection.executeNonResult("ALTER TABLE CUSTOMERS AUTO_INCREMENT = 0");
-        DBConnection.executeNonResult("DELETE FROM PRODUCTS");
-        DBConnection.executeNonResult("ALTER TABLE PRODUCTS AUTO_INCREMENT = 0");
-        DBConnection.executeNonResult("DELETE FROM DEALS");
-        DBConnection.executeNonResult("ALTER TABLE DEALS AUTO_INCREMENT = 0");
+        CommonUnitTests.cleanDB("jdbc:mysql://localhost:3306/hibernate_unittests", "root", "password");
     }
 
     @Test
@@ -132,7 +121,7 @@ class ProductDAOTest {
             deal.setProduct(product);
             deal.setPrice(product.getPrice());
             deal.setDiscount(new BigDecimal(0));
-            deal.setDealDate(Date.valueOf(LocalDate.now()));
+            deal.setDealDate(new Timestamp(System.currentTimeMillis()));
             GenericDAO.insertEntity(deal);
         }
 

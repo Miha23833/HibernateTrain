@@ -6,17 +6,15 @@ import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
 import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
+import javax.persistence.criteria.*;
 import java.math.BigDecimal;
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.List;
 
 public class DealDAO {
 
-    public static List<Deal> getByDate(Date date, ComparisonOperator operator){
+    public static List<Deal> getByDate(Timestamp date, ComparisonOperator operator){
         SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
 
         try (Session session = sessionFactory.openSession()) {
@@ -26,20 +24,26 @@ public class DealDAO {
             Root<Deal> deal = criteriaQuery.from(Deal.class);
             Predicate datePredicate;
 
+            Path<Timestamp> datePath = deal.get("dealDate");
+
             switch (operator){
                 case NOT_EQUAL:
-                    datePredicate = builder.notEqual(deal.get("dealDate"), date);
+                    datePredicate = builder.notEqual(datePath, date);
                     break;
                 case GREATHER_THAN:
+                    datePredicate = builder.greaterThan(datePath, date);
+                    break;
                 case GREATHER_THAN_OR_EQUAL:
-                    datePredicate = builder.greaterThanOrEqualTo(deal.get("dealDate"), date);
+                    datePredicate = builder.greaterThanOrEqualTo(datePath, date);
                     break;
                 case LESS_THAN:
+                    datePredicate = builder.lessThan(datePath, date);
+                    break;
                 case LESS_THAN_OR_EQUAL:
-                    datePredicate = builder.lessThanOrEqualTo(deal.get("dealDate"), date);
+                    datePredicate = builder.lessThanOrEqualTo(datePath, date);
                     break;
                 default:
-                    datePredicate = builder.equal(deal.get("dealDate"), date);
+                    datePredicate = builder.equal(datePath, date);
             }
             criteriaQuery.select(deal).where(datePredicate);
 
