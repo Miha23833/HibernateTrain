@@ -59,9 +59,6 @@ class DealDAOTest {
             GenericDAO.insertEntity(newDeal);
         }
 
-        List<Deal> dealList = DealDAO.getByDate(compDate, ComparisonOperator.EQUAL);
-
-        // равного по времени - 1, меньше и больше - по 5
         // Сравнение по количеству возвращённых записей для учитывания всех енумов
         Assert.assertEquals(1, DealDAO.getByDate(compDate, ComparisonOperator.EQUAL).size());
 
@@ -78,14 +75,92 @@ class DealDAOTest {
 
     @Test
     void getByDiscount() {
+        deal.setDiscount(new BigDecimal(50));
+        BigDecimal compDiscount = deal.getDiscount();
+
+        GenericDAO.insertEntity(customer);
+        GenericDAO.insertEntity(product);
+        GenericDAO.insertEntity(deal);
+
+        for (int i = 1; i < 6; i++) {
+            Deal newDeal = new Deal(customer, product, System.currentTimeMillis(), new BigDecimal(50), new BigDecimal(50+i));
+            GenericDAO.insertEntity(newDeal);
+            newDeal = new Deal(customer, product, System.currentTimeMillis(), new BigDecimal(50), new BigDecimal(50-i));
+            GenericDAO.insertEntity(newDeal);
+        }
+
+        // Сравнение по количеству возвращённых записей для учитывания всех енумов
+        Assert.assertEquals(1, DealDAO.getByDiscount(compDiscount, ComparisonOperator.EQUAL).size());
+
+        Assert.assertEquals(10, DealDAO.getByDiscount(compDiscount, ComparisonOperator.NOT_EQUAL).size());
+
+        Assert.assertEquals(5, DealDAO.getByDiscount(compDiscount, ComparisonOperator.GREATHER_THAN).size());
+
+        Assert.assertEquals(6, DealDAO.getByDiscount(compDiscount, ComparisonOperator.GREATHER_THAN_OR_EQUAL).size());
+
+        Assert.assertEquals(5, DealDAO.getByDiscount(compDiscount, ComparisonOperator.LESS_THAN).size());
+
+        Assert.assertEquals(6, DealDAO.getByDiscount(compDiscount, ComparisonOperator.LESS_THAN_OR_EQUAL).size());
     }
 
     @Test
     void getByPrice() {
+        deal.setPrice(new BigDecimal(50));
+        BigDecimal compPrice = deal.getPrice();
+
+        GenericDAO.insertEntity(customer);
+        GenericDAO.insertEntity(product);
+        GenericDAO.insertEntity(deal);
+
+        for (int i = 1; i < 6; i++) {
+            Deal newDeal = new Deal(customer, product, System.currentTimeMillis(), new BigDecimal(50+i), new BigDecimal(50));
+            GenericDAO.insertEntity(newDeal);
+            newDeal = new Deal(customer, product, System.currentTimeMillis(), new BigDecimal(50-i), new BigDecimal(50));
+            GenericDAO.insertEntity(newDeal);
+        }
+
+        // Сравнение по количеству возвращённых записей для учитывания всех енумов
+        Assert.assertEquals(1, DealDAO.getByPrice(compPrice, ComparisonOperator.EQUAL).size());
+
+        Assert.assertEquals(10, DealDAO.getByPrice(compPrice, ComparisonOperator.NOT_EQUAL).size());
+
+        Assert.assertEquals(5, DealDAO.getByPrice(compPrice, ComparisonOperator.GREATHER_THAN).size());
+
+        Assert.assertEquals(6, DealDAO.getByPrice(compPrice, ComparisonOperator.GREATHER_THAN_OR_EQUAL).size());
+
+        Assert.assertEquals(5, DealDAO.getByPrice(compPrice, ComparisonOperator.LESS_THAN).size());
+
+        Assert.assertEquals(6, DealDAO.getByPrice(compPrice, ComparisonOperator.LESS_THAN_OR_EQUAL).size());
     }
 
     @Test
     void getByCustomerID() {
+        int id = GenericDAO.insertEntity(customer);
+        GenericDAO.insertEntity(product);
+        GenericDAO.insertEntity(deal);
+
+        for (int i = 0; i < 3; i++) {
+            Customer otherCustomer = new Customer("UNIT", "TEST", (short) 10, null);
+            GenericDAO.insertEntity(otherCustomer);
+            for (int j = 0; j < 4; j++) {
+                Deal otherDeal = new Deal(otherCustomer, product, System.currentTimeMillis(), product.getPrice(), new BigDecimal(0));
+                GenericDAO.insertEntity(otherDeal);
+            }
+        }
+
+        List<Deal> deals = DealDAO.getByCustomerID(id);
+
+        Assert.assertEquals(1, deals.size());
+
+        for (Deal compDeal: deals) {
+            Assert.assertEquals(deal.getCustomer().getCustomerID(), compDeal.getCustomer().getCustomerID());
+            Assert.assertEquals(deal.getProduct().getProductID(), compDeal.getProduct().getProductID());
+            Assert.assertEquals(deal.getDealDate(), compDeal.getDealDate());
+            Assert.assertEquals(0, deal.getDiscount().compareTo(compDeal.getDiscount()));
+            Assert.assertEquals(deal.getDealID(), compDeal.getDealID());
+            Assert.assertEquals(0, deal.getPrice().compareTo(compDeal.getPrice()));
+        }
+
     }
 
     @Test

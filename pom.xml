@@ -60,6 +60,12 @@
             <version>5.4.22.Final</version>
             <classifier>javadoc</classifier>
         </dependency>
+        <!-- Hibernate metamodel -->
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-jpamodelgen</artifactId>
+            <version>5.4.22.Final</version>
+        </dependency>
         <!-- Log4j -->
         <dependency>
             <groupId>log4j</groupId>

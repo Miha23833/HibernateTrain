@@ -1,6 +1,9 @@
 package com.exactpro.DAO;
 
+import com.exactpro.entities.Customer;
 import com.exactpro.entities.Deal;
+import com.exactpro.entities.metamodel.Customer_;
+import com.exactpro.entities.metamodel.Deal_;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
@@ -9,8 +12,9 @@ import javax.persistence.TypedQuery;
 import javax.persistence.criteria.*;
 import java.math.BigDecimal;
 import java.sql.Date;
-import java.sql.Timestamp;
 import java.util.List;
+
+//TODO: раз уж я знаю как делать метамодели - нужно заняться и заменой SQL на нормальный типизированный код. УРА!
 
 public class DealDAO {
 
@@ -66,13 +70,13 @@ public class DealDAO {
                     predicate = builder.notEqual(deal.get("discount"), discount);
                     break;
                 case GREATHER_THAN:
-                    predicate = builder.gt(deal.get("discount"), discount);
+                    predicate = builder.greaterThan(deal.get("discount"), discount);
                     break;
                 case GREATHER_THAN_OR_EQUAL:
                     predicate = builder.greaterThanOrEqualTo(deal.get("discount"), discount);
                     break;
                 case LESS_THAN:
-                    predicate = builder.le(deal.get("discount"), discount);
+                    predicate = builder.lessThan(deal.get("discount"), discount);
                     break;
                 case LESS_THAN_OR_EQUAL:
                     predicate = builder.lessThanOrEqualTo(deal.get("discount"), discount);
@@ -102,13 +106,13 @@ public class DealDAO {
                     predicate = builder.notEqual(deal.get("price"), price);
                     break;
                 case GREATHER_THAN:
-                    predicate = builder.gt(deal.get("price"), price);
+                    predicate = builder.greaterThan(deal.get("price"), price);
                     break;
                 case GREATHER_THAN_OR_EQUAL:
                     predicate = builder.greaterThanOrEqualTo(deal.get("price"), price);
                     break;
                 case LESS_THAN:
-                    predicate = builder.le(deal.get("price"), price);
+                    predicate = builder.lessThan(deal.get("price"), price);
                     break;
                 case LESS_THAN_OR_EQUAL:
                     predicate = builder.lessThanOrEqualTo(deal.get("price"), price);
@@ -131,8 +135,9 @@ public class DealDAO {
 
             CriteriaQuery<Deal> criteriaQuery = builder.createQuery(Deal.class);
             Root<Deal> deal = criteriaQuery.from(Deal.class);
+            Join<Deal, Customer> customerJoin = deal.join(Deal_.CUSTOMER);
 
-            Predicate predicate = builder.equal(deal.get("customer_id"), customerID);
+            Predicate predicate = builder.equal(customerJoin.get(Customer_.CUSTOMER_ID), customerID);
 
             criteriaQuery.select(deal).where(predicate);
             TypedQuery<Deal> query = session.createQuery(criteriaQuery);
