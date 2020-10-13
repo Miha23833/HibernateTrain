@@ -165,9 +165,54 @@ class DealDAOTest {
 
     @Test
     void getByProductID() {
+        GenericDAO.insertEntity(customer);
+        int id = GenericDAO.insertEntity(product);
+        GenericDAO.insertEntity(deal);
+
+        for (int i = 0; i < 3; i++) {
+            Product otherProduct = new Product("Чай беседа", "Лучший чай", new BigDecimal(i) );
+            GenericDAO.insertEntity(otherProduct);
+            for (int j = 0; j < 4; j++) {
+                Deal otherDeal = new Deal(customer, otherProduct, System.currentTimeMillis(), product.getPrice(), new BigDecimal(0));
+                GenericDAO.insertEntity(otherDeal);
+            }
+        }
+
+        List<Deal> deals = DealDAO.getByProductID(id);
+
+        Assert.assertEquals(1, deals.size());
+
+        for (Deal compDeal: deals) {
+            Assert.assertEquals(deal.getCustomer().getCustomerID(), compDeal.getCustomer().getCustomerID());
+            Assert.assertEquals(deal.getProduct().getProductID(), compDeal.getProduct().getProductID());
+            Assert.assertEquals(deal.getDealDate(), compDeal.getDealDate());
+            Assert.assertEquals(0, deal.getDiscount().compareTo(compDeal.getDiscount()));
+            Assert.assertEquals(deal.getDealID(), compDeal.getDealID());
+            Assert.assertEquals(0, deal.getPrice().compareTo(compDeal.getPrice()));
+        }
+
     }
 
     @Test
     void getByPeriod() {
+        Long compDate = deal.getDealDate();
+
+        GenericDAO.insertEntity(customer);
+        GenericDAO.insertEntity(product);
+        GenericDAO.insertEntity(deal);
+
+        for (int i = 1; i < 6; i++) {
+            Deal newDeal = new Deal(customer, product, compDate-i*1000, new BigDecimal(50), new BigDecimal(0));
+            GenericDAO.insertEntity(newDeal);
+            newDeal = new Deal(customer, product, compDate+i*1000, new BigDecimal(50), new BigDecimal(0));
+            GenericDAO.insertEntity(newDeal);
+        }
+
+        List<Deal> deals = DealDAO.getByPeriod(compDate-3000,compDate+3000);
+
+        for (Deal compDeal: deals) {
+            Assert.assertTrue(compDeal.getDealDate() >= compDate-3000);
+            Assert.assertTrue(compDeal.getDealDate() <= compDate+3000);
+        }
     }
 }
