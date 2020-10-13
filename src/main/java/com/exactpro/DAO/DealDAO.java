@@ -14,7 +14,7 @@ import java.util.List;
 
 public class DealDAO {
 
-    public static List<Deal> getByDate(Timestamp date, ComparisonOperator operator){
+    public static List<Deal> getByDate(Long date, ComparisonOperator operator){
         SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
 
         try (Session session = sessionFactory.openSession()) {
@@ -24,7 +24,7 @@ public class DealDAO {
             Root<Deal> deal = criteriaQuery.from(Deal.class);
             Predicate datePredicate;
 
-            Path<Timestamp> datePath = deal.get("dealDate");
+            Path<Long> datePath = deal.get("dealDate");
 
             switch (operator){
                 case NOT_EQUAL:

@@ -35,7 +35,7 @@ class DealDAOTest {
     void launchTest(){
         product = new Product("Name", "Some desc", new BigDecimal(50000));
         customer = new Customer("TEST", "UNIT", (short) 20, null);
-        deal = new Deal(customer, product, new Timestamp(System.currentTimeMillis()), new BigDecimal(50), new BigDecimal(0));
+        deal = new Deal(customer, product, System.currentTimeMillis(), new BigDecimal(50), new BigDecimal(0));
     }
 
     @AfterEach
@@ -46,21 +46,22 @@ class DealDAOTest {
 
     @Test
     void getByDate() {
-        Timestamp compDate = deal.getDealDate();
+        Long compDate = deal.getDealDate();
 
         GenericDAO.insertEntity(customer);
         GenericDAO.insertEntity(product);
         GenericDAO.insertEntity(deal);
 
         for (int i = 1; i < 6; i++) {
-            Deal newDeal = new Deal(customer, product, new Timestamp(compDate.getTime()-i*1000), new BigDecimal(50), new BigDecimal(0));
+            Deal newDeal = new Deal(customer, product, compDate-i*1000, new BigDecimal(50), new BigDecimal(0));
             GenericDAO.insertEntity(newDeal);
-            newDeal = new Deal(customer, product, new Timestamp(compDate.getTime()+i*1000), new BigDecimal(50), new BigDecimal(0));
+            newDeal = new Deal(customer, product, compDate+i*1000, new BigDecimal(50), new BigDecimal(0));
             GenericDAO.insertEntity(newDeal);
         }
 
         List<Deal> dealList = DealDAO.getByDate(compDate, ComparisonOperator.EQUAL);
 
+        // равного по времени - 1, меньше и больше - по 5
         // Сравнение по количеству возвращённых записей для учитывания всех енумов
         Assert.assertEquals(1, DealDAO.getByDate(compDate, ComparisonOperator.EQUAL).size());
 

@@ -15,13 +15,13 @@ public class Deal implements Serializable {
 
     private Customer customer;
     private Product product;
-    private Timestamp dealDate;
+    private Long dealDate;
     private BigDecimal discount;
     private BigDecimal price;
 
     public Deal() {}
 
-    public Deal(Customer customer, Product product, Timestamp dealDate, BigDecimal price, BigDecimal discount) {
+    public Deal(Customer customer, Product product, Long dealDate, BigDecimal price, BigDecimal discount) {
         this.customer = customer;
         this.product = product;
         this.dealDate = dealDate;
@@ -65,11 +65,11 @@ public class Deal implements Serializable {
 
     // dealDate
     @Column(name = "deal_date")
-    public Timestamp getDealDate() {
+    public Long getDealDate() {
         return dealDate;
     }
 
-    public void setDealDate(Timestamp dealDate) {
+    public void setDealDate(Long dealDate) {
         this.dealDate = dealDate;
     }
 

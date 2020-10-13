@@ -148,7 +148,7 @@ class CustomerDAOTest {
             deal.setProduct(product);
             deal.setPrice(product.getPrice());
             deal.setDiscount(new BigDecimal(0));
-            deal.setDealDate(new Timestamp(System.currentTimeMillis()));
+            deal.setDealDate(System.currentTimeMillis());
 
             GenericDAO.insertEntity(newCustomer);
             GenericDAO.insertEntity(deal);
