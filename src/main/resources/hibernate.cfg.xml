@@ -13,8 +13,6 @@
         <property name="hibernate.connection.username">root</property>
         <property name="hibernate.connection.password">password</property>
 
-        <!-- List of XML mapping files -->
-<!--        <mapping resource="Developer.hbm.xml"/>-->
         <!-- List of mapping entities -->
         <mapping class="com.exactpro.entities.Customer"/>
         <mapping class="com.exactpro.entities.Product"/>
