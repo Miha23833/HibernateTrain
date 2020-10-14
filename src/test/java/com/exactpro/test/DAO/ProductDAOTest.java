@@ -50,7 +50,11 @@ class ProductDAOTest {
     void getByID() {
         int id = GenericDAO.insertEntity(product);
         Product newProduct = ProductDAO.getByID(id);
-        Assert.assertEquals(newProduct, product);
+
+        Assert.assertEquals(product.getProductID(), newProduct.getProductID());
+        Assert.assertEquals(product.getProductName(), newProduct.getProductName());
+        Assert.assertEquals(product.getDescription(), newProduct.getDescription());
+        Assert.assertEquals(0, product.getPrice().compareTo(newProduct.getPrice()));
     }
 
     @Test
@@ -68,7 +72,6 @@ class ProductDAOTest {
         Assert.assertEquals(productsList.size(), 10);
 
         for (Product compProduct : productsList) {
-            Assert.assertEquals((product.getDeals()), compProduct.getDeals());
             Assert.assertEquals(0, compProduct.getPrice().compareTo(product.getPrice()));
             Assert.assertEquals(product.getDescription(), compProduct.getDescription());
             Assert.assertEquals(product.getProductName(), compProduct.getProductName());

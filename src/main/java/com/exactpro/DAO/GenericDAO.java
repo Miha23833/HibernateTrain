@@ -1,10 +1,13 @@
 package com.exactpro.DAO;
 
+import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
+import org.hibernate.mapping.PersistentClass;
 
+import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
@@ -43,7 +46,9 @@ public class GenericDAO {
     public static <T> T selectByID(Class<T> clazz, Integer id) {
         try (SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory()) {
             try (Session session = sessionFactory.openSession()) {
-                return session.load(clazz, id);
+                T entity = session.load(clazz, id);
+                Hibernate.initialize(entity);
+                return entity;
             }
         }
     }
