@@ -55,6 +55,7 @@ public class GenericDAO {
 
     public static <T> void deleteEntityFromTable(Session session, T entity) {
         session.delete(entity);
+        Hibernate.initialize(entity);
         logger.info(String.format("Entity %s was deleted from DB", entity.getClass().toString()));
     }
 

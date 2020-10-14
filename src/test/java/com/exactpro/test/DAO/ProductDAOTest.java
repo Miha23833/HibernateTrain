@@ -49,9 +49,14 @@ class ProductDAOTest {
     @Test
     void getByID() {
 
-        int id = GenericDAO.insertEntity(sf.openSession(), product);
+        Session insertSession = sf.openSession();
+        insertSession.beginTransaction();
+        int id = GenericDAO.insertEntity(insertSession, product);
+        insertSession.getTransaction().commit();
 
-        Product newProduct = ProductDAO.getByID(sf.openSession(), id);
+        Session selectSession = sf.openSession();
+        Product newProduct = ProductDAO.getByID(selectSession, id);
+        selectSession.close();
 
         Assert.assertEquals(product.getProductID(), newProduct.getProductID());
         Assert.assertEquals(product.getProductName(), newProduct.getProductName());
@@ -86,8 +91,16 @@ class ProductDAOTest {
 
     @Test
     void getByName() {
-        GenericDAO.insertEntity(sf.openSession(), product);
-        List<Product> products = ProductDAO.getByName(sf.openSession(), "Name");
+
+        Session insertSession = sf.openSession();
+        insertSession.beginTransaction();
+        GenericDAO.insertEntity(insertSession, product);
+        insertSession.getTransaction().commit();
+
+        Session selectSession = sf.openSession();
+        List<Product> products = ProductDAO.getByName(selectSession, "Name");
+        selectSession.close();
+
         for (Product compProduct : products) {
             Assert.assertEquals(product.getProductName(), compProduct.getProductName());
         }

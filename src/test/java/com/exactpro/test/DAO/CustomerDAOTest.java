@@ -90,7 +90,9 @@ class CustomerDAOTest {
         GenericDAO.insertEntity(session, customer);
         session.getTransaction().commit();
 
-        Customer compCustomer = CustomerDAO.getByID(sf.openSession(), customer.getCustomerID());
+        Session selectSession = sf.openSession();
+        Customer compCustomer = CustomerDAO.getByID(selectSession, customer.getCustomerID());
+        selectSession.close();
 
         Assert.assertEquals(customer.getName(), compCustomer.getName());
         Assert.assertEquals(customer.getSurname(), compCustomer.getSurname());

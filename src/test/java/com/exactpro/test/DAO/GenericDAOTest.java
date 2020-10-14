@@ -5,6 +5,7 @@ import com.exactpro.DAO.SingleSessionFactory;
 import com.exactpro.connection.DBConnection;
 import com.exactpro.entities.Customer;
 import com.exactpro.test.common.CommonUnitTests;
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.junit.After;
 import org.junit.Assert;
@@ -33,16 +34,30 @@ class GenericDAOTest {
 
     @Test
     void insertEntity() {
-        GenericDAO.insertEntity(sf.openSession(), customer);
+        Session insertSession = sf.openSession();
+        insertSession.beginTransaction();
+        GenericDAO.insertEntity(insertSession, customer);
+        insertSession.getTransaction().commit();
+        insertSession.close();
     }
 
     @Test
     void updateTableByEntity() throws SQLException, ClassNotFoundException {
-        GenericDAO.insertEntity(sf.openSession(), customer);
+
+        Session insertSession = sf.openSession();
+        insertSession.beginTransaction();
+        GenericDAO.insertEntity(insertSession, customer);
+        insertSession.getTransaction().commit();
+        insertSession.close();
+
         customer.setName("UPDATED TEST");
         customer.setSurname("UPDATED UNIT");
         customer.setAge((short) 12);
-        GenericDAO.updateTableByEntity(sf.openSession(), customer);
+
+        Session updateSession = sf.openSession();
+        updateSession.beginTransaction();
+        GenericDAO.updateTableByEntity(updateSession, customer);
+        updateSession.getTransaction().commit();
 
         ResultSet resultSet = DBConnection.executeWithResult(
                 String.format(
@@ -61,17 +76,30 @@ class GenericDAOTest {
 
     @Test
     void selectByID() {
-        int selectingID = GenericDAO.insertEntity(sf.openSession(), customer);
-        Customer newCustomer = GenericDAO.selectByID(sf.openSession(), Customer.class, selectingID);
+
+        Session insertSession = sf.openSession();
+        insertSession.beginTransaction();
+        int selectingID = GenericDAO.insertEntity(insertSession, customer);
+        insertSession.getTransaction().commit();
+
+        Session selectSession = sf.openSession();
+        Customer newCustomer = GenericDAO.selectByID(selectSession, Customer.class, selectingID);
+        selectSession.close();
+
         Assert.assertEquals(customer, newCustomer);
     }
 
     @Test
     void gelAllEntities() throws SQLException, ClassNotFoundException {
 
-        GenericDAO.insertEntity(sf.openSession(), customer);
-        GenericDAO.insertEntity(sf.openSession(), customer);
-        GenericDAO.insertEntity(sf.openSession(), customer);
+        Session insertSession = sf.openSession();
+        insertSession.beginTransaction();
+        for (int i = 0; i < 3; i++) {
+            Customer newCustomer = new Customer(customer.getName(), customer.getSurname(), customer.getAge(), customer.getFavouriteProduct());
+            GenericDAO.insertEntity(insertSession, newCustomer);
+        }
+        insertSession.getTransaction().commit();
+        insertSession.close();
 
         int hibernateResultSize = GenericDAO.gelAllEntities(sf.openSession(), Customer.class).size();
 
@@ -84,8 +112,19 @@ class GenericDAOTest {
 
     @Test
     void deleteEntityFromTable() throws SQLException, ClassNotFoundException {
-        int customerID = GenericDAO.insertEntity(sf.openSession(), customer);
-        GenericDAO.deleteEntityFromTable(sf.openSession(), customer);
+
+        Session insertSession = sf.openSession();
+        insertSession.beginTransaction();
+        int customerID = GenericDAO.insertEntity(insertSession, customer);
+        insertSession.getTransaction().commit();
+        insertSession.close();
+
+        Session deleteSession = sf.openSession();
+        deleteSession.beginTransaction();
+        GenericDAO.deleteEntityFromTable(deleteSession, customer);
+        deleteSession.getTransaction().commit();
+        deleteSession.close();
+
 
         ResultSet resultSet = DBConnection.executeWithResult(
                 String.format("SELECT EXISTS(SELECT 1 FROM CUSTOMERS C WHERE CUSTOMER_ID = %s) AS exist", customerID));
