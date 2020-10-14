@@ -24,187 +24,168 @@ public class DealDAO {
 
     private static final Logger logger = StaticLogger.infoLogger;
 
-    public static List<Deal> getByDate(Long date, ComparisonOperator operator){
-        try (SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory()) {
+    public static List<Deal> getByDate(Session session, Long date, ComparisonOperator operator) {
 
-            try (Session session = sessionFactory.openSession()) {
-                CriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaBuilder builder = session.getCriteriaBuilder();
 
-                CriteriaQuery<Deal> criteriaQuery = builder.createQuery(Deal.class);
-                Root<Deal> deal = criteriaQuery.from(Deal.class);
-                Predicate datePredicate;
+        CriteriaQuery<Deal> criteriaQuery = builder.createQuery(Deal.class);
+        Root<Deal> deal = criteriaQuery.from(Deal.class);
+        Predicate datePredicate;
 
-                Path<Long> datePath = deal.get("dealDate");
+        Path<Long> datePath = deal.get("dealDate");
 
-                switch (operator) {
-                    case NOT_EQUAL:
-                        datePredicate = builder.notEqual(datePath, date);
-                        break;
-                    case GREATER_THAN:
-                        datePredicate = builder.greaterThan(datePath, date);
-                        break;
-                    case GREATER_THAN_OR_EQUAL:
-                        datePredicate = builder.greaterThanOrEqualTo(datePath, date);
-                        break;
-                    case LESS_THAN:
-                        datePredicate = builder.lessThan(datePath, date);
-                        break;
-                    case LESS_THAN_OR_EQUAL:
-                        datePredicate = builder.lessThanOrEqualTo(datePath, date);
-                        break;
-                    default:
-                        datePredicate = builder.equal(datePath, date);
-                }
-                criteriaQuery.select(deal).where(datePredicate);
-
-                TypedQuery<Deal> query = session.createQuery(criteriaQuery);
-                List<Deal> result = query.getResultList();
-
-                logger.info(String.format("Returned list of deals found by date which %s %s ", operator, new Timestamp(date)));
-                return result;
-            }
+        switch (operator) {
+            case NOT_EQUAL:
+                datePredicate = builder.notEqual(datePath, date);
+                break;
+            case GREATER_THAN:
+                datePredicate = builder.greaterThan(datePath, date);
+                break;
+            case GREATER_THAN_OR_EQUAL:
+                datePredicate = builder.greaterThanOrEqualTo(datePath, date);
+                break;
+            case LESS_THAN:
+                datePredicate = builder.lessThan(datePath, date);
+                break;
+            case LESS_THAN_OR_EQUAL:
+                datePredicate = builder.lessThanOrEqualTo(datePath, date);
+                break;
+            default:
+                datePredicate = builder.equal(datePath, date);
         }
+        criteriaQuery.select(deal).where(datePredicate);
+
+        TypedQuery<Deal> query = session.createQuery(criteriaQuery);
+        List<Deal> result = query.getResultList();
+
+        logger.info(String.format("Returned list of deals found by date which %s %s ", operator, new Timestamp(date)));
+        return result;
     }
 
-    public static List<Deal> getByDiscount(BigDecimal discount, ComparisonOperator operator){
-        try (SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory()) {
-            try (Session session = sessionFactory.openSession()) {
-                CriteriaBuilder builder = session.getCriteriaBuilder();
+    public static List<Deal> getByDiscount(Session session, BigDecimal discount, ComparisonOperator operator) {
 
-                CriteriaQuery<Deal> criteriaQuery = builder.createQuery(Deal.class);
-                Root<Deal> deal = criteriaQuery.from(Deal.class);
+        CriteriaBuilder builder = session.getCriteriaBuilder();
 
-                Predicate predicate;
-                switch (operator) {
-                    case NOT_EQUAL:
-                        predicate = builder.notEqual(deal.get("discount"), discount);
-                        break;
-                    case GREATER_THAN:
-                        predicate = builder.greaterThan(deal.get("discount"), discount);
-                        break;
-                    case GREATER_THAN_OR_EQUAL:
-                        predicate = builder.greaterThanOrEqualTo(deal.get("discount"), discount);
-                        break;
-                    case LESS_THAN:
-                        predicate = builder.lessThan(deal.get("discount"), discount);
-                        break;
-                    case LESS_THAN_OR_EQUAL:
-                        predicate = builder.lessThanOrEqualTo(deal.get("discount"), discount);
-                        break;
-                    default:
-                        predicate = builder.equal(deal.get("discount"), discount);
-                }
+        CriteriaQuery<Deal> criteriaQuery = builder.createQuery(Deal.class);
+        Root<Deal> deal = criteriaQuery.from(Deal.class);
 
-                criteriaQuery.select(deal).where(predicate);
-                TypedQuery<Deal> query = session.createQuery(criteriaQuery);
-
-                List<Deal> result = query.getResultList();
-                logger.info(String.format("Returned list of deals found by discount which %s %s ", operator, discount));
-                return result;
-            }
+        Predicate predicate;
+        switch (operator) {
+            case NOT_EQUAL:
+                predicate = builder.notEqual(deal.get("discount"), discount);
+                break;
+            case GREATER_THAN:
+                predicate = builder.greaterThan(deal.get("discount"), discount);
+                break;
+            case GREATER_THAN_OR_EQUAL:
+                predicate = builder.greaterThanOrEqualTo(deal.get("discount"), discount);
+                break;
+            case LESS_THAN:
+                predicate = builder.lessThan(deal.get("discount"), discount);
+                break;
+            case LESS_THAN_OR_EQUAL:
+                predicate = builder.lessThanOrEqualTo(deal.get("discount"), discount);
+                break;
+            default:
+                predicate = builder.equal(deal.get("discount"), discount);
         }
+
+        criteriaQuery.select(deal).where(predicate);
+        TypedQuery<Deal> query = session.createQuery(criteriaQuery);
+
+        List<Deal> result = query.getResultList();
+        logger.info(String.format("Returned list of deals found by discount which %s %s ", operator, discount));
+        return result;
     }
 
-    public static List<Deal> getByPrice(BigDecimal price, ComparisonOperator operator){
-        try (SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory()) {
-            try (Session session = sessionFactory.openSession()) {
-                CriteriaBuilder builder = session.getCriteriaBuilder();
+    public static List<Deal> getByPrice(Session session, BigDecimal price, ComparisonOperator operator) {
 
-                CriteriaQuery<Deal> criteriaQuery = builder.createQuery(Deal.class);
-                Root<Deal> deal = criteriaQuery.from(Deal.class);
+        CriteriaBuilder builder = session.getCriteriaBuilder();
 
-                Predicate predicate;
-                switch (operator) {
-                    case NOT_EQUAL:
-                        predicate = builder.notEqual(deal.get("price"), price);
-                        break;
-                    case GREATER_THAN:
-                        predicate = builder.greaterThan(deal.get("price"), price);
-                        break;
-                    case GREATER_THAN_OR_EQUAL:
-                        predicate = builder.greaterThanOrEqualTo(deal.get("price"), price);
-                        break;
-                    case LESS_THAN:
-                        predicate = builder.lessThan(deal.get("price"), price);
-                        break;
-                    case LESS_THAN_OR_EQUAL:
-                        predicate = builder.lessThanOrEqualTo(deal.get("price"), price);
-                        break;
-                    default:
-                        predicate = builder.equal(deal.get("price"), price);
-                }
+        CriteriaQuery<Deal> criteriaQuery = builder.createQuery(Deal.class);
+        Root<Deal> deal = criteriaQuery.from(Deal.class);
 
-                criteriaQuery.select(deal).where(predicate);
-                TypedQuery<Deal> query = session.createQuery(criteriaQuery);
-
-                List<Deal> result = query.getResultList();
-                logger.info(String.format("Returned list of deals found by price which %s %s ", operator, price));
-                return result;
-            }
+        Predicate predicate;
+        switch (operator) {
+            case NOT_EQUAL:
+                predicate = builder.notEqual(deal.get("price"), price);
+                break;
+            case GREATER_THAN:
+                predicate = builder.greaterThan(deal.get("price"), price);
+                break;
+            case GREATER_THAN_OR_EQUAL:
+                predicate = builder.greaterThanOrEqualTo(deal.get("price"), price);
+                break;
+            case LESS_THAN:
+                predicate = builder.lessThan(deal.get("price"), price);
+                break;
+            case LESS_THAN_OR_EQUAL:
+                predicate = builder.lessThanOrEqualTo(deal.get("price"), price);
+                break;
+            default:
+                predicate = builder.equal(deal.get("price"), price);
         }
+
+        criteriaQuery.select(deal).where(predicate);
+        TypedQuery<Deal> query = session.createQuery(criteriaQuery);
+
+        List<Deal> result = query.getResultList();
+        logger.info(String.format("Returned list of deals found by price which %s %s ", operator, price));
+        return result;
     }
 
-    public static List<Deal> getByCustomerID(Integer customerID){
-        try (SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory()) {
-            try (Session session = sessionFactory.openSession()) {
-                CriteriaBuilder builder = session.getCriteriaBuilder();
+    public static List<Deal> getByCustomerID(Session session, Integer customerID) {
 
-                CriteriaQuery<Deal> criteriaQuery = builder.createQuery(Deal.class);
-                Root<Deal> deal = criteriaQuery.from(Deal.class);
-                Join<Deal, Customer> customerJoin = deal.join(Deal_.CUSTOMER);
+        CriteriaBuilder builder = session.getCriteriaBuilder();
+
+        CriteriaQuery<Deal> criteriaQuery = builder.createQuery(Deal.class);
+        Root<Deal> deal = criteriaQuery.from(Deal.class);
+        Join<Deal, Customer> customerJoin = deal.join(Deal_.CUSTOMER);
 
 
-                Predicate predicate = builder.equal(customerJoin.get(Customer_.CUSTOMER_ID), customerID);
+        Predicate predicate = builder.equal(customerJoin.get(Customer_.CUSTOMER_ID), customerID);
 
-                criteriaQuery.select(deal).where(predicate);
-                TypedQuery<Deal> query = session.createQuery(criteriaQuery);
+        criteriaQuery.select(deal).where(predicate);
+        TypedQuery<Deal> query = session.createQuery(criteriaQuery);
 
-                List<Deal> result = query.getResultList();
-                logger.info(String.format("Returned list of deals that made by customer with id %s ", customerID));
-                return result;
-            }
-        }
+        List<Deal> result = query.getResultList();
+        logger.info(String.format("Returned list of deals that made by customer with id %s ", customerID));
+        return result;
     }
 
-    public static List<Deal> getByProductID(Integer productID){
-        try (SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory()) {
-            try (Session session = sessionFactory.openSession()) {
-                CriteriaBuilder builder = session.getCriteriaBuilder();
+    public static List<Deal> getByProductID(Session session, Integer productID) {
 
-                CriteriaQuery<Deal> criteriaQuery = builder.createQuery(Deal.class);
-                Root<Deal> deal = criteriaQuery.from(Deal.class);
-                Join<Deal, Product> productJoin = deal.join(Deal_.PRODUCT);
+        CriteriaBuilder builder = session.getCriteriaBuilder();
 
-                Predicate predicate = builder.equal(productJoin.get(Product_.PRODUCT_ID), productID);
-                criteriaQuery.select(deal).where(predicate);
-                TypedQuery<Deal> query = session.createQuery(criteriaQuery);
+        CriteriaQuery<Deal> criteriaQuery = builder.createQuery(Deal.class);
+        Root<Deal> deal = criteriaQuery.from(Deal.class);
+        Join<Deal, Product> productJoin = deal.join(Deal_.PRODUCT);
 
-                List<Deal> result = query.getResultList();
-                logger.info(String.format("Returned list of deals that references to product with id %s ", productID));
-                return result;
-            }
-        }
+        Predicate predicate = builder.equal(productJoin.get(Product_.PRODUCT_ID), productID);
+        criteriaQuery.select(deal).where(predicate);
+        TypedQuery<Deal> query = session.createQuery(criteriaQuery);
+
+        List<Deal> result = query.getResultList();
+        logger.info(String.format("Returned list of deals that references to product with id %s ", productID));
+        return result;
     }
 
-    public static List<Deal> getByPeriod(Long startRange, Long endRange){
+    public static List<Deal> getByPeriod(Session session, Long startRange, Long endRange) {
 
-        try (SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory()) {
-            try (Session session = sessionFactory.openSession()) {
-                CriteriaBuilder builder = session.getCriteriaBuilder();
 
-                CriteriaQuery<Deal> criteriaQuery = builder.createQuery(Deal.class);
-                Root<Deal> deal = criteriaQuery.from(Deal.class);
+        CriteriaBuilder builder = session.getCriteriaBuilder();
 
-                Predicate predicate = builder.between(deal.get(Deal_.DEAL_DATE), startRange, endRange);
+        CriteriaQuery<Deal> criteriaQuery = builder.createQuery(Deal.class);
+        Root<Deal> deal = criteriaQuery.from(Deal.class);
 
-                criteriaQuery.select(deal).where(predicate);
-                TypedQuery<Deal> query = session.createQuery(criteriaQuery);
+        Predicate predicate = builder.between(deal.get(Deal_.DEAL_DATE), startRange, endRange);
 
-                List<Deal> result = query.getResultList();
-                logger.info(String.format("Returned list of deals that was made between %s and %s ", new Timestamp(startRange), new Timestamp(endRange)));
-                return result;
-            }
-        }
+        criteriaQuery.select(deal).where(predicate);
+        TypedQuery<Deal> query = session.createQuery(criteriaQuery);
+
+        List<Deal> result = query.getResultList();
+        logger.info(String.format("Returned list of deals that was made between %s and %s ", new Timestamp(startRange), new Timestamp(endRange)));
+        return result;
     }
 
 }
