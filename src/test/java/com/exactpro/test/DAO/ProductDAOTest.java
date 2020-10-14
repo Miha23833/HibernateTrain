@@ -3,10 +3,13 @@ package com.exactpro.test.DAO;
 import com.exactpro.DAO.ComparisonOperator;
 import com.exactpro.DAO.GenericDAO;
 import com.exactpro.DAO.ProductDAO;
+import com.exactpro.DAO.SingleSessionFactory;
 import com.exactpro.entities.Customer;
 import com.exactpro.entities.Deal;
 import com.exactpro.entities.Product;
 import com.exactpro.test.common.CommonUnitTests;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.jupiter.api.AfterEach;
@@ -20,6 +23,7 @@ import java.util.List;
 class ProductDAOTest {
 
     Product product;
+    private final SessionFactory sf = SingleSessionFactory.getInstance();
 
     @Before
     public void launchAllTests() throws SQLException, ClassNotFoundException {
@@ -44,8 +48,10 @@ class ProductDAOTest {
 
     @Test
     void getByID() {
-        int id = GenericDAO.insertEntity(product);
-        Product newProduct = ProductDAO.getByID(id);
+
+        int id = GenericDAO.insertEntity(sf.openSession(), product);
+
+        Product newProduct = ProductDAO.getByID(sf.openSession(), id);
 
         Assert.assertEquals(product.getProductID(), newProduct.getProductID());
         Assert.assertEquals(product.getProductName(), newProduct.getProductName());
@@ -55,15 +61,19 @@ class ProductDAOTest {
 
     @Test
     void getAllProducts() {
+
+        Session insertSession = sf.openSession();
+        insertSession.beginTransaction();
         for (int i = 0; i < 10; i++) {
             Product products = new Product();
 
             products.setPrice(new BigDecimal(50000));
             products.setDescription("Some desc");
             products.setProductName("Name");
-            GenericDAO.insertEntity(products);
+            GenericDAO.insertEntity(insertSession, products);
         }
-        List<Product> productsList = ProductDAO.getAllProducts();
+        insertSession.getTransaction().commit();
+        List<Product> productsList = ProductDAO.getAllProducts(sf.openSession());
 
         Assert.assertEquals(productsList.size(), 10);
 
@@ -76,8 +86,8 @@ class ProductDAOTest {
 
     @Test
     void getByName() {
-        GenericDAO.insertEntity(product);
-        List<Product> products = ProductDAO.getByName("Name");
+        GenericDAO.insertEntity(sf.openSession(), product);
+        List<Product> products = ProductDAO.getByName(sf.openSession(), "Name");
         for (Product compProduct : products) {
             Assert.assertEquals(product.getProductName(), compProduct.getProductName());
         }
@@ -85,26 +95,29 @@ class ProductDAOTest {
 
     @Test
     void getByPrice() {
+        Session insertSession = sf.openSession();
+        insertSession.beginTransaction();
         for (int i = 1; i < 6; i++) {
             Product productToInsert = new Product();
             productToInsert.setProductName("Product to getByPrice");
             productToInsert.setDescription("Just a product");
             productToInsert.setPrice(new BigDecimal(i));
-            GenericDAO.insertEntity(productToInsert);
+            GenericDAO.insertEntity(insertSession, productToInsert);
         }
+        insertSession.getTransaction().commit();
 
         // Сравнение по количеству возвращённых записей для учитывания всех енумов
-        Assert.assertEquals(1, ProductDAO.getByPrice(new BigDecimal(5), ComparisonOperator.EQUAL).size());
+        Assert.assertEquals(1, ProductDAO.getByPrice(sf.openSession(), new BigDecimal(5), ComparisonOperator.EQUAL).size());
 
-        Assert.assertEquals(4, ProductDAO.getByPrice(new BigDecimal(5), ComparisonOperator.NOT_EQUAL).size());
+        Assert.assertEquals(4, ProductDAO.getByPrice(sf.openSession(), new BigDecimal(5), ComparisonOperator.NOT_EQUAL).size());
 
-        Assert.assertEquals(2, ProductDAO.getByPrice(new BigDecimal(3), ComparisonOperator.GREATER_THAN).size());
+        Assert.assertEquals(2, ProductDAO.getByPrice(sf.openSession(), new BigDecimal(3), ComparisonOperator.GREATER_THAN).size());
 
-        Assert.assertEquals(3, ProductDAO.getByPrice(new BigDecimal(3), ComparisonOperator.GREATER_THAN_OR_EQUAL).size());
+        Assert.assertEquals(3, ProductDAO.getByPrice(sf.openSession(), new BigDecimal(3), ComparisonOperator.GREATER_THAN_OR_EQUAL).size());
 
-        Assert.assertEquals(2, ProductDAO.getByPrice(new BigDecimal(3), ComparisonOperator.LESS_THAN).size());
+        Assert.assertEquals(2, ProductDAO.getByPrice(sf.openSession(), new BigDecimal(3), ComparisonOperator.LESS_THAN).size());
 
-        Assert.assertEquals(3, ProductDAO.getByPrice(new BigDecimal(3), ComparisonOperator.LESS_THAN_OR_EQUAL).size());
+        Assert.assertEquals(3, ProductDAO.getByPrice(sf.openSession(), new BigDecimal(3), ComparisonOperator.LESS_THAN_OR_EQUAL).size());
 
     }
 
@@ -112,7 +125,10 @@ class ProductDAOTest {
     void getBoughtByCustomer() {
         Customer customer = new Customer("Unit", "Test", (short) 15, null);
 
-        GenericDAO.insertEntity(customer); GenericDAO.insertEntity(product);
+        Session insertSession = sf.openSession();
+        insertSession.beginTransaction();
+        GenericDAO.insertEntity(insertSession, customer);
+        GenericDAO.insertEntity(insertSession, product);
 
         for (int i = 0; i < 5; i++) {
             Deal deal = new Deal();
@@ -121,10 +137,11 @@ class ProductDAOTest {
             deal.setPrice(product.getPrice());
             deal.setDiscount(new BigDecimal(0));
             deal.setDealDate(System.currentTimeMillis());
-            GenericDAO.insertEntity(deal);
+            GenericDAO.insertEntity(insertSession, deal);
         }
+        insertSession.getTransaction().commit();
 
-        List<Product> products = ProductDAO.getBoughtByCustomer(customer.getCustomerID());
+        List<Product> products = ProductDAO.getBoughtByCustomer(sf.openSession(), customer.getCustomerID());
 
         Assert.assertEquals(1, products.size());
 

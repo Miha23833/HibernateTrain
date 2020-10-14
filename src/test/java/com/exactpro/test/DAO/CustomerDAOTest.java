@@ -3,10 +3,14 @@ package com.exactpro.test.DAO;
 import com.exactpro.DAO.ComparisonOperator;
 import com.exactpro.DAO.CustomerDAO;
 import com.exactpro.DAO.GenericDAO;
+import com.exactpro.DAO.SingleSessionFactory;
 import com.exactpro.entities.Customer;
 import com.exactpro.entities.Deal;
 import com.exactpro.entities.Product;
 import com.exactpro.test.common.CommonUnitTests;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.jupiter.api.AfterEach;
@@ -19,7 +23,9 @@ import java.util.List;
 
 class CustomerDAOTest {
 
-    Customer customer;
+    private Customer customer;
+
+    private final SessionFactory sf = SingleSessionFactory.getInstance();
 
     @Before
     public void launchAllTests() throws SQLException, ClassNotFoundException {
@@ -40,12 +46,17 @@ class CustomerDAOTest {
 
     @Test
     void getByName() {
+
+        Session insertSession = sf.openSession();
+        insertSession.beginTransaction();
+
         for (int i = 0; i < 5; i++) {
             customer = new Customer("TEST"+i, "UNIT", (short) 20, null);
-            GenericDAO.insertEntity(customer);
+            GenericDAO.insertEntity(insertSession, customer);
         }
+        insertSession.getTransaction().commit();
 
-        List<Customer> customers = CustomerDAO.getByName("TEST3");
+        List<Customer> customers = CustomerDAO.getByName(sf.openSession(), "TEST3");
 
         Assert.assertEquals(1, customers.size());
         for (Customer compCustomer: customers) {
@@ -55,12 +66,16 @@ class CustomerDAOTest {
 
     @Test
     void getBySurname() {
+
+        Session session = sf.openSession();
+        session.beginTransaction();
         for (int i = 0; i < 5; i++) {
             customer = new Customer("TEST", "UNIT"+i, (short) 20, null);
-            GenericDAO.insertEntity(customer);
+            GenericDAO.insertEntity(session, customer);
         }
+        session.getTransaction().commit();
 
-        List<Customer> customers = CustomerDAO.getBySurname("UNIT3");
+        List<Customer> customers = CustomerDAO.getBySurname(sf.openSession(), "UNIT3");
 
         Assert.assertEquals(1, customers.size());
         for (Customer compCustomer: customers) {
@@ -70,8 +85,12 @@ class CustomerDAOTest {
 
     @Test
     void getByID() {
-        GenericDAO.insertEntity(customer);
-        Customer compCustomer = CustomerDAO.getByID(customer.getCustomerID());
+        Session session = sf.openSession();
+        session.beginTransaction();
+        GenericDAO.insertEntity(session, customer);
+        session.getTransaction().commit();
+
+        Customer compCustomer = CustomerDAO.getByID(sf.openSession(), customer.getCustomerID());
 
         Assert.assertEquals(customer.getName(), compCustomer.getName());
         Assert.assertEquals(customer.getSurname(), compCustomer.getSurname());
@@ -82,12 +101,15 @@ class CustomerDAOTest {
 
     @Test
     void getAllCustomers() {
+        Session session = sf.openSession();
+        session.beginTransaction();
         for (int i = 0; i < 50; i++) {
             Customer newCustomer = new Customer("TEST"+i, "UNIT"+i, (short) 20, null);
-            GenericDAO.insertEntity(newCustomer);
+            GenericDAO.insertEntity(session, newCustomer);
         }
+        session.getTransaction().commit();
 
-        List<Customer> customers = CustomerDAO.getAllCustomers();
+        List<Customer> customers = CustomerDAO.getAllCustomers(sf.openSession());
 
         Assert.assertEquals(customers.size(), 50);
 
@@ -100,26 +122,29 @@ class CustomerDAOTest {
 
     @Test
     void getByAge() {
+        Session session = sf.openSession();
+        session.beginTransaction();
         for (int i = 0; i < 10; i++) {
             Customer newCustomer = new Customer("TEST", "UNIT", (short) i, null);
-            GenericDAO.insertEntity(newCustomer);
+            GenericDAO.insertEntity(session, newCustomer);
         }
+        session.getTransaction().commit();
 
-        List<Customer> customers = CustomerDAO.getByAge((short)8, ComparisonOperator.EQUAL);
+        List<Customer> customers = CustomerDAO.getByAge(sf.openSession(), (short)8, ComparisonOperator.EQUAL);
         Assert.assertEquals(customers.size(), 1);
         Assert.assertEquals(customers.get(0).getAge(), (short)8);
 
         // Сравнение по количеству возвращённых записей для учитывания всех енумов
 
-        Assert.assertEquals(9, CustomerDAO.getByAge((short) 3, ComparisonOperator.NOT_EQUAL).size());
+        Assert.assertEquals(9, CustomerDAO.getByAge(sf.openSession(), (short) 3, ComparisonOperator.NOT_EQUAL).size());
 
-        Assert.assertEquals(6, CustomerDAO.getByAge((short) 3, ComparisonOperator.GREATER_THAN).size());
+        Assert.assertEquals(6, CustomerDAO.getByAge(sf.openSession(), (short) 3, ComparisonOperator.GREATER_THAN).size());
 
-        Assert.assertEquals(7, CustomerDAO.getByAge((short) 3, ComparisonOperator.GREATER_THAN_OR_EQUAL).size());
+        Assert.assertEquals(7, CustomerDAO.getByAge(sf.openSession(), (short) 3, ComparisonOperator.GREATER_THAN_OR_EQUAL).size());
 
-        Assert.assertEquals(7, CustomerDAO.getByAge((short) 7, ComparisonOperator.LESS_THAN).size());
+        Assert.assertEquals(7, CustomerDAO.getByAge(sf.openSession(), (short) 7, ComparisonOperator.LESS_THAN).size());
 
-        Assert.assertEquals(8, CustomerDAO.getByAge((short) 7, ComparisonOperator.LESS_THAN_OR_EQUAL).size());
+        Assert.assertEquals(8, CustomerDAO.getByAge(sf.openSession(), (short) 7, ComparisonOperator.LESS_THAN_OR_EQUAL).size());
     }
 
     @Test
@@ -130,9 +155,10 @@ class CustomerDAOTest {
         product.setDescription("Some desc");
         product.setProductName("Name");
 
-        GenericDAO.insertEntity(customer);
-
-        GenericDAO.insertEntity(product);
+        Session session = sf.openSession();
+        session.beginTransaction();
+        GenericDAO.insertEntity(session, customer);
+        GenericDAO.insertEntity(session, product);
 
         for (int i = 0; i < 5; i++) {
             Customer newCustomer = new Customer("TEST", "UNIT", (short) i, null);
@@ -144,11 +170,12 @@ class CustomerDAOTest {
             deal.setDiscount(new BigDecimal(0));
             deal.setDealDate(System.currentTimeMillis());
 
-            GenericDAO.insertEntity(newCustomer);
-            GenericDAO.insertEntity(deal);
+            GenericDAO.insertEntity(session, newCustomer);
+            GenericDAO.insertEntity(session, deal);
         }
+        session.getTransaction().commit();
 
-        List<Customer> customers = CustomerDAO.getWhoBoughtProduct(product.getProductID());
+        List<Customer> customers = CustomerDAO.getWhoBoughtProduct(sf.openSession(), product.getProductID());
 
         Assert.assertEquals(1, customers.size());
 

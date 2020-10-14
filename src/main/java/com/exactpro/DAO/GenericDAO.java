@@ -4,12 +4,7 @@ import com.exactpro.loggers.StaticLogger;
 import org.apache.log4j.Logger;
 import org.hibernate.Hibernate;
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
-import org.hibernate.cfg.Configuration;
-import org.hibernate.mapping.PersistentClass;
 
-import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
@@ -29,9 +24,7 @@ public class GenericDAO {
     }
 
     public static <T> void updateTableByEntity(Session session, T entity) {
-        Transaction transaction = session.beginTransaction();
         session.update(entity);
-        transaction.commit();
         logger.info(String.format("Entity %s was updated to database", entity.getClass().toString()));
     }
 
@@ -61,9 +54,7 @@ public class GenericDAO {
     }
 
     public static <T> void deleteEntityFromTable(Session session, T entity) {
-        Transaction transaction = session.beginTransaction();
         session.delete(entity);
-        transaction.commit();
         logger.info(String.format("Entity %s was deleted from DB", entity.getClass().toString()));
     }
 

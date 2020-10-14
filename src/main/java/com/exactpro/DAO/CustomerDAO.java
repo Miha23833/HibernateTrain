@@ -52,11 +52,11 @@ public class CustomerDAO {
     }
 
     public static Customer getByID(Session session, int id) {
-        return GenericDAO.selectByID(Customer.class, id);
+        return GenericDAO.selectByID(session, Customer.class, id);
     }
 
     public static List<Customer> getAllCustomers(Session session) {
-        return GenericDAO.gelAllEntities(Customer.class);
+        return GenericDAO.gelAllEntities(session, Customer.class);
     }
 
     public static List<Customer> getByAge(Session session, short age, ComparisonOperator operator) {

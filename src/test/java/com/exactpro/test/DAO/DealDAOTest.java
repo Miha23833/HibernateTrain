@@ -3,10 +3,13 @@ package com.exactpro.test.DAO;
 import com.exactpro.DAO.ComparisonOperator;
 import com.exactpro.DAO.DealDAO;
 import com.exactpro.DAO.GenericDAO;
+import com.exactpro.DAO.SingleSessionFactory;
 import com.exactpro.entities.Customer;
 import com.exactpro.entities.Deal;
 import com.exactpro.entities.Product;
 import com.exactpro.test.common.CommonUnitTests;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.jupiter.api.AfterEach;
@@ -22,6 +25,7 @@ class DealDAOTest {
     private Deal deal;
     private Product product;
     private Customer customer;
+    private final SessionFactory sf = SingleSessionFactory.getInstance();
 
     @Before
     public void launchAllTests() throws SQLException, ClassNotFoundException {
@@ -46,29 +50,32 @@ class DealDAOTest {
     void getByDate() {
         Long compDate = deal.getDealDate();
 
-        GenericDAO.insertEntity(customer);
-        GenericDAO.insertEntity(product);
-        GenericDAO.insertEntity(deal);
+        Session insertSession = sf.openSession();
+        insertSession.beginTransaction();
+        GenericDAO.insertEntity(insertSession, customer);
+        GenericDAO.insertEntity(insertSession, product);
+        GenericDAO.insertEntity(insertSession, deal);
 
         for (int i = 1; i < 6; i++) {
             Deal newDeal = new Deal(customer, product, compDate-i*1000, new BigDecimal(50), new BigDecimal(0));
-            GenericDAO.insertEntity(newDeal);
+            GenericDAO.insertEntity(insertSession, newDeal);
             newDeal = new Deal(customer, product, compDate+i*1000, new BigDecimal(50), new BigDecimal(0));
-            GenericDAO.insertEntity(newDeal);
+            GenericDAO.insertEntity(insertSession, newDeal);
         }
+        insertSession.getTransaction().commit();
 
         // Сравнение по количеству возвращённых записей для учитывания всех енумов
-        Assert.assertEquals(1, DealDAO.getByDate(compDate, ComparisonOperator.EQUAL).size());
+        Assert.assertEquals(1, DealDAO.getByDate(sf.openSession(), compDate, ComparisonOperator.EQUAL).size());
 
-        Assert.assertEquals(10, DealDAO.getByDate(compDate, ComparisonOperator.NOT_EQUAL).size());
+        Assert.assertEquals(10, DealDAO.getByDate(sf.openSession(), compDate, ComparisonOperator.NOT_EQUAL).size());
 
-        Assert.assertEquals(5, DealDAO.getByDate(compDate, ComparisonOperator.GREATER_THAN).size());
+        Assert.assertEquals(5, DealDAO.getByDate(sf.openSession(), compDate, ComparisonOperator.GREATER_THAN).size());
 
-        Assert.assertEquals(6, DealDAO.getByDate(compDate, ComparisonOperator.GREATER_THAN_OR_EQUAL).size());
+        Assert.assertEquals(6, DealDAO.getByDate(sf.openSession(), compDate, ComparisonOperator.GREATER_THAN_OR_EQUAL).size());
 
-        Assert.assertEquals(5, DealDAO.getByDate(compDate, ComparisonOperator.LESS_THAN).size());
+        Assert.assertEquals(5, DealDAO.getByDate(sf.openSession(), compDate, ComparisonOperator.LESS_THAN).size());
 
-        Assert.assertEquals(6, DealDAO.getByDate(compDate, ComparisonOperator.LESS_THAN_OR_EQUAL).size());
+        Assert.assertEquals(6, DealDAO.getByDate(sf.openSession(), compDate, ComparisonOperator.LESS_THAN_OR_EQUAL).size());
     }
 
     @Test
@@ -76,29 +83,31 @@ class DealDAOTest {
         deal.setDiscount(new BigDecimal(50));
         BigDecimal compDiscount = deal.getDiscount();
 
-        GenericDAO.insertEntity(customer);
-        GenericDAO.insertEntity(product);
-        GenericDAO.insertEntity(deal);
+        Session insertSession = sf.openSession();
+        insertSession.beginTransaction();
+        GenericDAO.insertEntity(insertSession, customer);
+        GenericDAO.insertEntity(insertSession, product);
+        GenericDAO.insertEntity(insertSession, deal);
 
         for (int i = 1; i < 6; i++) {
             Deal newDeal = new Deal(customer, product, System.currentTimeMillis(), new BigDecimal(50), new BigDecimal(50+i));
-            GenericDAO.insertEntity(newDeal);
+            GenericDAO.insertEntity(insertSession, newDeal);
             newDeal = new Deal(customer, product, System.currentTimeMillis(), new BigDecimal(50), new BigDecimal(50-i));
-            GenericDAO.insertEntity(newDeal);
+            GenericDAO.insertEntity(insertSession, newDeal);
         }
-
+        insertSession.getTransaction().commit();
         // Сравнение по количеству возвращённых записей для учитывания всех енумов
-        Assert.assertEquals(1, DealDAO.getByDiscount(compDiscount, ComparisonOperator.EQUAL).size());
+        Assert.assertEquals(1, DealDAO.getByDiscount(sf.openSession(), compDiscount, ComparisonOperator.EQUAL).size());
 
-        Assert.assertEquals(10, DealDAO.getByDiscount(compDiscount, ComparisonOperator.NOT_EQUAL).size());
+        Assert.assertEquals(10, DealDAO.getByDiscount(sf.openSession(), compDiscount, ComparisonOperator.NOT_EQUAL).size());
 
-        Assert.assertEquals(5, DealDAO.getByDiscount(compDiscount, ComparisonOperator.GREATER_THAN).size());
+        Assert.assertEquals(5, DealDAO.getByDiscount(sf.openSession(), compDiscount, ComparisonOperator.GREATER_THAN).size());
 
-        Assert.assertEquals(6, DealDAO.getByDiscount(compDiscount, ComparisonOperator.GREATER_THAN_OR_EQUAL).size());
+        Assert.assertEquals(6, DealDAO.getByDiscount(sf.openSession(), compDiscount, ComparisonOperator.GREATER_THAN_OR_EQUAL).size());
 
-        Assert.assertEquals(5, DealDAO.getByDiscount(compDiscount, ComparisonOperator.LESS_THAN).size());
+        Assert.assertEquals(5, DealDAO.getByDiscount(sf.openSession(), compDiscount, ComparisonOperator.LESS_THAN).size());
 
-        Assert.assertEquals(6, DealDAO.getByDiscount(compDiscount, ComparisonOperator.LESS_THAN_OR_EQUAL).size());
+        Assert.assertEquals(6, DealDAO.getByDiscount(sf.openSession(), compDiscount, ComparisonOperator.LESS_THAN_OR_EQUAL).size());
     }
 
     @Test
@@ -106,47 +115,55 @@ class DealDAOTest {
         deal.setPrice(new BigDecimal(50));
         BigDecimal compPrice = deal.getPrice();
 
-        GenericDAO.insertEntity(customer);
-        GenericDAO.insertEntity(product);
-        GenericDAO.insertEntity(deal);
+        Session insertSession = sf.openSession();
+        insertSession.beginTransaction();
+        GenericDAO.insertEntity(insertSession, customer);
+        GenericDAO.insertEntity(insertSession, product);
+        GenericDAO.insertEntity(insertSession, deal);
 
         for (int i = 1; i < 6; i++) {
             Deal newDeal = new Deal(customer, product, System.currentTimeMillis(), new BigDecimal(50+i), new BigDecimal(50));
-            GenericDAO.insertEntity(newDeal);
+            GenericDAO.insertEntity(insertSession, newDeal);
             newDeal = new Deal(customer, product, System.currentTimeMillis(), new BigDecimal(50-i), new BigDecimal(50));
-            GenericDAO.insertEntity(newDeal);
+            GenericDAO.insertEntity(insertSession, newDeal);
         }
+        insertSession.getTransaction().commit();
 
         // Сравнение по количеству возвращённых записей для учитывания всех енумов
-        Assert.assertEquals(1, DealDAO.getByPrice(compPrice, ComparisonOperator.EQUAL).size());
+        Assert.assertEquals(1, DealDAO.getByPrice(sf.openSession(), compPrice, ComparisonOperator.EQUAL).size());
 
-        Assert.assertEquals(10, DealDAO.getByPrice(compPrice, ComparisonOperator.NOT_EQUAL).size());
+        Assert.assertEquals(10, DealDAO.getByPrice(sf.openSession(), compPrice, ComparisonOperator.NOT_EQUAL).size());
 
-        Assert.assertEquals(5, DealDAO.getByPrice(compPrice, ComparisonOperator.GREATER_THAN).size());
+        Assert.assertEquals(5, DealDAO.getByPrice(sf.openSession(), compPrice, ComparisonOperator.GREATER_THAN).size());
 
-        Assert.assertEquals(6, DealDAO.getByPrice(compPrice, ComparisonOperator.GREATER_THAN_OR_EQUAL).size());
+        Assert.assertEquals(6, DealDAO.getByPrice(sf.openSession(), compPrice, ComparisonOperator.GREATER_THAN_OR_EQUAL).size());
 
-        Assert.assertEquals(5, DealDAO.getByPrice(compPrice, ComparisonOperator.LESS_THAN).size());
+        Assert.assertEquals(5, DealDAO.getByPrice(sf.openSession(), compPrice, ComparisonOperator.LESS_THAN).size());
 
-        Assert.assertEquals(6, DealDAO.getByPrice(compPrice, ComparisonOperator.LESS_THAN_OR_EQUAL).size());
+        Assert.assertEquals(6, DealDAO.getByPrice(sf.openSession(), compPrice, ComparisonOperator.LESS_THAN_OR_EQUAL).size());
     }
 
     @Test
     void getByCustomerID() {
-        int id = GenericDAO.insertEntity(customer);
-        GenericDAO.insertEntity(product);
-        GenericDAO.insertEntity(deal);
+
+        Session insertSession = sf.openSession();
+        insertSession.beginTransaction();
+
+        int id = GenericDAO.insertEntity(insertSession, customer);
+        GenericDAO.insertEntity(insertSession, product);
+        GenericDAO.insertEntity(insertSession, deal);
 
         for (int i = 0; i < 3; i++) {
             Customer otherCustomer = new Customer("UNIT", "TEST", (short) 10, null);
-            GenericDAO.insertEntity(otherCustomer);
+            GenericDAO.insertEntity(insertSession, otherCustomer);
             for (int j = 0; j < 4; j++) {
                 Deal otherDeal = new Deal(otherCustomer, product, System.currentTimeMillis(), product.getPrice(), new BigDecimal(0));
-                GenericDAO.insertEntity(otherDeal);
+                GenericDAO.insertEntity(insertSession, otherDeal);
             }
         }
+        insertSession.getTransaction().commit();
 
-        List<Deal> deals = DealDAO.getByCustomerID(id);
+        List<Deal> deals = DealDAO.getByCustomerID(sf.openSession(), id);
 
         Assert.assertEquals(1, deals.size());
 
@@ -163,20 +180,24 @@ class DealDAOTest {
 
     @Test
     void getByProductID() {
-        GenericDAO.insertEntity(customer);
-        int id = GenericDAO.insertEntity(product);
-        GenericDAO.insertEntity(deal);
+
+        Session insertSession = sf.openSession();
+        insertSession.beginTransaction();
+        GenericDAO.insertEntity(insertSession, customer);
+        int id = GenericDAO.insertEntity(insertSession, product);
+        GenericDAO.insertEntity(insertSession, deal);
 
         for (int i = 0; i < 3; i++) {
             Product otherProduct = new Product("Чай беседа", "Лучший чай", new BigDecimal(i) );
-            GenericDAO.insertEntity(otherProduct);
+            GenericDAO.insertEntity(insertSession, otherProduct);
             for (int j = 0; j < 4; j++) {
                 Deal otherDeal = new Deal(customer, otherProduct, System.currentTimeMillis(), product.getPrice(), new BigDecimal(0));
-                GenericDAO.insertEntity(otherDeal);
+                GenericDAO.insertEntity(insertSession, otherDeal);
             }
         }
+        insertSession.getTransaction().commit();
 
-        List<Deal> deals = DealDAO.getByProductID(id);
+        List<Deal> deals = DealDAO.getByProductID(sf.openSession(), id);
 
         Assert.assertEquals(1, deals.size());
 
@@ -195,18 +216,21 @@ class DealDAOTest {
     void getByPeriod() {
         Long compDate = deal.getDealDate();
 
-        GenericDAO.insertEntity(customer);
-        GenericDAO.insertEntity(product);
-        GenericDAO.insertEntity(deal);
+        Session insertSession = sf.openSession();
+        insertSession.beginTransaction();
+        GenericDAO.insertEntity(insertSession, customer);
+        GenericDAO.insertEntity(insertSession, product);
+        GenericDAO.insertEntity(insertSession, deal);
 
         for (int i = 1; i < 6; i++) {
             Deal newDeal = new Deal(customer, product, compDate-i*1000, new BigDecimal(50), new BigDecimal(0));
-            GenericDAO.insertEntity(newDeal);
+            GenericDAO.insertEntity(insertSession, newDeal);
             newDeal = new Deal(customer, product, compDate+i*1000, new BigDecimal(50), new BigDecimal(0));
-            GenericDAO.insertEntity(newDeal);
+            GenericDAO.insertEntity(insertSession, newDeal);
         }
+        insertSession.getTransaction().commit();
 
-        List<Deal> deals = DealDAO.getByPeriod(compDate-3000,compDate+3000);
+        List<Deal> deals = DealDAO.getByPeriod(sf.openSession(), compDate-3000,compDate+3000);
 
         Assert.assertEquals(7, deals.size());
 
