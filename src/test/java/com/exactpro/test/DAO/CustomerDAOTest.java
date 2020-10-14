@@ -53,7 +53,7 @@ class CustomerDAOTest {
 
         List<Customer> customers = CustomerDAO.getByName("TEST3");
 
-        Assert.assertEquals(customers.size(), 1);
+        Assert.assertEquals(1, customers.size());
         for (Customer compCustomer: customers) {
             Assert.assertEquals(compCustomer.getName(), "TEST3");
         }
@@ -68,9 +68,9 @@ class CustomerDAOTest {
 
         List<Customer> customers = CustomerDAO.getBySurname("UNIT3");
 
-        Assert.assertEquals(customers.size(), 1);
+        Assert.assertEquals(1, customers.size());
         for (Customer compCustomer: customers) {
-            Assert.assertEquals(compCustomer.getSurname(), "UNIT3");
+            Assert.assertEquals("UNIT3", compCustomer.getSurname());
         }
     }
 
@@ -79,10 +79,10 @@ class CustomerDAOTest {
         GenericDAO.insertEntity(customer);
         Customer compCustomer = CustomerDAO.getByID(customer.getCustomerID());
 
-        Assert.assertEquals(compCustomer.getName(), customer.getName());
-        Assert.assertEquals(compCustomer.getSurname(), customer.getSurname());
-        Assert.assertEquals(compCustomer.getAge(), customer.getAge());
-        Assert.assertEquals(compCustomer.getCustomerID(), customer.getCustomerID());
+        Assert.assertEquals(customer.getName(), compCustomer.getName());
+        Assert.assertEquals(customer.getSurname(), compCustomer.getSurname());
+        Assert.assertEquals(customer.getAge(), compCustomer.getAge());
+        Assert.assertEquals(customer.getCustomerID(), compCustomer.getCustomerID());
 
     }
 
@@ -98,8 +98,8 @@ class CustomerDAOTest {
         Assert.assertEquals(customers.size(), 50);
 
         for (int i = 0; i < customers.size(); i++) {
-            Assert.assertEquals(customers.get(i).getName(), "TEST"+i);
-            Assert.assertEquals(customers.get(i).getSurname(), "UNIT"+i);
+            Assert.assertEquals("TEST"+i, customers.get(i).getName());
+            Assert.assertEquals("UNIT"+i, customers.get(i).getSurname());
         }
 
     }
@@ -117,15 +117,15 @@ class CustomerDAOTest {
 
         // Сравнение по количеству возвращённых записей для учитывания всех енумов
 
-        Assert.assertEquals(CustomerDAO.getByAge((short) 3, ComparisonOperator.NOT_EQUAL).size(), 9);
+        Assert.assertEquals(9, CustomerDAO.getByAge((short) 3, ComparisonOperator.NOT_EQUAL).size());
 
-        Assert.assertEquals(CustomerDAO.getByAge((short) 3, ComparisonOperator.GREATHER_THAN).size(), 6);
+        Assert.assertEquals(6, CustomerDAO.getByAge((short) 3, ComparisonOperator.GREATHER_THAN).size());
 
-        Assert.assertEquals(CustomerDAO.getByAge((short) 3, ComparisonOperator.GREATHER_THAN_OR_EQUAL).size(), 7);
+        Assert.assertEquals(7, CustomerDAO.getByAge((short) 3, ComparisonOperator.GREATHER_THAN_OR_EQUAL).size());
 
-        Assert.assertEquals(CustomerDAO.getByAge((short) 7, ComparisonOperator.LESS_THAN).size(), 7);
+        Assert.assertEquals(7, CustomerDAO.getByAge((short) 7, ComparisonOperator.LESS_THAN).size());
 
-        Assert.assertEquals(CustomerDAO.getByAge((short) 7, ComparisonOperator.LESS_THAN_OR_EQUAL).size(), 8);
+        Assert.assertEquals(8, CustomerDAO.getByAge((short) 7, ComparisonOperator.LESS_THAN_OR_EQUAL).size());
     }
 
     @Test
@@ -159,10 +159,10 @@ class CustomerDAOTest {
         Assert.assertEquals(1, customers.size());
 
         for (Customer compCustomer: customers) {
-            Assert.assertEquals(compCustomer.getAge(), customer.getAge());
-            Assert.assertEquals(compCustomer.getName(), customer.getName());
-            Assert.assertEquals(compCustomer.getSurname(), customer.getSurname());
-            Assert.assertEquals(compCustomer.getCustomerID(), customer.getCustomerID());
+            Assert.assertEquals(customer.getAge(), compCustomer.getAge());
+            Assert.assertEquals(customer.getName(), compCustomer.getName());
+            Assert.assertEquals(customer.getSurname(), compCustomer.getSurname());
+            Assert.assertEquals(customer.getCustomerID(), compCustomer.getCustomerID());
         }
     }
 }

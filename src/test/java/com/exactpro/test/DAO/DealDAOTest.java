@@ -210,6 +210,8 @@ class DealDAOTest {
 
         List<Deal> deals = DealDAO.getByPeriod(compDate-3000,compDate+3000);
 
+        Assert.assertEquals(7, deals.size());
+
         for (Deal compDeal: deals) {
             Assert.assertTrue(compDeal.getDealDate() >= compDate-3000);
             Assert.assertTrue(compDeal.getDealDate() <= compDate+3000);

@@ -68,10 +68,10 @@ class ProductDAOTest {
         Assert.assertEquals(productsList.size(), 10);
 
         for (Product compProduct : productsList) {
-            Assert.assertEquals(compProduct.getDeals(), (product.getDeals()));
+            Assert.assertEquals((product.getDeals()), compProduct.getDeals());
             Assert.assertEquals(0, compProduct.getPrice().compareTo(product.getPrice()));
-            Assert.assertEquals(compProduct.getDescription(), product.getDescription());
-            Assert.assertEquals(compProduct.getProductName(), product.getProductName());
+            Assert.assertEquals(product.getDescription(), compProduct.getDescription());
+            Assert.assertEquals(product.getProductName(), compProduct.getProductName());
         }
     }
 
@@ -80,7 +80,7 @@ class ProductDAOTest {
         GenericDAO.insertEntity(product);
         List<Product> products = ProductDAO.getByName("Name");
         for (Product compProduct : products) {
-            Assert.assertEquals(compProduct.getProductName(), product.getProductName());
+            Assert.assertEquals(product.getProductName(), compProduct.getProductName());
         }
     }
 
@@ -95,17 +95,17 @@ class ProductDAOTest {
         }
 
         // Сравнение по количеству возвращённых записей для учитывания всех енумов
-        Assert.assertEquals(ProductDAO.getByPrice(new BigDecimal(5), ComparisonOperator.EQUAL).size(), 1);
+        Assert.assertEquals(1, ProductDAO.getByPrice(new BigDecimal(5), ComparisonOperator.EQUAL).size());
 
-        Assert.assertEquals(ProductDAO.getByPrice(new BigDecimal(5), ComparisonOperator.NOT_EQUAL).size(), 4);
+        Assert.assertEquals(4, ProductDAO.getByPrice(new BigDecimal(5), ComparisonOperator.NOT_EQUAL).size());
 
-        Assert.assertEquals(ProductDAO.getByPrice(new BigDecimal(3), ComparisonOperator.GREATHER_THAN).size(), 2);
+        Assert.assertEquals(2, ProductDAO.getByPrice(new BigDecimal(3), ComparisonOperator.GREATHER_THAN).size());
 
-        Assert.assertEquals(ProductDAO.getByPrice(new BigDecimal(3), ComparisonOperator.GREATHER_THAN_OR_EQUAL).size(), 3);
+        Assert.assertEquals(3, ProductDAO.getByPrice(new BigDecimal(3), ComparisonOperator.GREATHER_THAN_OR_EQUAL).size());
 
-        Assert.assertEquals(ProductDAO.getByPrice(new BigDecimal(3), ComparisonOperator.LESS_THAN).size(), 2);
+        Assert.assertEquals(2, ProductDAO.getByPrice(new BigDecimal(3), ComparisonOperator.LESS_THAN).size());
 
-        Assert.assertEquals(ProductDAO.getByPrice(new BigDecimal(3), ComparisonOperator.LESS_THAN_OR_EQUAL).size(), 3);
+        Assert.assertEquals(3, ProductDAO.getByPrice(new BigDecimal(3), ComparisonOperator.LESS_THAN_OR_EQUAL).size());
 
     }
 
@@ -131,8 +131,8 @@ class ProductDAOTest {
 
         for (Product compProduct: products) {
             Assert.assertEquals(0, compProduct.getPrice().compareTo(product.getPrice()));
-            Assert.assertEquals(compProduct.getDescription(), product.getDescription());
-            Assert.assertEquals(compProduct.getProductName(), product.getProductName());
+            Assert.assertEquals(product.getDescription(), compProduct.getDescription());
+            Assert.assertEquals(product.getProductName(), compProduct.getProductName());
         }
     }
 }
