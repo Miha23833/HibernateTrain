@@ -24,77 +24,80 @@ public class ProductDAO {
     }
 
     public static List<Product> getByName(String name){
-        SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
+        try (SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory()) {
 
-        try (Session session = sessionFactory.openSession()) {
-            CriteriaBuilder builder = session.getCriteriaBuilder();
+            try (Session session = sessionFactory.openSession()) {
+                CriteriaBuilder builder = session.getCriteriaBuilder();
 
-            CriteriaQuery<Product> criteriaQuery = builder.createQuery(Product.class);
-            Root<Product> product = criteriaQuery.from(Product.class);
+                CriteriaQuery<Product> criteriaQuery = builder.createQuery(Product.class);
+                Root<Product> product = criteriaQuery.from(Product.class);
 
-            Predicate predicate = builder.equal(product.get("productName"), name);
-            criteriaQuery.select(product).where(predicate);
+                Predicate predicate = builder.equal(product.get("productName"), name);
+                criteriaQuery.select(product).where(predicate);
 
-            TypedQuery<Product> query = session.createQuery(criteriaQuery);
-            String a = query.unwrap(Query.class).getQueryString();
-            return query.getResultList();
+                TypedQuery<Product> query = session.createQuery(criteriaQuery);
+                String a = query.unwrap(Query.class).getQueryString();
+                return query.getResultList();
+            }
         }
     }
 
     public static List<Product> getByPrice(BigDecimal price, ComparisonOperator operator){
-        SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
+        try (SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory()) {
 
-        try (Session session = sessionFactory.openSession()) {
-            CriteriaBuilder builder = session.getCriteriaBuilder();
+            try (Session session = sessionFactory.openSession()) {
+                CriteriaBuilder builder = session.getCriteriaBuilder();
 
-            CriteriaQuery<Product> criteriaQuery = builder.createQuery(Product.class);
-            Root<Product> product = criteriaQuery.from(Product.class);
+                CriteriaQuery<Product> criteriaQuery = builder.createQuery(Product.class);
+                Root<Product> product = criteriaQuery.from(Product.class);
 
-            Predicate predicate;
+                Predicate predicate;
 
-            switch (operator){
-                case NOT_EQUAL:
-                    predicate = builder.notEqual(product.get("price"), price);
-                    break;
-                case GREATHER_THAN:
-                    predicate = builder.greaterThan(product.get("price"), price);
-                    break;
-                case GREATHER_THAN_OR_EQUAL:
-                    predicate = builder.greaterThanOrEqualTo(product.get("price"), price);
-                    break;
-                case LESS_THAN:
-                    predicate = builder.lessThan(product.get("price"), price);
-                    break;
-                case LESS_THAN_OR_EQUAL:
-                    predicate = builder.lessThanOrEqualTo(product.get("price"), price);
-                    break;
-                default:
-                    predicate = builder.equal(product.get("price"), price);
+                switch (operator) {
+                    case NOT_EQUAL:
+                        predicate = builder.notEqual(product.get("price"), price);
+                        break;
+                    case GREATHER_THAN:
+                        predicate = builder.greaterThan(product.get("price"), price);
+                        break;
+                    case GREATHER_THAN_OR_EQUAL:
+                        predicate = builder.greaterThanOrEqualTo(product.get("price"), price);
+                        break;
+                    case LESS_THAN:
+                        predicate = builder.lessThan(product.get("price"), price);
+                        break;
+                    case LESS_THAN_OR_EQUAL:
+                        predicate = builder.lessThanOrEqualTo(product.get("price"), price);
+                        break;
+                    default:
+                        predicate = builder.equal(product.get("price"), price);
+                }
+
+                criteriaQuery.select(product).where(predicate);
+
+                TypedQuery<Product> query = session.createQuery(criteriaQuery);
+                return query.getResultList();
             }
-
-            criteriaQuery.select(product).where(predicate);
-
-            TypedQuery<Product> query = session.createQuery(criteriaQuery);
-            return query.getResultList();
         }
     }
 
 
     public static List<Product> getBoughtByCustomer(Integer customerID){
-        SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
+        try (SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory()) {
 
-        try (Session session = sessionFactory.openSession()) {
-            return session.createNativeQuery(
-                    "SELECT\n" +
-                            "products.*\n" +
-                            "FROM deals\n" +
-                            "JOIN products\n" +
-                            "USING(product_id)\n" +
-                            "WHERE deals.customer_id = ?\n" +
-                            "GROUP BY 1,2,3,4",
-                    Product.class
-            ).setParameter(1, customerID)
-             .list();
+            try (Session session = sessionFactory.openSession()) {
+                return session.createNativeQuery(
+                        "SELECT\n" +
+                                "products.*\n" +
+                                "FROM deals\n" +
+                                "JOIN products\n" +
+                                "USING(product_id)\n" +
+                                "WHERE deals.customer_id = ?\n" +
+                                "GROUP BY 1,2,3,4",
+                        Product.class
+                ).setParameter(1, customerID)
+                        .list();
+            }
         }
     }
 }

@@ -3,7 +3,6 @@ package com.exactpro.test.DAO;
 import com.exactpro.DAO.ComparisonOperator;
 import com.exactpro.DAO.CustomerDAO;
 import com.exactpro.DAO.GenericDAO;
-import com.exactpro.DAO.ProductDAO;
 import com.exactpro.entities.Customer;
 import com.exactpro.entities.Deal;
 import com.exactpro.entities.Product;
@@ -15,13 +14,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
-import java.sql.Date;
 import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.time.LocalDate;
 import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class CustomerDAOTest {
 
