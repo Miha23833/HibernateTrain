@@ -4,6 +4,7 @@ package com.exactpro;
 import com.exactpro.entities.Customer;
 import com.exactpro.entities.Deal;
 import com.exactpro.entities.Product;
+import org.apache.log4j.Logger;
 
 import java.util.Date;
 
@@ -25,9 +26,13 @@ class Factory{
 public class Test {
 
     public static void main(String[] args) {
-        Date now = new Date(System.currentTimeMillis());
-//        now.
-        System.out.println(now);
+        Logger infoLogger = Logger.getLogger("releaseeINFO");
+        Logger warnLogger = Logger.getLogger("releaseeWARN");
+
+        infoLogger.info("info");
+        infoLogger.error("error");
+        warnLogger.warn("warn");
+        warnLogger.error("error");
 
     }
 }

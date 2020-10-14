@@ -1,20 +1,27 @@
 package com.exactpro.DAO;
 
+import com.exactpro.entities.Customer;
+import com.exactpro.entities.Deal;
 import com.exactpro.entities.Product;
+import com.exactpro.entities.metamodel.Customer_;
+import com.exactpro.entities.metamodel.Deal_;
+import com.exactpro.entities.metamodel.Product_;
+import com.exactpro.loggers.StaticLogger;
+import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.query.Query;
 
 import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
+import javax.persistence.criteria.*;
 import java.math.BigDecimal;
 import java.util.List;
 
 public class ProductDAO {
+
+    private static final Logger logger = StaticLogger.infoLogger;
+
     public static Product getByID(int id){
         return GenericDAO.selectByID(Product.class, id);
     }
@@ -36,8 +43,10 @@ public class ProductDAO {
                 criteriaQuery.select(product).where(predicate);
 
                 TypedQuery<Product> query = session.createQuery(criteriaQuery);
-                String a = query.unwrap(Query.class).getQueryString();
-                return query.getResultList();
+
+                List<Product> products = query.getResultList();
+                logger.info(String.format("Returned list of products found by name(%s) ", name));
+                return products;
             }
         }
     }
@@ -57,10 +66,10 @@ public class ProductDAO {
                     case NOT_EQUAL:
                         predicate = builder.notEqual(product.get("price"), price);
                         break;
-                    case GREATHER_THAN:
+                    case GREATER_THAN:
                         predicate = builder.greaterThan(product.get("price"), price);
                         break;
-                    case GREATHER_THAN_OR_EQUAL:
+                    case GREATER_THAN_OR_EQUAL:
                         predicate = builder.greaterThanOrEqualTo(product.get("price"), price);
                         break;
                     case LESS_THAN:
@@ -76,7 +85,10 @@ public class ProductDAO {
                 criteriaQuery.select(product).where(predicate);
 
                 TypedQuery<Product> query = session.createQuery(criteriaQuery);
-                return query.getResultList();
+
+                List<Product> products = query.getResultList();
+                logger.info(String.format("Returned list of products found by price which %s %s", operator, price));
+                return products;
             }
         }
     }
@@ -86,7 +98,7 @@ public class ProductDAO {
         try (SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory()) {
 
             try (Session session = sessionFactory.openSession()) {
-                return session.createNativeQuery(
+                List<Product> result = session.createNativeQuery(
                         "SELECT\n" +
                                 "products.*\n" +
                                 "FROM deals\n" +
@@ -94,9 +106,10 @@ public class ProductDAO {
                                 "USING(product_id)\n" +
                                 "WHERE deals.customer_id = ?\n" +
                                 "GROUP BY 1,2,3,4",
-                        Product.class
-                ).setParameter(1, customerID)
+                        Product.class).setParameter(1, customerID)
                         .list();
+                logger.info(String.format("Returned list of products that customer(%s) has bought", customerID));
+                return result;
             }
         }
     }

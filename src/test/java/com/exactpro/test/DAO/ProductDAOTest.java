@@ -3,7 +3,6 @@ package com.exactpro.test.DAO;
 import com.exactpro.DAO.ComparisonOperator;
 import com.exactpro.DAO.GenericDAO;
 import com.exactpro.DAO.ProductDAO;
-import com.exactpro.connection.DBConnection;
 import com.exactpro.entities.Customer;
 import com.exactpro.entities.Deal;
 import com.exactpro.entities.Product;
@@ -15,10 +14,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
-import java.sql.Timestamp;
-import java.util.Date;
 import java.sql.SQLException;
-import java.time.LocalDate;
 import java.util.List;
 
 class ProductDAOTest {
@@ -102,9 +98,9 @@ class ProductDAOTest {
 
         Assert.assertEquals(4, ProductDAO.getByPrice(new BigDecimal(5), ComparisonOperator.NOT_EQUAL).size());
 
-        Assert.assertEquals(2, ProductDAO.getByPrice(new BigDecimal(3), ComparisonOperator.GREATHER_THAN).size());
+        Assert.assertEquals(2, ProductDAO.getByPrice(new BigDecimal(3), ComparisonOperator.GREATER_THAN).size());
 
-        Assert.assertEquals(3, ProductDAO.getByPrice(new BigDecimal(3), ComparisonOperator.GREATHER_THAN_OR_EQUAL).size());
+        Assert.assertEquals(3, ProductDAO.getByPrice(new BigDecimal(3), ComparisonOperator.GREATER_THAN_OR_EQUAL).size());
 
         Assert.assertEquals(2, ProductDAO.getByPrice(new BigDecimal(3), ComparisonOperator.LESS_THAN).size());
 

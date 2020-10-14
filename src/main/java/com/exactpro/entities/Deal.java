@@ -42,7 +42,7 @@ public class Deal implements Serializable {
     }
 
     // customer
-    @ManyToOne(fetch = FetchType.LAZY, targetEntity = Customer.class)
+    @ManyToOne(fetch = FetchType.EAGER, targetEntity = Customer.class)
     @JoinColumn(name = "customer_id", nullable = false)
     public Customer getCustomer() {
         return customer;
@@ -54,7 +54,7 @@ public class Deal implements Serializable {
 
     // product
     @JoinColumn(name = "product_id", nullable = false)
-    @ManyToOne(fetch = FetchType.LAZY, targetEntity = Product.class)
+    @ManyToOne(fetch = FetchType.EAGER, targetEntity = Product.class)
     public Product getProduct() {
         return product;
     }

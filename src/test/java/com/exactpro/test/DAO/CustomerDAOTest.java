@@ -113,9 +113,9 @@ class CustomerDAOTest {
 
         Assert.assertEquals(9, CustomerDAO.getByAge((short) 3, ComparisonOperator.NOT_EQUAL).size());
 
-        Assert.assertEquals(6, CustomerDAO.getByAge((short) 3, ComparisonOperator.GREATHER_THAN).size());
+        Assert.assertEquals(6, CustomerDAO.getByAge((short) 3, ComparisonOperator.GREATER_THAN).size());
 
-        Assert.assertEquals(7, CustomerDAO.getByAge((short) 3, ComparisonOperator.GREATHER_THAN_OR_EQUAL).size());
+        Assert.assertEquals(7, CustomerDAO.getByAge((short) 3, ComparisonOperator.GREATER_THAN_OR_EQUAL).size());
 
         Assert.assertEquals(7, CustomerDAO.getByAge((short) 7, ComparisonOperator.LESS_THAN).size());
 

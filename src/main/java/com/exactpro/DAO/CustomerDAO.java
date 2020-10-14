@@ -1,20 +1,23 @@
 package com.exactpro.DAO;
 
 import com.exactpro.entities.Customer;
-import com.exactpro.entities.Deal;
-import com.exactpro.entities.Product;
+import com.exactpro.loggers.StaticLogger;
+import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
-//TODO: сделать логирование
+
 import javax.persistence.TypedQuery;
-import javax.persistence.criteria.*;
-import java.sql.SQLException;
-import java.util.ArrayList;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import java.util.List;
 
 
 public class CustomerDAO {
+
+    private static final Logger logger = StaticLogger.infoLogger;
 
     public static List<Customer> getByName(String name) {
         try (SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory()) {
@@ -29,6 +32,9 @@ public class CustomerDAO {
                 criteriaQuery.select(customer).where(predicate);
 
                 TypedQuery<Customer> query = session.createQuery(criteriaQuery);
+
+                logger.info(String.format("Returned list of customers found by name '%s' ", name));
+
                 return query.getResultList();
             }
         }
@@ -47,6 +53,9 @@ public class CustomerDAO {
                 criteriaQuery.select(customer).where(predicate);
 
                 TypedQuery<Customer> query = session.createQuery(criteriaQuery);
+
+                logger.info(String.format("Returned list of customers found by surname '%s' ", surname));
+
                 return query.getResultList();
             }
         }
@@ -75,10 +84,10 @@ public class CustomerDAO {
                     case NOT_EQUAL:
                         agePredicate = builder.notEqual(customer.get("age"), age);
                         break;
-                    case GREATHER_THAN:
+                    case GREATER_THAN:
                         agePredicate = builder.greaterThan(customer.get("age"), age);
                         break;
-                    case GREATHER_THAN_OR_EQUAL:
+                    case GREATER_THAN_OR_EQUAL:
                         agePredicate = builder.greaterThanOrEqualTo(customer.get("age"), age);
                         break;
                     case LESS_THAN:
@@ -93,16 +102,19 @@ public class CustomerDAO {
                 criteriaQuery.select(customer).where(agePredicate);
 
                 TypedQuery<Customer> query = session.createQuery(criteriaQuery);
-                return query.getResultList();
+
+                List<Customer> result = query.getResultList();
+                logger.info(String.format("Returned list of customers found by age which %s %s ", operator, age));
+                return result;
             }
         }
     }
 
     public static List<Customer> getWhoBoughtProduct(Integer productID){
         try (SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory()) {
-
+            // TODO: убрать нативную SQL и сделать джоином
             try (Session session = sessionFactory.openSession()) {
-                return session.createNativeQuery(
+                List<Customer> result = session.createNativeQuery(
                         "SELECT DISTINCT\n" +
                                 "customers.*\n" +
                                 "FROM customers\n" +
@@ -113,6 +125,8 @@ public class CustomerDAO {
                         Customer.class
                 ).setParameter(1, productID)
                         .list();
+                logger.info(String.format("Returned list of customers who bought product with id %s ", productID));
+                return result;
             }
         }
     }

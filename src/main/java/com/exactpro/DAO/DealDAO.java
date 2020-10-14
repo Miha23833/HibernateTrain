@@ -6,6 +6,8 @@ import com.exactpro.entities.Product;
 import com.exactpro.entities.metamodel.Customer_;
 import com.exactpro.entities.metamodel.Deal_;
 import com.exactpro.entities.metamodel.Product_;
+import com.exactpro.loggers.StaticLogger;
+import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
@@ -13,13 +15,14 @@ import org.hibernate.cfg.Configuration;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.*;
 import java.math.BigDecimal;
-import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.List;
 
 //TODO: раз уж я знаю как делать метамодели - нужно заняться и заменой SQL на нормальный типизированный код. УРА!
 
 public class DealDAO {
+
+    private static final Logger logger = StaticLogger.infoLogger;
 
     public static List<Deal> getByDate(Long date, ComparisonOperator operator){
         try (SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory()) {
@@ -37,10 +40,10 @@ public class DealDAO {
                     case NOT_EQUAL:
                         datePredicate = builder.notEqual(datePath, date);
                         break;
-                    case GREATHER_THAN:
+                    case GREATER_THAN:
                         datePredicate = builder.greaterThan(datePath, date);
                         break;
-                    case GREATHER_THAN_OR_EQUAL:
+                    case GREATER_THAN_OR_EQUAL:
                         datePredicate = builder.greaterThanOrEqualTo(datePath, date);
                         break;
                     case LESS_THAN:
@@ -55,7 +58,10 @@ public class DealDAO {
                 criteriaQuery.select(deal).where(datePredicate);
 
                 TypedQuery<Deal> query = session.createQuery(criteriaQuery);
-                return query.getResultList();
+                List<Deal> result = query.getResultList();
+
+                logger.info(String.format("Returned list of deals found by date which %s %s ", operator, new Timestamp(date)));
+                return result;
             }
         }
     }
@@ -73,10 +79,10 @@ public class DealDAO {
                     case NOT_EQUAL:
                         predicate = builder.notEqual(deal.get("discount"), discount);
                         break;
-                    case GREATHER_THAN:
+                    case GREATER_THAN:
                         predicate = builder.greaterThan(deal.get("discount"), discount);
                         break;
-                    case GREATHER_THAN_OR_EQUAL:
+                    case GREATER_THAN_OR_EQUAL:
                         predicate = builder.greaterThanOrEqualTo(deal.get("discount"), discount);
                         break;
                     case LESS_THAN:
@@ -92,7 +98,9 @@ public class DealDAO {
                 criteriaQuery.select(deal).where(predicate);
                 TypedQuery<Deal> query = session.createQuery(criteriaQuery);
 
-                return query.getResultList();
+                List<Deal> result = query.getResultList();
+                logger.info(String.format("Returned list of deals found by discount which %s %s ", operator, discount));
+                return result;
             }
         }
     }
@@ -110,10 +118,10 @@ public class DealDAO {
                     case NOT_EQUAL:
                         predicate = builder.notEqual(deal.get("price"), price);
                         break;
-                    case GREATHER_THAN:
+                    case GREATER_THAN:
                         predicate = builder.greaterThan(deal.get("price"), price);
                         break;
-                    case GREATHER_THAN_OR_EQUAL:
+                    case GREATER_THAN_OR_EQUAL:
                         predicate = builder.greaterThanOrEqualTo(deal.get("price"), price);
                         break;
                     case LESS_THAN:
@@ -129,7 +137,9 @@ public class DealDAO {
                 criteriaQuery.select(deal).where(predicate);
                 TypedQuery<Deal> query = session.createQuery(criteriaQuery);
 
-                return query.getResultList();
+                List<Deal> result = query.getResultList();
+                logger.info(String.format("Returned list of deals found by price which %s %s ", operator, price));
+                return result;
             }
         }
     }
@@ -143,12 +153,15 @@ public class DealDAO {
                 Root<Deal> deal = criteriaQuery.from(Deal.class);
                 Join<Deal, Customer> customerJoin = deal.join(Deal_.CUSTOMER);
 
+
                 Predicate predicate = builder.equal(customerJoin.get(Customer_.CUSTOMER_ID), customerID);
 
                 criteriaQuery.select(deal).where(predicate);
                 TypedQuery<Deal> query = session.createQuery(criteriaQuery);
 
-                return query.getResultList();
+                List<Deal> result = query.getResultList();
+                logger.info(String.format("Returned list of deals that made by customer with id %s ", customerID));
+                return result;
             }
         }
     }
@@ -166,7 +179,9 @@ public class DealDAO {
                 criteriaQuery.select(deal).where(predicate);
                 TypedQuery<Deal> query = session.createQuery(criteriaQuery);
 
-                return query.getResultList();
+                List<Deal> result = query.getResultList();
+                logger.info(String.format("Returned list of deals that references to product with id %s ", productID));
+                return result;
             }
         }
     }
@@ -185,7 +200,9 @@ public class DealDAO {
                 criteriaQuery.select(deal).where(predicate);
                 TypedQuery<Deal> query = session.createQuery(criteriaQuery);
 
-                return query.getResultList();
+                List<Deal> result = query.getResultList();
+                logger.info(String.format("Returned list of deals that was made between %s and %s ", new Timestamp(startRange), new Timestamp(endRange)));
+                return result;
             }
         }
     }

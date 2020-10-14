@@ -1,5 +1,7 @@
 package com.exactpro.DAO;
 
+import com.exactpro.loggers.StaticLogger;
+import org.apache.log4j.Logger;
 import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -17,10 +19,16 @@ import java.util.List;
 
 
 public class GenericDAO {
+
+    private static final Logger logger = StaticLogger.infoLogger;
+
     public static <T> int insertEntity(T entity) {
         try (SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory()) {
             try (Session session = sessionFactory.openSession()) {
-                return (int) session.save(entity);
+
+                int entityID = (int) session.save(entity);
+                logger.info(String.format("Entity %s(%s) was saved to database", entity.getClass().toString(), entityID));
+                return entityID;
             }
         }
     }
@@ -31,6 +39,7 @@ public class GenericDAO {
                 Transaction transaction = session.beginTransaction();
                 session.update(entity);
                 transaction.commit();
+                logger.info(String.format("Entity %s was updated to database", entity.getClass().toString()));
             }
         }
     }
@@ -39,7 +48,10 @@ public class GenericDAO {
     public static <T> T selectByID(Class<T> clazz, Long id) {
         try (SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory()) {
             try (Session session = sessionFactory.openSession()) {
-                return session.load(clazz, id);
+                T entity = session.load(clazz, id);
+                Hibernate.initialize(entity);
+                logger.info(String.format("Entity %s was selected by id (%s)", clazz.toString(), id));
+                return entity;
             }
         }
     }
@@ -48,6 +60,7 @@ public class GenericDAO {
             try (Session session = sessionFactory.openSession()) {
                 T entity = session.load(clazz, id);
                 Hibernate.initialize(entity);
+                logger.info(String.format("Entity %s was selected by id (%s)", clazz.toString(), id));
                 return entity;
             }
         }
@@ -60,7 +73,9 @@ public class GenericDAO {
                 CriteriaQuery<T> criteriaQuery = builder.createQuery(clazz);
                 Root<T> customerRoot = criteriaQuery.from(clazz);
                 criteriaQuery.select(customerRoot);
-                return session.createQuery(criteriaQuery).getResultList();
+                List<T> entities = session.createQuery(criteriaQuery).getResultList();
+                logger.info(String.format("List of entities %s was selected", clazz.toString()));
+                return entities;
             }
         }
     }
@@ -71,6 +86,7 @@ public class GenericDAO {
                 Transaction transaction = session.beginTransaction();
                 session.delete(entity);
                 transaction.commit();
+                logger.info(String.format("Entity %s was deleted from DB", entity.getClass().toString()));
             }
         }
     }

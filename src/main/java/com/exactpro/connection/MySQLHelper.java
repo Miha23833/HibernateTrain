@@ -1,12 +1,14 @@
 package com.exactpro.connection;
 
+import com.exactpro.loggers.StaticLogger;
 import org.apache.log4j.Logger;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class MySQLHelper implements DBHelper {
-    private final static Logger logger = Logger.getLogger(MySQLHelper.class);
+    static Logger infoLogger = StaticLogger.infoLogger;
+    static Logger warnLogger = StaticLogger.warnLogger;
 
     void setLogger(){
     }
@@ -30,10 +32,10 @@ public class MySQLHelper implements DBHelper {
         try {
             DBConnection.executeNonResult(String.format("CREATE TABLE `%s` (%s)", tableName, stringBuilder.toString()));
 
-            logger.info("Table " + tableName + " created");
+            infoLogger.info("Table " + tableName + " created");
 
         } catch (ClassNotFoundException | SQLException e) {
-            logger.error("Error trying to create table", e);
+            warnLogger.error("Error trying to create table", e);
             if (e.getCause() instanceof SQLException)
                 throw new SQLException(e);
             else if (e.getCause() instanceof ClassNotFoundException)
@@ -46,10 +48,10 @@ public class MySQLHelper implements DBHelper {
         try {
             DBConnection.executeNonResult(String.format("DROP TABLE `%s`", tableName));
 
-            logger.info("Table dropped " + tableName);
+            infoLogger.info("Table dropped " + tableName);
 
         } catch (ClassNotFoundException e) {
-            logger.error("Error trying to drop table", e);
+            warnLogger.error("Error trying to drop table", e);
             if (e.getCause() instanceof SQLException)
                 throw new SQLException(e);
             else if (e.getCause() instanceof ClassNotFoundException)
@@ -64,10 +66,10 @@ public class MySQLHelper implements DBHelper {
             DBConnection.executeNonResult(String.format(
                     "ALTER TABLE `%s` ADD COLUMN `%s` %s", tableName, colName, dataType));
 
-            logger.info(String.format("Column %s added with type %s to table %s", colName, dataType, tableName ));
+            infoLogger.info(String.format("Column %s added with type %s to table %s", colName, dataType, tableName ));
 
         } catch (ClassNotFoundException | SQLException e) {
-            logger.error("Error trying to add column", e);
+            warnLogger.error("Error trying to add column", e);
             if (e.getCause() instanceof SQLException)
                 throw new SQLException(e);
             else if (e.getCause() instanceof ClassNotFoundException)
@@ -81,10 +83,10 @@ public class MySQLHelper implements DBHelper {
             DBConnection.executeNonResult(String.format(
                     "ALTER TABLE `%s` DROP COLUMN `%s`", tableName, colName));
 
-            logger.info(String.format("Column %s dropped from table %s", colName, tableName));
+            infoLogger.info(String.format("Column %s dropped from table %s", colName, tableName));
 
         } catch (ClassNotFoundException | SQLException e) {
-            logger.error("Error trying to drop column", e);
+            warnLogger.error("Error trying to drop column", e);
             if (e.getCause() instanceof SQLException)
                 throw new SQLException(e);
             else if (e.getCause() instanceof ClassNotFoundException)
@@ -101,10 +103,10 @@ public class MySQLHelper implements DBHelper {
                     "%s %s ON `%s` FOR EACH ROW " +
                     "%s", trigName, execTime, operation, tableName, body));
 
-            logger.info(String.format("Trigger %s created on table %s", trigName, tableName));
+            infoLogger.info(String.format("Trigger %s created on table %s", trigName, tableName));
 
         } catch (ClassNotFoundException | SQLException e) {
-            logger.error("Error trying to create trigger", e);
+            warnLogger.error("Error trying to create trigger", e);
             if (e.getCause() instanceof SQLException)
                 throw new SQLException(e);
             else if (e.getCause() instanceof ClassNotFoundException)
@@ -118,10 +120,10 @@ public class MySQLHelper implements DBHelper {
         try {
             DBConnection.executeNonResult(String.format("DROP TRIGGER `%s`", trigName));
 
-            logger.info("Trigger " + trigName + " dropped");
+            infoLogger.info("Trigger " + trigName + " dropped");
 
         } catch (ClassNotFoundException | SQLException e) {
-            logger.error("Error trying to drop trigger", e);
+            warnLogger.error("Error trying to drop trigger", e);
             if (e.getCause() instanceof SQLException)
                 throw new SQLException(e);
             else if (e.getCause() instanceof ClassNotFoundException)
@@ -140,7 +142,7 @@ public class MySQLHelper implements DBHelper {
             String query = "SELECT " + joinedFields + " FROM " + sourceTables + condition;
             result = DBConnection.executeWithResult(query);
         } catch (ClassNotFoundException | SQLException e) {
-            logger.error("Error trying to select data", e);
+            warnLogger.error("Error trying to select data", e);
             if (e.getCause() instanceof SQLException)
                 throw new SQLException(e);
             else if (e.getCause() instanceof ClassNotFoundException)
@@ -163,7 +165,7 @@ public class MySQLHelper implements DBHelper {
             DBConnection.executeNonResult(query);
 
         } catch (ClassNotFoundException | SQLException e) {
-            logger.error("Error trying to insert data", e);
+            warnLogger.error("Error trying to insert data", e);
             if (e.getCause() instanceof SQLException)
                 throw new SQLException(e);
             else if (e.getCause() instanceof ClassNotFoundException)
@@ -180,7 +182,7 @@ public class MySQLHelper implements DBHelper {
             DBConnection.executeNonResult(query);
 
         } catch (ClassNotFoundException | SQLException e) {
-            logger.error("Error trying to update data", e);
+            warnLogger.error("Error trying to update data", e);
             if (e.getCause() instanceof SQLException)
                 throw new SQLException(e);
             else if (e.getCause() instanceof ClassNotFoundException)
@@ -198,7 +200,7 @@ public class MySQLHelper implements DBHelper {
             DBConnection.executeNonResult(query);
 
         } catch (ClassNotFoundException | SQLException e) {
-            logger.error("Error trying to delete data", e);
+            warnLogger.error("Error trying to delete data", e);
             if (e.getCause() instanceof SQLException)
                 throw new SQLException(e);
             else if (e.getCause() instanceof ClassNotFoundException)

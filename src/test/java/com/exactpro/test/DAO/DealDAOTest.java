@@ -14,9 +14,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
-import java.sql.Date;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.util.List;
 
 class DealDAOTest {
@@ -64,9 +62,9 @@ class DealDAOTest {
 
         Assert.assertEquals(10, DealDAO.getByDate(compDate, ComparisonOperator.NOT_EQUAL).size());
 
-        Assert.assertEquals(5, DealDAO.getByDate(compDate, ComparisonOperator.GREATHER_THAN).size());
+        Assert.assertEquals(5, DealDAO.getByDate(compDate, ComparisonOperator.GREATER_THAN).size());
 
-        Assert.assertEquals(6, DealDAO.getByDate(compDate, ComparisonOperator.GREATHER_THAN_OR_EQUAL).size());
+        Assert.assertEquals(6, DealDAO.getByDate(compDate, ComparisonOperator.GREATER_THAN_OR_EQUAL).size());
 
         Assert.assertEquals(5, DealDAO.getByDate(compDate, ComparisonOperator.LESS_THAN).size());
 
@@ -94,9 +92,9 @@ class DealDAOTest {
 
         Assert.assertEquals(10, DealDAO.getByDiscount(compDiscount, ComparisonOperator.NOT_EQUAL).size());
 
-        Assert.assertEquals(5, DealDAO.getByDiscount(compDiscount, ComparisonOperator.GREATHER_THAN).size());
+        Assert.assertEquals(5, DealDAO.getByDiscount(compDiscount, ComparisonOperator.GREATER_THAN).size());
 
-        Assert.assertEquals(6, DealDAO.getByDiscount(compDiscount, ComparisonOperator.GREATHER_THAN_OR_EQUAL).size());
+        Assert.assertEquals(6, DealDAO.getByDiscount(compDiscount, ComparisonOperator.GREATER_THAN_OR_EQUAL).size());
 
         Assert.assertEquals(5, DealDAO.getByDiscount(compDiscount, ComparisonOperator.LESS_THAN).size());
 
@@ -124,9 +122,9 @@ class DealDAOTest {
 
         Assert.assertEquals(10, DealDAO.getByPrice(compPrice, ComparisonOperator.NOT_EQUAL).size());
 
-        Assert.assertEquals(5, DealDAO.getByPrice(compPrice, ComparisonOperator.GREATHER_THAN).size());
+        Assert.assertEquals(5, DealDAO.getByPrice(compPrice, ComparisonOperator.GREATER_THAN).size());
 
-        Assert.assertEquals(6, DealDAO.getByPrice(compPrice, ComparisonOperator.GREATHER_THAN_OR_EQUAL).size());
+        Assert.assertEquals(6, DealDAO.getByPrice(compPrice, ComparisonOperator.GREATER_THAN_OR_EQUAL).size());
 
         Assert.assertEquals(5, DealDAO.getByPrice(compPrice, ComparisonOperator.LESS_THAN).size());
 
