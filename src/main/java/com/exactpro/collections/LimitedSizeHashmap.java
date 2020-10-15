@@ -47,4 +47,8 @@ public class LimitedSizeHashmap<K, V> {
     public void removeAll(){
         cacheHashMap.keySet().removeAll(cacheHashMap.keySet());
     }
+
+    public int size(){
+        return cacheHashMap.size();
+    }
 }
