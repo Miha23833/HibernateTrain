@@ -12,6 +12,8 @@ import org.hibernate.SessionFactory;
 import java.math.BigDecimal;
 import java.util.List;
 
+// При инсерте нужно сбрасывать кэш.
+
 public class DealCache implements Cache {
 
     private static final SessionFactory sf = SingleSessionFactory.getInstance();
@@ -19,7 +21,7 @@ public class DealCache implements Cache {
     // Кэши для каждого из запросов
     private final static LimitedSizeHashmap
             <TwoParameterTuple<Long, ComparisonOperator>
-            , List<Deal>> cacheByDate = new LimitedSizeHashmap<>(50);
+                    , List<Deal>> cacheByDate = new LimitedSizeHashmap<>(50);
 
     private final static LimitedSizeHashmap<
             TwoParameterTuple<BigDecimal, ComparisonOperator>
@@ -42,10 +44,13 @@ public class DealCache implements Cache {
         if (cacheByDate.containsKey(tuple)) {
             return cacheByDate.get(tuple);
         }
-        else{
+        else {
             Session session = sf.openSession();
             List<Deal> result = DealDAO.getByDate(session, date, operator);
-            cacheByDate.put(tuple, result);
+            session.close();
+            if (result.size() > 0) {
+                cacheByDate.put(tuple, result);
+            }
             return result;
         }
 
@@ -56,59 +61,79 @@ public class DealCache implements Cache {
         if (cacheByDiscount.containsKey(tuple)) {
             return cacheByDiscount.get(tuple);
         }
-        else{
+        else {
             Session session = sf.openSession();
             List<Deal> result = DealDAO.getByDiscount(session, discount, operator);
-            cacheByDiscount.put(tuple, result);
+            session.close();
+            if (result.size() > 0) {
+                cacheByDiscount.put(tuple, result);
+            }
             return result;
-        }}
+        }
+    }
 
     public static synchronized List<Deal> getByPrice(BigDecimal price, ComparisonOperator operator) {
         TwoParameterTuple<BigDecimal, ComparisonOperator> tuple = new TwoParameterTuple<>(price, operator);
         if (cacheByPrice.containsKey(tuple)) {
             return cacheByPrice.get(tuple);
         }
-        else{
+        else {
             Session session = sf.openSession();
             List<Deal> result = DealDAO.getByPrice(session, price, operator);
-            cacheByPrice.put(tuple, result);
+            session.close();
+            if (result.size() > 0) {
+                cacheByPrice.put(tuple, result);
+            }
             return result;
-        }}
+        }
+    }
 
     public static synchronized List<Deal> getByCustomerID(Integer customerID) {
         if (cacheByCustomerID.containsKey(customerID)) {
             return cacheByCustomerID.get(customerID);
         }
-        else{
+        else {
             Session session = sf.openSession();
             List<Deal> result = DealDAO.getByCustomerID(session, customerID);
-            cacheByCustomerID.put(customerID, result);
+            session.close();
+            if (result.size() > 0) {
+                cacheByCustomerID.put(customerID, result);
+            }
             return result;
-        }}
+        }
+    }
 
     public static synchronized List<Deal> getByProductID(Integer productID) {
         if (cacheByProductID.containsKey(productID)) {
             return cacheByProductID.get(productID);
         }
-        else{
+        else {
             Session session = sf.openSession();
             List<Deal> result = DealDAO.getByProductID(session, productID);
-            cacheByProductID.put(productID, result);
+            session.close();
+            if (result.size() > 0) {
+                cacheByProductID.put(productID, result);
+            }
             return result;
-        }}
+        }
+    }
 
     public static synchronized List<Deal> getByPeriod(Long startRange, Long endRange) {
-        Long[] ranges = new Long[] {startRange, endRange};
+        Long[] ranges = new Long[]{startRange, endRange};
 
         if (cacheByPeriod.containsKey(ranges)) {
             return cacheByPeriod.get(ranges);
         }
-        else{
+        else {
             Session session = sf.openSession();
             List<Deal> result = DealDAO.getByPeriod(session, startRange, endRange);
-            cacheByPeriod.put(ranges, result);
+            session.close();
+            if (result.size() > 0) {
+                cacheByPeriod.put(ranges, result);
+            }
             return result;
-        }}
+        }
+    }
 
 
     @Override
