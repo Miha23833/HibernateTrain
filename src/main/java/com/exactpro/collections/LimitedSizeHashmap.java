@@ -38,4 +38,8 @@ public class LimitedSizeHashmap<K, V> {
     public boolean containsKey(K key){
         return cacheHashMap.containsKey(key);
     }
+
+    public void removeAll(){
+        cacheHashMap.keySet().removeAll(cacheHashMap.keySet());
+    }
 }
