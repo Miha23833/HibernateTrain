@@ -35,7 +35,9 @@ public class DealCache implements Cache {
 
     private final static LimitedSizeHashmap<Integer, List<Deal>> cacheByProductID = new LimitedSizeHashmap<>(50);
 
-    private final static LimitedSizeHashmap<Long[], List<Deal>> cacheByPeriod = new LimitedSizeHashmap<>(50);
+    private final static LimitedSizeHashmap<
+            TwoParameterTuple<Long, Long>
+            , List<Deal>> cacheByPeriod = new LimitedSizeHashmap<>(50);
 
 
     public static synchronized List<Deal> getByDate(Long date, ComparisonOperator operator) {
@@ -119,7 +121,7 @@ public class DealCache implements Cache {
     }
 
     public static synchronized List<Deal> getByPeriod(Long startRange, Long endRange) {
-        Long[] ranges = new Long[]{startRange, endRange};
+        TwoParameterTuple<Long, Long> ranges = new TwoParameterTuple<>(startRange, endRange);
 
         if (cacheByPeriod.containsKey(ranges)) {
             return cacheByPeriod.get(ranges);

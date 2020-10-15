@@ -42,6 +42,7 @@ class DealCacheTest {
         customer = new Customer("TEST", "UNIT", (short) 20, null);
         deal = new Deal(customer, product, System.currentTimeMillis(), new BigDecimal(50), new BigDecimal(0));
 
+        // Заполняем БД
         Session session = sf.openSession();
         session.beginTransaction();
         for (int i = 0; i < 20; i++) {
@@ -53,21 +54,21 @@ class DealCacheTest {
             GenericDAO.insertEntity(session, newCustomer);
             GenericDAO.insertEntity(session, newDeal);
         }
+        GenericDAO.insertEntity(session, product);
+        GenericDAO.insertEntity(session, customer);
+        GenericDAO.insertEntity(session, deal);
         session.getTransaction().commit();
         session.close();
     }
 
     @AfterEach
     void cleanTest() throws SQLException, ClassNotFoundException {
-        product = null;
         CommonUnitTests.cleanDB("jdbc:mysql://localhost:3306/hibernate_unittests", "root", "password");
     }
 
 
     @Test
     void getByDate() {
-
-        // Равные по времени сделки
         List<Deal> dealsFromDB = DealCache.getByDate(deal.getDealDate(), ComparisonOperator.EQUAL);
         List<Deal> dealsFromCache = DealCache.getByDate(deal.getDealDate(), ComparisonOperator.EQUAL);
 
@@ -75,8 +76,8 @@ class DealCacheTest {
 
         Assert.assertEquals(dealsFromCache.hashCode(), dealsFromDB.hashCode());
 
-        List<Deal> olderDealsFromDB = DealCache.getByDate(deal.getDealDate(), ComparisonOperator.EQUAL);
-        List<Deal> olderDealsFromCache = DealCache.getByDate(deal.getDealDate(), ComparisonOperator.EQUAL);
+        List<Deal> olderDealsFromDB = DealCache.getByDate(deal.getDealDate()+1, ComparisonOperator.LESS_THAN);
+        List<Deal> olderDealsFromCache = DealCache.getByDate(deal.getDealDate()+1, ComparisonOperator.LESS_THAN);
 
         Assert.assertTrue(olderDealsFromDB.size() > 0);
         Assert.assertEquals(olderDealsFromDB.hashCode(), olderDealsFromCache.hashCode());
@@ -84,21 +85,63 @@ class DealCacheTest {
 
     @Test
     void getByDiscount() {
+        List<Deal> dealsFromDB = DealCache.getByDiscount(deal.getDiscount(), ComparisonOperator.EQUAL);
+        List<Deal> dealsFromCache = DealCache.getByDiscount(deal.getDiscount(), ComparisonOperator.EQUAL);
+
+        Assert.assertTrue(dealsFromDB.size() > 0);
+
+        Assert.assertEquals(dealsFromCache.hashCode(), dealsFromDB.hashCode());
+
+        List<Deal> lessDealsFromDB = DealCache.getByDiscount(deal.getDiscount().add(new BigDecimal(1)), ComparisonOperator.LESS_THAN);
+        List<Deal> lessDealsFromCache = DealCache.getByDiscount(deal.getDiscount().add(new BigDecimal(1)), ComparisonOperator.LESS_THAN);
+
+        Assert.assertTrue(lessDealsFromDB.size() > 0);
+        Assert.assertEquals(lessDealsFromDB.hashCode(), lessDealsFromCache.hashCode());
     }
 
     @Test
     void getByPrice() {
+        List<Deal> dealsFromDB = DealCache.getByPrice(deal.getPrice(), ComparisonOperator.EQUAL);
+        List<Deal> dealsFromCache = DealCache.getByPrice(deal.getPrice(), ComparisonOperator.EQUAL);
+
+        Assert.assertTrue(dealsFromDB.size() > 0);
+
+        Assert.assertEquals(dealsFromCache.hashCode(), dealsFromDB.hashCode());
+
+        List<Deal> lessDealsFromDB = DealCache.getByPrice(deal.getPrice().add(new BigDecimal(1)), ComparisonOperator.LESS_THAN);
+        List<Deal> lessDealsFromCache = DealCache.getByPrice(deal.getPrice().add(new BigDecimal(1)), ComparisonOperator.LESS_THAN);
+
+        Assert.assertTrue(lessDealsFromDB.size() > 0);
+        Assert.assertEquals(lessDealsFromDB.hashCode(), lessDealsFromCache.hashCode());
     }
 
     @Test
     void getByCustomerID() {
+        List<Deal> dealsFromDB = DealCache.getByCustomerID(deal.getCustomer().getCustomerID());
+        List<Deal> dealsFromCache = DealCache.getByCustomerID(deal.getCustomer().getCustomerID());
+
+        Assert.assertTrue(dealsFromDB.size() > 0);
+
+        Assert.assertEquals(dealsFromCache.hashCode(), dealsFromDB.hashCode());
     }
 
     @Test
     void getByProductID() {
+        List<Deal> dealsFromDB = DealCache.getByProductID(deal.getProduct().getProductID());
+        List<Deal> dealsFromCache = DealCache.getByProductID(deal.getProduct().getProductID());
+
+        Assert.assertTrue(dealsFromDB.size() > 0);
+
+        Assert.assertEquals(dealsFromCache.hashCode(), dealsFromDB.hashCode());
     }
 
     @Test
     void getByPeriod() {
+        List<Deal> dealsFromDB = DealCache.getByPeriod(deal.getDealDate()-1, deal.getDealDate()+1);
+        List<Deal> dealsFromCache = DealCache.getByPeriod(deal.getDealDate()-1, deal.getDealDate()+1);
+
+        Assert.assertTrue(dealsFromDB.size() > 0);
+
+        Assert.assertEquals(dealsFromCache.hashCode(), dealsFromDB.hashCode());
     }
 }
