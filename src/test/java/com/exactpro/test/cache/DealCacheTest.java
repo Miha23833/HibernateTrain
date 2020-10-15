@@ -47,7 +47,7 @@ class DealCacheTest {
         for (int i = 0; i < 20; i++) {
             Product newProduct = new Product("Name", "Some desc", new BigDecimal(50000));
             Customer newCustomer = new Customer("TEST", "UNIT", (short) 20, null);
-            Deal newDeal = new Deal(customer, newProduct, System.currentTimeMillis(), new BigDecimal(50), new BigDecimal(0));
+            Deal newDeal = new Deal(newCustomer, newProduct, deal.getDealDate(), new BigDecimal(50), new BigDecimal(0));
 
             GenericDAO.insertEntity(session, newProduct);
             GenericDAO.insertEntity(session, newCustomer);
@@ -67,12 +67,19 @@ class DealCacheTest {
     @Test
     void getByDate() {
 
+        // Равные по времени сделки
         List<Deal> dealsFromDB = DealCache.getByDate(deal.getDealDate(), ComparisonOperator.EQUAL);
         List<Deal> dealsFromCache = DealCache.getByDate(deal.getDealDate(), ComparisonOperator.EQUAL);
 
         Assert.assertTrue(dealsFromDB.size() > 0);
 
         Assert.assertEquals(dealsFromCache.hashCode(), dealsFromDB.hashCode());
+
+        List<Deal> olderDealsFromDB = DealCache.getByDate(deal.getDealDate(), ComparisonOperator.EQUAL);
+        List<Deal> olderDealsFromCache = DealCache.getByDate(deal.getDealDate(), ComparisonOperator.EQUAL);
+
+        Assert.assertTrue(olderDealsFromDB.size() > 0);
+        Assert.assertEquals(olderDealsFromDB.hashCode(), olderDealsFromCache.hashCode());
     }
 
     @Test
