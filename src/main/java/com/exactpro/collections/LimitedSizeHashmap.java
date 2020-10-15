@@ -5,6 +5,11 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Set;
 
+/**
+ * {@code LimitedSizeHashmap} contains keys in queue.
+ * When count of keys equals to size then
+ * oldest key {@link K} removing in queue and hashmap cascade.
+ */
 public class LimitedSizeHashmap<K, V> {
 
     final int size;

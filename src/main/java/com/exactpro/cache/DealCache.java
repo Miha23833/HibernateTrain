@@ -12,13 +12,15 @@ import org.hibernate.SessionFactory;
 import java.math.BigDecimal;
 import java.util.List;
 
-// При инсерте нужно сбрасывать кэш.
+// TODO При инсерте нужно сбрасывать кэш.
 
+/**
+ * Caches for every query in DealDao.
+ */
 public class DealCache implements Cache {
 
     private static final SessionFactory sf = SingleSessionFactory.getInstance();
 
-    // Кэши для каждого из запросов
     private final static LimitedSizeHashmap
             <TwoParameterTuple<Long, ComparisonOperator>
                     , List<Deal>> cacheByDate = new LimitedSizeHashmap<>(50);

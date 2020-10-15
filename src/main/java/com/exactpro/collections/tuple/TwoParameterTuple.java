@@ -2,6 +2,16 @@ package com.exactpro.collections.tuple;
 
 import java.util.Objects;
 
+/**
+ * If we need to cache some value with key-class
+ * we need to override hashcode and equals
+ * but it is irrational for every class.
+ * This tuple overrides hashcode and equals methods
+ * and can be used to be key in cacheMap.
+ * @apiNote  Designed for cache by two values.
+ * @param <P1> first value to contain
+ * @param <P2> first value to contain
+ */
 public class TwoParameterTuple<P1, P2> {
     private P1 firstValue;
     private P2 secondValue;
