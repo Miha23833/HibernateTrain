@@ -10,9 +10,6 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import java.util.List;
 
-//TODO: сделать логирование
-
-
 public class GenericDAO {
 
     private static final Logger logger = StaticLogger.infoLogger;
