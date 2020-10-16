@@ -12,7 +12,7 @@ import java.util.Objects;
 @Table(name = "deals")
 public class Deal implements Serializable {
     @Id
-    private int dealID;
+    private Integer dealID;
 
     private Customer customer;
     private Product product;
@@ -34,11 +34,11 @@ public class Deal implements Serializable {
     @Id
     @Column(name = "deal_id", unique = true, nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public int getDealID() {
+    public Integer getDealID() {
         return dealID;
     }
 
-    public void setDealID(int dealID) {
+    public void setDealID(Integer dealID) {
         this.dealID = dealID;
     }
 
