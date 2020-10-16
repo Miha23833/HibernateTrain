@@ -29,14 +29,12 @@ public class GenericDAO {
     //Перегрузки
     public static <T> T selectByID(Session session, Class<T> clazz, Long id) {
         T entity = session.load(clazz, id);
-        Hibernate.initialize(entity);
         logger.info(String.format("Entity %s was selected by id (%s)", clazz.toString(), id));
         return entity;
     }
 
     public static <T> T selectByID(Session session, Class<T> clazz, Integer id) {
         T entity = session.load(clazz, id);
-        Hibernate.initialize(entity);
         logger.info(String.format("Entity %s was selected by id (%s)", clazz.toString(), id));
         return entity;
     }
@@ -53,7 +51,6 @@ public class GenericDAO {
 
     public static <T> void deleteEntityFromTable(Session session, T entity) {
         session.delete(entity);
-        Hibernate.initialize(entity);
         logger.info(String.format("Entity %s was deleted from DB", entity.getClass().toString()));
     }
 
