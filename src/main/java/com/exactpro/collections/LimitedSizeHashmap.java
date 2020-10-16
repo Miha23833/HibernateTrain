@@ -24,10 +24,11 @@ public class LimitedSizeHashmap<K, V> {
 
     public void put(K key, V value){
         if (!cacheHashMap.containsKey(key)) {
-            keys.add(key);
             if (keys.size() > size) {
-                cacheHashMap.remove(keys.remove());
+                K lastKey = keys.remove();
+                cacheHashMap.remove(lastKey);
             }
+            keys.add(key);
         }
         cacheHashMap.put(key, value);
     }
@@ -45,7 +46,8 @@ public class LimitedSizeHashmap<K, V> {
     }
 
     public void removeAll(){
-        cacheHashMap.keySet().removeAll(cacheHashMap.keySet());
+        cacheHashMap.clear();
+        keys.clear();
     }
 
     public int size(){
