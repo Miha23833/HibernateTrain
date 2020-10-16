@@ -39,6 +39,7 @@ public class DealService implements Cache {
         if (deal != null) {
             cache.put(id, deal);
         }
+        session.close();
         return deal;
     }
 
@@ -71,4 +72,10 @@ public class DealService implements Cache {
     public synchronized void clean() {
         cache.clear();
     }
+
+    @Override
+    public synchronized int getSize(){
+        return cache.size();
+    }
+
 }
