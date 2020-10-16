@@ -5,6 +5,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -94,19 +95,20 @@ public class Customer implements Serializable {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (!(obj instanceof Customer))
-            return false;
-
-        Customer guest = (Customer) obj;
-
-        return guest.getAge() == this.age &&
-                guest.getCustomerID() == this.customerID &&
-                guest.getName().equals(this.name) &&
-                guest.getSurname().equals(this.surname) &&
-                guest.getFavouriteProduct().equals(this.favouriteProduct);
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Customer customer = (Customer) o;
+        return customerID == customer.customerID &&
+                age == customer.age &&
+                Objects.equals(name, customer.name) &&
+                Objects.equals(surname, customer.surname) &&
+                Objects.equals(favouriteProduct, customer.favouriteProduct) &&
+                Objects.equals(deals, customer.deals);
     }
 
-
-
+    @Override
+    public int hashCode() {
+        return Objects.hash(customerID, name, surname, age, favouriteProduct, deals);
+    }
 }

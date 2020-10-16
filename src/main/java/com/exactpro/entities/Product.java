@@ -4,6 +4,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -80,17 +81,19 @@ public class Product implements Serializable {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (!(obj instanceof Product))
-            return false;
-
-        Product guest = (Product) obj;
-
-        return guest.getDeals().equals(this.deals) &&
-                guest.getPrice().compareTo(this.price) == 0 &&
-                guest.getDescription().equals(this.description) &&
-                guest.getProductID() == (this.productID) &&
-                guest.getProductName().equals(this.productName);
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Product product = (Product) o;
+        return productID == product.productID &&
+                Objects.equals(productName, product.productName) &&
+                Objects.equals(description, product.description) &&
+                Objects.equals(price, product.price) &&
+                Objects.equals(deals, product.deals);
     }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(productID, productName, description, price, deals);
+    }
 }

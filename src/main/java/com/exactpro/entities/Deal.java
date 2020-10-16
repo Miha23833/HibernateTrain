@@ -6,6 +6,7 @@ import java.math.BigDecimal;
 import java.sql.Date;
 import java.sql.Time;
 import java.sql.Timestamp;
+import java.util.Objects;
 
 @Entity
 @Table(name = "deals")
@@ -94,18 +95,20 @@ public class Deal implements Serializable {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (!(obj instanceof Deal))
-            return false;
-
-        Deal guest = (Deal) obj;
-
-        return guest.getCustomer().equals(this.customer) &&
-                guest.getProduct().equals(this.product) &&
-                guest.getDealDate() == this.dealDate &&
-                guest.getDealID() == (this.dealID) &&
-                guest.getDiscount().compareTo(this.discount) == 0 &&
-                guest.getPrice().compareTo(this.price) == 0;
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Deal deal = (Deal) o;
+        return dealID == deal.dealID &&
+                Objects.equals(customer, deal.customer) &&
+                Objects.equals(product, deal.product) &&
+                Objects.equals(dealDate, deal.dealDate) &&
+                Objects.equals(discount, deal.discount) &&
+                Objects.equals(price, deal.price);
     }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(dealID, customer, product, dealDate, discount, price);
+    }
 }
