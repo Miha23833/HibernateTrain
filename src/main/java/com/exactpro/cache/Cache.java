@@ -5,4 +5,6 @@ public interface Cache {
      * Cleans cache.
      */
     void clean();
+
+    int getSize();
 }
