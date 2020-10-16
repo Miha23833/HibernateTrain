@@ -1,5 +1,6 @@
 package com.exactpro.DAO;
 
+import com.exactpro.cache.DealCache;
 import com.exactpro.loggers.StaticLogger;
 import org.apache.log4j.Logger;
 import org.hibernate.Hibernate;
@@ -17,6 +18,7 @@ public class GenericDAO {
     public static <T> int insertEntity(Session session, T entity) {
         int entityID = (int) session.save(entity);
         logger.info(String.format("Entity %s(%s) was saved to database", entity.getClass().toString(), entityID));
+        new DealCache().clean();
         return entityID;
     }
 
