@@ -36,7 +36,7 @@ public class DealService implements Cache {
         }
         Session session = sf.openSession();
         Deal deal = GenericDAO.selectByID(session, Deal.class, id);
-        if (deal != null) {
+        if (deal != null && deal.getDealID() != null) {
             cache.put(id, deal);
         }
         session.close();
