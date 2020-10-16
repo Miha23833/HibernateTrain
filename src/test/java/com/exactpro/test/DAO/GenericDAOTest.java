@@ -86,7 +86,12 @@ class GenericDAOTest {
         Customer newCustomer = GenericDAO.selectByID(selectSession, Customer.class, selectingID);
         selectSession.close();
 
-        Assert.assertEquals(customer, newCustomer);
+        Assert.assertEquals(customer.getCustomerID(), newCustomer.getCustomerID());
+        Assert.assertEquals(customer.getName(), newCustomer.getName());
+        Assert.assertEquals(customer.getSurname(), newCustomer.getSurname());
+        Assert.assertEquals(customer.getAge(), newCustomer.getAge());
+        Assert.assertEquals(customer.getFavouriteProduct(), newCustomer.getFavouriteProduct());
+        Assert.assertEquals(customer.getDeals(), newCustomer.getDeals());
     }
 
     @Test
