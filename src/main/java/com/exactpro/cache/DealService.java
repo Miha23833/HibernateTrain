@@ -7,10 +7,10 @@ import com.exactpro.entities.Deal;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
-// TODO При инсерте нужно сбрасывать кэш.
+// TODO сделать прокси на все DAO с сессиями и т.п.
 
 /**
- * Caches for every query in DealDao.
+ * Cache is working for only by dealId
  */
 public class DealService implements Cache {
 
