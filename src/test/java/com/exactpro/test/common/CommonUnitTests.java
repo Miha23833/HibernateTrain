@@ -20,6 +20,6 @@ public class CommonUnitTests {
         DBConnection.executeNonResult("DELETE FROM DEALS");
         DBConnection.executeNonResult("ALTER TABLE DEALS AUTO_INCREMENT = 0");
 
-        infoLogger.info("Database " + url + "was cleaned by user " + user);
+        infoLogger.info("Database " + url + " was cleaned by user " + user);
     }
 }
