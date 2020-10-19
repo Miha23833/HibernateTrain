@@ -1,9 +1,7 @@
 package com.exactpro.DAO;
 
-import com.exactpro.cache.DealService;
 import com.exactpro.loggers.StaticLogger;
 import org.apache.log4j.Logger;
-import org.hibernate.Hibernate;
 import org.hibernate.Session;
 
 import javax.persistence.criteria.CriteriaBuilder;
