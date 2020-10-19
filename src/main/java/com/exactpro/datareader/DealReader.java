@@ -3,7 +3,7 @@ package com.exactpro.datareader;
 import com.exactpro.cache.DealService;
 import com.exactpro.entities.Deal;
 
-public class DealReader implements Runnable {
+public class DealReader extends Thread {
 
     private Deal deal = null;
     private final int dealID;
@@ -11,8 +11,11 @@ public class DealReader implements Runnable {
 
     @Override
     public void run() {
-        deal = DealService.getByID(dealID);
-        isDone = true;
+        synchronized (this) {
+            deal = DealService.getByID(dealID);
+            isDone = true;
+            notifyAll();
+        }
     }
 
     public DealReader(int dealID){
