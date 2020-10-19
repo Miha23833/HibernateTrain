@@ -10,6 +10,7 @@ import com.exactpro.entities.Product;
 import com.exactpro.test.common.CommonUnitTests;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -38,9 +39,9 @@ public class DealReaderTest {
     }
 
     @Test
-    public void dealReaderTest(){
+    public void dealReaderTest() throws InterruptedException {
 
-        Deal[] deals = new Deal[10];
+        Deal[] deals = new Deal[100];
         DealReader[] dealReaders = new DealReader[deals.length];
 
         Product product = new Product("Name", "Some desc", new BigDecimal(50000));
@@ -63,10 +64,12 @@ public class DealReaderTest {
 
         for (int i = 0; i < dealReaders.length; i++) {
             dealReaders[i] = new DealReader(deals[i].getDealID());
+            dealReaders[i].start();
         }
 
-        for (DealReader reader: dealReaders) {
-            reader.run();
+        for (int i = 0; i < deals.length; i++) {
+            dealReaders[i].join();
+            Assert.assertEquals(deals[i].getDealID(), dealReaders[i].getDeal().getDealID());
         }
     }
 
