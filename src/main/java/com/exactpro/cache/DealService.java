@@ -4,6 +4,8 @@ import com.exactpro.DAO.GenericDAO;
 import com.exactpro.DAO.SingleSessionFactory;
 import com.exactpro.collections.LimitedSizeHashmap;
 import com.exactpro.entities.Deal;
+import com.exactpro.loggers.StaticLogger;
+import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
@@ -28,16 +30,21 @@ public class DealService implements Cache {
         session.close();
 
         cache.put(deal.getDealID(), deal);
+
+        StaticLogger.infoLogger.info(String.format("Deal with id = %s was put into cache", deal.getDealID()));
     }
 
     public static synchronized Deal getByID(Integer id){
         if (cache.containsKey(id)) {
-            return cache.get(id);
+            Deal deal = cache.get(id);
+            StaticLogger.infoLogger.info(String.format("Deal with id = %s was taken from cache", deal.getDealID()));
+            return deal;
         }
         Session session = sf.openSession();
         Deal deal = GenericDAO.selectByID(session, Deal.class, id);
         if (deal != null && deal.getDealID() != null) {
             cache.put(id, deal);
+            StaticLogger.infoLogger.info(String.format("Deal with id = %s wasn't in cache. It was put into cache", deal.getDealID()));
         }
         session.close();
         return deal;
@@ -53,6 +60,7 @@ public class DealService implements Cache {
         session.close();
 
         cache.put(deal.getDealID(), deal);
+        StaticLogger.infoLogger.info(String.format("Deal with id = %s was put into cache", deal.getDealID()));
     }
 
     public static synchronized void deleteDeal(Deal deal){
@@ -65,6 +73,7 @@ public class DealService implements Cache {
         session.close();
 
         cache.removeKey(deal.getDealID());
+        StaticLogger.infoLogger.info(String.format("Deal with id = %s was removed from cache", deal.getDealID()));
 
     }
 
