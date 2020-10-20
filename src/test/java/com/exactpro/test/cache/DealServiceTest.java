@@ -27,6 +27,7 @@ class DealServiceTest {
     private Product product;
     private Customer customer;
     private final SessionFactory sf = SingleSessionFactory.getInstance();
+    DealService service = new DealService();
 
     @Before
     public void launchAllTests() throws SQLException, ClassNotFoundException {
@@ -50,7 +51,6 @@ class DealServiceTest {
         session.getTransaction().commit();
         session.close();
 
-        DealService.clearCache();
     }
 
     @AfterEach
@@ -66,7 +66,7 @@ class DealServiceTest {
         for (int i = 0; i < 100; i++) {
             Deal newDeal = new Deal(customer, product, System.currentTimeMillis(), new BigDecimal(50), new BigDecimal(0));
             DealService.insertDeal(newDeal);
-            if (i > 49){
+            if (i > service.maxSize()-1){
                 deals.add(newDeal);
             }
         }
