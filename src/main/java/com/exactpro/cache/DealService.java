@@ -77,6 +77,10 @@ public class DealService implements Cache {
 
     }
 
+    public static synchronized void clearCache(){
+        cache.clear();
+    }
+
     @Override
     public synchronized void clean() {
         cache.clear();
