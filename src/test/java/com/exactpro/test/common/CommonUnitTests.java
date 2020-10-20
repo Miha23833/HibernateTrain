@@ -1,5 +1,6 @@
 package com.exactpro.test.common;
 
+import com.exactpro.cache.DealService;
 import com.exactpro.connection.DBConnection;
 import com.exactpro.loggers.StaticLogger;
 import org.apache.log4j.Logger;
@@ -21,5 +22,11 @@ public class CommonUnitTests {
         DBConnection.executeNonResult("ALTER TABLE DEALS AUTO_INCREMENT = 0");
 
         infoLogger.info("Database " + url + " was cleaned by user " + user);
+
+        DealService service = new DealService();
+        service.clean();
+
+        infoLogger.info("Cache was cleaned during clearing database");
+
     }
 }
