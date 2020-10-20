@@ -1,4 +1,4 @@
-package com.exactpro.datareader;
+package com.exactpro.multithread;
 
 import com.exactpro.cache.DealService;
 import com.exactpro.entities.Deal;
