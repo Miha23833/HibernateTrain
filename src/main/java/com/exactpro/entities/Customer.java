@@ -103,12 +103,11 @@ public class Customer implements Serializable {
                 age == customer.age &&
                 Objects.equals(name, customer.name) &&
                 Objects.equals(surname, customer.surname) &&
-                Objects.equals(favouriteProduct, customer.favouriteProduct) &&
-                Objects.equals(deals, customer.deals);
+                Objects.equals(favouriteProduct, customer.favouriteProduct);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(customerID, name, surname, age, favouriteProduct, deals);
+        return Objects.hash(customerID, name, surname, age, favouriteProduct);
     }
 }
