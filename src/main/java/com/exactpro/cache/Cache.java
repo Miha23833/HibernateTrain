@@ -7,4 +7,6 @@ public interface Cache {
     void clean();
 
     int getSize();
+
+    int maxSize();
 }

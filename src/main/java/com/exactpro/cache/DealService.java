@@ -77,10 +77,6 @@ public class DealService implements Cache {
 
     }
 
-    public static synchronized void clearCache(){
-        cache.clear();
-    }
-
     @Override
     public synchronized void clean() {
         cache.clear();
@@ -89,6 +85,11 @@ public class DealService implements Cache {
     @Override
     public synchronized int getSize(){
         return cache.size();
+    }
+
+    @Override
+    public synchronized int maxSize(){
+        return cache.maxSize();
     }
 
 }
