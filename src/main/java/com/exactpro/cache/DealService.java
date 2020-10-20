@@ -9,6 +9,9 @@ import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
+
 // TODO сделать прокси на все DAO с сессиями и т.п.
 
 /**
@@ -20,75 +23,102 @@ public class DealService implements Cache {
 
     private static final LimitedSizeHashmap<Integer, Deal> cache = new LimitedSizeHashmap<>(50);
 
-    public static synchronized void insertDeal(Deal deal){
-        Session session = sf.openSession();
-        session.beginTransaction();
+    private static final ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
 
-        GenericDAO.insertEntity(session, deal);
+    public static void insertDeal(Deal deal) {
+        try {
+            readWriteLock.writeLock().lock();
 
-        session.getTransaction().commit();
-        session.close();
+            Session session = sf.openSession();
+            session.beginTransaction();
 
-        cache.put(deal.getDealID(), deal);
+            GenericDAO.insertEntity(session, deal);
 
-        StaticLogger.infoLogger.info(String.format("Deal with id = %s was put into cache", deal.getDealID()));
+            session.getTransaction().commit();
+            session.close();
+
+            cache.put(deal.getDealID(), deal);
+
+            StaticLogger.infoLogger.info(String.format("Deal with id = %s was put into cache", deal.getDealID()));
+        } finally {
+            readWriteLock.writeLock().unlock();
+        }
     }
 
-    public static synchronized Deal getByID(Integer id){
-        if (cache.containsKey(id)) {
-            Deal deal = cache.get(id);
-            StaticLogger.infoLogger.info(String.format("Deal with id = %s was taken from cache", deal.getDealID()));
+    public static Deal getByID(Integer id) {
+        try {
+            readWriteLock.readLock().lock();
+
+            if (cache.containsKey(id)) {
+                Deal deal = cache.get(id);
+                StaticLogger.infoLogger.info(String.format("Deal with id = %s was taken from cache", deal.getDealID()));
+                return deal;
+            }
+            Session session = sf.openSession();
+            Deal deal = GenericDAO.selectByID(session, Deal.class, id);
+            if (deal != null && deal.getDealID() != null) {
+                cache.put(id, deal);
+                StaticLogger.infoLogger.info(String.format("Deal with id = %s wasn't in cache. It was put into cache", deal.getDealID()));
+            }
+            session.close();
             return deal;
+        } finally {
+            readWriteLock.readLock().unlock();
         }
-        Session session = sf.openSession();
-        Deal deal = GenericDAO.selectByID(session, Deal.class, id);
-        if (deal != null && deal.getDealID() != null) {
-            cache.put(id, deal);
-            StaticLogger.infoLogger.info(String.format("Deal with id = %s wasn't in cache. It was put into cache", deal.getDealID()));
-        }
-        session.close();
-        return deal;
+
     }
 
-    public static synchronized void updateDeal(Deal deal){
-        Session session = sf.openSession();
-        session.beginTransaction();
+    public static void updateDeal(Deal deal) {
+        try {
+            readWriteLock.readLock().lock();
 
-        GenericDAO.updateTableByEntity(session, deal);
+            Session session = sf.openSession();
+            session.beginTransaction();
 
-        session.getTransaction().commit();
-        session.close();
+            GenericDAO.updateTableByEntity(session, deal);
 
-        cache.put(deal.getDealID(), deal);
-        StaticLogger.infoLogger.info(String.format("Deal with id = %s was put into cache", deal.getDealID()));
+            session.getTransaction().commit();
+            session.close();
+
+            cache.put(deal.getDealID(), deal);
+            StaticLogger.infoLogger.info(String.format("Deal with id = %s was put into cache", deal.getDealID()));
+        } finally {
+            readWriteLock.readLock().unlock();
+        }
     }
 
-    public static synchronized void deleteDeal(Deal deal){
-        Session session = sf.openSession();
-        session.beginTransaction();
+    public static void deleteDeal(Deal deal) {
+        try {
+            readWriteLock.readLock().lock();
 
-        GenericDAO.deleteEntityFromTable(session, deal);
+            Session session = sf.openSession();
+            session.beginTransaction();
 
-        session.getTransaction().commit();
-        session.close();
+            GenericDAO.deleteEntityFromTable(session, deal);
 
-        cache.removeKey(deal.getDealID());
-        StaticLogger.infoLogger.info(String.format("Deal with id = %s was removed from cache", deal.getDealID()));
+            session.getTransaction().commit();
+            session.close();
+
+            cache.removeKey(deal.getDealID());
+            StaticLogger.infoLogger.info(String.format("Deal with id = %s was removed from cache", deal.getDealID()));
+        } finally {
+            readWriteLock.readLock().unlock();
+        }
 
     }
 
     @Override
-    public synchronized void clean() {
+    public void clean() {
         cache.clear();
     }
 
     @Override
-    public synchronized int getSize(){
+    public int getSize() {
         return cache.size();
     }
 
     @Override
-    public synchronized int maxSize(){
+    public int maxSize() {
         return cache.maxSize();
     }
 
