@@ -61,4 +61,8 @@ public class LimitedSizeHashmap<K, V> {
     public int size(){
         return cacheHashMap.size();
     }
+
+    public int maxSize(){
+        return size;
+    }
 }
