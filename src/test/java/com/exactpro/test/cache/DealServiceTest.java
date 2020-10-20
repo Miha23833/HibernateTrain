@@ -49,6 +49,8 @@ class DealServiceTest {
         GenericDAO.insertEntity(session, customer);
         session.getTransaction().commit();
         session.close();
+
+        DealService.clearCache();
     }
 
     @AfterEach
