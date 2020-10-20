@@ -14,11 +14,8 @@ public class DealWriter extends Thread {
 
     @Override
     public void run() {
-        synchronized (this) {
-            DealService.insertDeal(dealToInsert);
-            isDone = true;
-            notifyAll();
-        }
+        DealService.insertDeal(dealToInsert);
+        isDone = true;
     }
 
     public boolean isDone() {

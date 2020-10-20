@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Set;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
  * {@code LimitedSizeHashmap} contains keys in queue.
@@ -15,6 +17,7 @@ public class LimitedSizeHashmap<K, V> {
     final int size;
     Queue<K> keys = new LinkedList<>();
     HashMap<K, V> cacheHashMap = new HashMap<>();
+    ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
 
     public LimitedSizeHashmap(int size) {
         if (size <= 0)
@@ -23,46 +26,87 @@ public class LimitedSizeHashmap<K, V> {
     }
 
     public void put(K key, V value){
-        if (!cacheHashMap.containsKey(key)) {
-            if (keys.size() > size) {
-                K lastKey = keys.remove();
-                cacheHashMap.remove(lastKey);
+        readWriteLock.writeLock().lock();
+        try {
+            if (!cacheHashMap.containsKey(key)) {
+                if (keys.size() > size) {
+                    K lastKey = keys.remove();
+                    cacheHashMap.remove(lastKey);
+                }
+                keys.add(key);
             }
-            keys.add(key);
+            cacheHashMap.put(key, value);
         }
-        cacheHashMap.put(key, value);
-    }
-
-    public V get(K key){
-        return cacheHashMap.get(key);
-    }
-
-    public Set<K> keySet(){
-        return cacheHashMap.keySet();
-    }
-
-    public boolean containsKey(K key){
-        return cacheHashMap.containsKey(key);
-    }
-
-    public void clear(){
-        cacheHashMap.clear();
-        keys.clear();
-    }
-
-    public void removeKey(K key){
-        if (!cacheHashMap.containsKey(key)){
-            return;
+        finally {
+            readWriteLock.writeLock().unlock();
         }
-        cacheHashMap.remove(key);
-        keys.remove(key);
     }
 
-    public int size(){
-        return cacheHashMap.size();
+    public V get(K key) {
+        readWriteLock.readLock().lock();
+        try {
+            return cacheHashMap.get(key);
+        } finally {
+            readWriteLock.readLock().unlock();
+        }
+    }
+
+    public Set<K> keySet() {
+        readWriteLock.readLock().lock();
+        try {
+            return cacheHashMap.keySet();
+        } finally {
+            readWriteLock.readLock().unlock();
+        }
+    }
+
+    public boolean containsKey(K key) {
+        readWriteLock.readLock().lock();
+        try {
+            return cacheHashMap.containsKey(key);
+        } finally {
+            readWriteLock.readLock().unlock();
+        }
+    }
+
+    public void clear() {
+        readWriteLock.readLock().lock();
+        try {
+            cacheHashMap.clear();
+            keys.clear();
+        } finally {
+            readWriteLock.readLock().unlock();
+        }
+    }
+
+    public void removeKey(K key) {
+        readWriteLock.readLock().lock();
+        try {
+            if (!cacheHashMap.containsKey(key)) {
+                return;
+            }
+            cacheHashMap.remove(key);
+            keys.remove(key);
+        } finally {
+            readWriteLock.readLock().unlock();
+        }
+    }
+
+    public int size() {
+        readWriteLock.readLock().lock();
+        try {
+            return cacheHashMap.size();
+        } finally {
+            readWriteLock.readLock().unlock();
+        }
     }
 
     public int maxSize(){
-        return size;
+        readWriteLock.readLock().lock();
+        try {
+            return size;
+        } finally {
+            readWriteLock.readLock().unlock();
+        }
     }
 }
