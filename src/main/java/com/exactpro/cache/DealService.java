@@ -5,7 +5,6 @@ import com.exactpro.DAO.SingleSessionFactory;
 import com.exactpro.collections.LimitedSizeHashmap;
 import com.exactpro.entities.Deal;
 import com.exactpro.loggers.StaticLogger;
-import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
@@ -115,17 +114,35 @@ public class DealService implements Cache {
 
     @Override
     public void clean() {
-        cache.clear();
+        try {
+            readWriteLock.writeLock().lock();
+            cache.clear();
+        }
+        finally {
+            readWriteLock.writeLock().unlock();
+        }
     }
 
     @Override
     public int getSize() {
+        try {
+        readWriteLock.writeLock().lock();
         return cache.size();
+        }
+        finally {
+            readWriteLock.writeLock().unlock();
+        }
     }
 
     @Override
     public int maxSize() {
+        try {
+        readWriteLock.writeLock().lock();
         return cache.maxSize();
+        }
+        finally {
+            readWriteLock.writeLock().unlock();
+        }
     }
 
 }
