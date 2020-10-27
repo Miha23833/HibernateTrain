@@ -1,7 +1,6 @@
 package com.exactpro.scheduler;
 
 import com.exactpro.DAO.GenericDAO;
-import com.exactpro.DAO.SingleSessionFactory;
 import com.exactpro.entities.Customer;
 import com.exactpro.entities.Deal;
 import com.exactpro.entities.Product;
