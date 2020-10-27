@@ -32,7 +32,7 @@ public class GenericDAO {
     }
 
     public static <T> T selectByID(Session session, Class<T> clazz, Integer id) {
-        T entity = session.load(clazz, id);
+        T entity = session.get(clazz, id);
         logger.info(String.format("Entity %s was selected by id (%s)", clazz.toString(), id));
         return entity;
     }
