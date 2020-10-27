@@ -1,5 +1,7 @@
 package com.exactpro.scheduler;
 
+import org.hibernate.Session;
+
 import java.sql.*;
 
 /**
@@ -8,7 +10,7 @@ import java.sql.*;
 public abstract class AbstractDataLoader {
     protected String selectStatement;
 
-    abstract void insertData(String path, String fileName) throws SQLException, ClassNotFoundException;
+    abstract void insertData(Session session, String path, String fileName) throws SQLException, ClassNotFoundException;
 
     protected ResultSet getDataFromCSV(String path, String fileName) throws ClassNotFoundException, SQLException {
         if (fileName.contains(".") && fileName.endsWith("csv")){

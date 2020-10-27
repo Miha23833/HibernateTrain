@@ -6,7 +6,6 @@ import com.exactpro.entities.Customer;
 import com.exactpro.entities.Deal;
 import com.exactpro.entities.Product;
 import org.hibernate.Session;
-import org.hibernate.Transaction;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -18,10 +17,9 @@ public class DealDataLoader extends AbstractDataLoader{
     }
 
     @Override
-    void insertData(String path, String fileName) throws SQLException, ClassNotFoundException {
+    void insertData(Session session, String path, String fileName) throws SQLException, ClassNotFoundException {
         ResultSet data = this.getDataFromCSV(path, fileName);
 
-        Session session = SingleSessionFactory.getInstance().openSession();
         session.beginTransaction();
 
         while (data.next()){
@@ -29,6 +27,16 @@ public class DealDataLoader extends AbstractDataLoader{
 
             Product product = GenericDAO.selectByID(session, Product.class, data.getInt("product_id"));
             Customer customer = GenericDAO.selectByID(session, Customer.class, data.getInt("customer_id"));
+
+            if (product == null && customer == null){
+                throw new SQLException("Product and customer does not exist.");
+            }
+            else if (product == null){
+                throw new SQLException("Product does not exist.");
+            }
+            else if (customer == null){
+                throw new SQLException("Customer does not exist.");
+            }
 
             dealToInsert.setDealID(data.getInt("deal_id"));
             dealToInsert.setDealDate(data.getLong("deal_date"));
@@ -39,8 +47,6 @@ public class DealDataLoader extends AbstractDataLoader{
 
             GenericDAO.insertEntity(session, dealToInsert);
         }
-        session.close();
-        session.getTransaction().commit();
     }
 
 
