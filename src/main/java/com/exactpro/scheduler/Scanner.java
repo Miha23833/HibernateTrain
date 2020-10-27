@@ -74,13 +74,19 @@ public class Scanner {
         this.rejectedData = rejectedData;
     }
 
+    public Scanner(String delimiter, String sourceRoot) throws IOException {
+        this.delimiter = delimiter;
+
+        checkRelatively(sourceRoot);
+        this.sourceRoot = sourceRoot;
+    }
+
     private List<String[]> loadCSV() throws FileNotFoundException {
 
         FilenameFilter filter = (dir, name) -> name.endsWith(".csv");
         File currentPath = new File(sourceRoot + freshData);
         String [] filenames = currentPath.list(filter);
 
-        CSVReader csvReader = new CSVReader(new FileReader(sourceRoot + freshData));
 
 
     }
