@@ -68,6 +68,9 @@ public class Scanner {
             if (!value.startsWith("/")){
                 value = "/"+value;
             }
+            if(value.length() > 0 && !value.endsWith("/")){
+                value = value.substring(0, value.length()-1);
+            }
             checkRelatively(value);
         }
 
