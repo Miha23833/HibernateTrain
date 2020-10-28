@@ -12,7 +12,7 @@ import java.sql.SQLException;
 public class DealDataLoader extends AbstractDataLoader{
 
     public DealDataLoader() {
-        this.selectStatement = "SELECT deal_date, customer_id, discount, product_id, price, deal_id\n, customer_id, product_id";
+        this.columns = new String[] {"deal_date"," customer_id", "discount", "product_id", "price", "customer_id", "product_id"};
     }
 
     @Override
@@ -37,7 +37,6 @@ public class DealDataLoader extends AbstractDataLoader{
                 throw new SQLException("Customer does not exist.");
             }
 
-            dealToInsert.setDealID(data.getInt("deal_id"));
             dealToInsert.setDealDate(data.getLong("deal_date"));
             dealToInsert.setPrice(data.getBigDecimal("price"));
             dealToInsert.setDiscount(data.getBigDecimal("discount"));
