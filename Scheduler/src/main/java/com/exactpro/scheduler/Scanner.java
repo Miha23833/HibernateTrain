@@ -23,7 +23,7 @@ public class Scanner {
     private String insertedData = "/Done";
     private String rejectedData = "/Rejected";
 
-    private final String delimiter;
+    private final char delimiter;
 
     private void checkRelatively(String path) throws IOException {
         File file = new File(path);
@@ -60,7 +60,7 @@ public class Scanner {
         }
     }
 
-    public Scanner (String delimiter, String sourceRoot, String freshData, String insertedData, String rejectedData) throws IOException {
+    public Scanner (char delimiter, String sourceRoot, String freshData, String insertedData, String rejectedData) throws IOException {
 
         this.delimiter = delimiter;
 
@@ -83,7 +83,7 @@ public class Scanner {
         createFolders();
     }
 
-    public Scanner(String delimiter, String sourceRoot) throws IOException {
+    public Scanner(char delimiter, String sourceRoot) throws IOException {
         this.delimiter = delimiter;
 
         checkRelatively(sourceRoot);
@@ -98,7 +98,7 @@ public class Scanner {
         File currentPath = new File(sourceRoot + freshData);
         String [] filenames = currentPath.list(filter);
 
-        AbstractDataLoader loader = new DealDataLoader();
+        DataLoader loader = new DealDataLoader();
 
         Session session = SingleSessionFactory.getInstance().openSession();
         for (String filename : filenames) {

@@ -9,7 +9,7 @@ import org.hibernate.Session;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class DealDataLoader extends AbstractDataLoader{
+public class DealDataLoader extends DataLoader {
 
     public DealDataLoader() {
         this.columns = new String[] {"deal_date"," customer_id", "discount", "product_id", "price", "customer_id", "product_id"};
