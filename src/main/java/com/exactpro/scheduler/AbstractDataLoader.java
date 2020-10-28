@@ -1,14 +1,24 @@
 package com.exactpro.scheduler;
 
+import com.exactpro.loggers.StaticLogger;
+import com.opencsv.CSVWriter;
+import org.apache.log4j.Logger;
 import org.hibernate.Session;
 
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.sql.*;
 
 /**
  * Loads data from csv to database
  */
 public abstract class AbstractDataLoader {
-    protected String selectStatement;
+
+    private Logger warnLogger = StaticLogger.warnLogger;
+
+    protected String[] columns;
 
     abstract void insertData(Session session, String path, String fileName) throws SQLException, ClassNotFoundException;
 
@@ -20,7 +30,31 @@ public abstract class AbstractDataLoader {
         Connection conn = DriverManager.getConnection("jdbc:relique:csv:" + path);
         Statement stmt = conn.createStatement();
 
-        return stmt.executeQuery(selectStatement + " FROM " + fileName);
+        return stmt.executeQuery("SELECT " + String.join(",", columns) + " FROM " + fileName);
+    }
+
+    protected void saveDataToCSV(ResultSet data, String path, String fileName, char separator) throws SQLException, IOException {
+
+        if (!fileName.startsWith("/")) {
+            fileName = "/" + fileName;
+        }
+        if(path.length() > 0 && !path.endsWith("/")){
+            path = path.substring(0, path.length()-1);
+        }
+
+        String namePostfix = "";
+        int existingFilesCount = 0;
+        while (Files.exists(Paths.get(path + fileName))){
+            namePostfix = String.format("(%s)", ++existingFilesCount);
+        }
+        fileName = fileName + namePostfix;
+
+        try (CSVWriter csvWriter = new CSVWriter(new FileWriter(path + fileName), separator, CSVWriter.DEFAULT_QUOTE_CHARACTER, CSVWriter.DEFAULT_ESCAPE_CHARACTER, CSVWriter.RFC4180_LINE_END)) {
+            csvWriter.writeAll(data, true);
+        }catch (SQLException e){
+            warnLogger.error(e);
+            throw new SQLException(e);
+        }
     }
 
 
