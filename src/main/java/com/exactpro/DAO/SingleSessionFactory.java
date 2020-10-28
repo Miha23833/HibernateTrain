@@ -21,6 +21,7 @@ public class SingleSessionFactory {
                         infoLogger.info("New instance of SessionFactory was created");
                     }catch (HibernateException e){
                         warnLogger.error("Failed to create SessionFactory object", e);
+                        throw new HibernateException(e);
                     }
             }
         }
