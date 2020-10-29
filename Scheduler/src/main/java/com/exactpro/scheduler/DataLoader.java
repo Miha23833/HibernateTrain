@@ -16,7 +16,7 @@ import java.sql.*;
  */
 public abstract class DataLoader {
 
-    private Logger warnLogger = StaticLogger.warnLogger;
+    private final Logger warnLogger = StaticLogger.warnLogger;
 
     protected String[] columns;
 
