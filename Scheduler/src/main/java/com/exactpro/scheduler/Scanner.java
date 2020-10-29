@@ -92,6 +92,11 @@ public class Scanner {
         createFolders();
     }
 
+    /**
+     * Looking for csv files in {@link #freshData} and loads them to database.
+     * If data in file is not valid then replace it to {@link #rejectedData}.
+     * @throws ClassNotFoundException if no driver is found
+     */
     public void scanAndLoadData() throws ClassNotFoundException, IOException {
 
         FilenameFilter filter = (dir, name) -> name.endsWith(".csv");
@@ -101,29 +106,34 @@ public class Scanner {
         DataLoader loader = new DealDataLoader();
 
         Session session = SingleSessionFactory.getInstance().openSession();
-        for (String filename : filenames) {
-            try {
-                loader.insertData(session, sourceRoot + freshData, filename);
+        try {
+            for (String filename: filenames) {
+                try {
+                    loader.insertData(session, sourceRoot + freshData, filename);
 
-                Files.move(Paths.get(sourceRoot + freshData + filename + ".csv"),
-                        Paths.get(sourceRoot + insertedData),
-                        StandardCopyOption.REPLACE_EXISTING);
+                    Files.move(Paths.get(sourceRoot + freshData + filename + ".csv"),
+                            Paths.get(sourceRoot + insertedData),
+                            StandardCopyOption.REPLACE_EXISTING);
 
-            }catch (SQLException e){
-                warnLogger.error(e);
+                } catch (SQLException e) {
+                    warnLogger.error(e);
 
-                Files.move(Paths.get(sourceRoot + freshData + filename + ".csv"),
-                        Paths.get(sourceRoot + rejectedData),
-                        StandardCopyOption.REPLACE_EXISTING);
+                    Files.move(Paths.get(sourceRoot + freshData + filename + ".csv"),
+                            Paths.get(sourceRoot + rejectedData),
+                            StandardCopyOption.REPLACE_EXISTING);
 
-                if (session.getTransaction().isActive()) {
-                    session.getTransaction().rollback();
+                    if (session.getTransaction().isActive()) {
+                        session.getTransaction().rollback();
+                    }
+
+                } catch (ClassNotFoundException e) {
+                    warnLogger.error(e);
+                    throw new ClassNotFoundException(e.toString());
                 }
-
-            } catch (ClassNotFoundException e) {
-                warnLogger.error(e);
-                throw new ClassNotFoundException(e.toString());
             }
+        }
+        finally {
+            session.close();
         }
         if (session.getTransaction().isActive()) {
             session.getTransaction().commit();
