@@ -1,6 +1,7 @@
 package com.exactpro.scheduler;
 
 import com.exactpro.DAO.SingleSessionFactory;
+import com.exactpro.functional.CreateDirFunc;
 import com.exactpro.loggers.StaticLogger;
 import org.apache.log4j.Logger;
 import org.hibernate.Session;
@@ -12,6 +13,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.sql.SQLException;
+import java.util.Arrays;
 
 public class Scanner {
     private final Logger infoLogger = StaticLogger.infoLogger;
@@ -36,22 +38,12 @@ public class Scanner {
         String logMsg = "Path %s created because it did not exist.";
 
         try {
-            if (!Files.exists(Paths.get(sourceRoot + freshData))) {
-                Files.createDirectories(Paths.get(sourceRoot + freshData));
+            for (String path: new String[]{freshData, insertedData, rejectedData}) {
+                if (!Files.exists(Paths.get(path))) {
+                    Files.createDirectories(Paths.get(path));
 
-                infoLogger.info(String.format(logMsg, sourceRoot + freshData));
-            }
-
-            if (!Files.exists(Paths.get(sourceRoot + insertedData))) {
-                Files.createDirectories(Paths.get(sourceRoot + insertedData));
-
-                infoLogger.info(String.format(logMsg, sourceRoot + freshData));
-            }
-
-            if (!Files.exists(Paths.get(sourceRoot + rejectedData))) {
-                Files.createDirectories(Paths.get(sourceRoot + rejectedData));
-
-                infoLogger.info(String.format(logMsg, sourceRoot + freshData));
+                    infoLogger.info(String.format(logMsg, path));
+                }
             }
 
         } catch (IOException e) {
