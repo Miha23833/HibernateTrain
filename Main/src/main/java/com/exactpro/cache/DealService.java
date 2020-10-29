@@ -45,29 +45,35 @@ public class DealService implements Cache {
     }
 
     public static Deal getByID(Integer id) {
+        readWriteLock.readLock().lock();
+        Session session = null;
         try {
-            readWriteLock.readLock().lock();
-
             if (cache.containsKey(id)) {
                 Deal deal = cache.get(id);
                 StaticLogger.infoLogger.info(String.format("Deal with id = %s was taken from cache", deal.getDealID()));
                 return deal;
             }
-            Session session = sf.openSession();
+            session = sf.openSession();
             Deal deal = GenericDAO.selectByID(session, Deal.class, id);
             if (deal != null && deal.getDealID() != null) {
-                readWriteLock.readLock().unlock();
-                readWriteLock.writeLock().lock();
-                
-                cache.put(id, deal);
-                StaticLogger.infoLogger.info(String.format("Deal with id = %s wasn't in cache. It was put into cache", deal.getDealID()));
+                try {
+                    readWriteLock.readLock().unlock();
+                    readWriteLock.writeLock().lock();
 
-                readWriteLock.writeLock().unlock();
-                readWriteLock.readLock().lock();
+                    cache.put(id, deal);
+                    StaticLogger.infoLogger.info(String.format("Deal with id = %s wasn't in cache. It was put into cache", deal.getDealID()));
+
+                }
+                finally {
+                    readWriteLock.writeLock().unlock();
+                    readWriteLock.readLock().lock();
+                }
             }
-            session.close();
             return deal;
         } finally {
+            if (session != null && session.isOpen()) {
+                session.close();
+            }
             readWriteLock.readLock().unlock();
         }
 

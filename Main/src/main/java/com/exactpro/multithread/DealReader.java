@@ -14,7 +14,6 @@ public class DealReader extends Thread {
         synchronized (this) {
             deal = DealService.getByID(dealID);
             isDone = true;
-            notifyAll();
         }
     }
 
