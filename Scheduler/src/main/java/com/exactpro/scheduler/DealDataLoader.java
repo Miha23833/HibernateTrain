@@ -9,6 +9,9 @@ import org.hibernate.Session;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/**
+ * Inserts data from CSV to Database.
+ */
 public class DealDataLoader extends DataLoader {
 
     public DealDataLoader() {
