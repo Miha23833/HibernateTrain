@@ -15,7 +15,7 @@ import java.util.Properties;
 /**
  * Loads data from csv to database
  */
-public abstract class DataLoader {
+public abstract class DataWorker {
 
     private final Logger warnLogger = StaticLogger.warnLogger;
 

@@ -12,9 +12,9 @@ import java.sql.SQLException;
 /**
  * Inserts data from CSV to Database.
  */
-public class DealDataLoader extends DataLoader {
+public class DealDataWorker extends DataWorker {
 
-    public DealDataLoader() {
+    public DealDataWorker() {
         this.columns = new String[] {"deal_date"," customer_id", "discount", "product_id", "price", "customer_id", "product_id"};
     }
 

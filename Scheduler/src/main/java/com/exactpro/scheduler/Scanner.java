@@ -100,7 +100,7 @@ public class Scanner {
      */
     public void loadDealsFromCSV(String filename) throws ClassNotFoundException, IOException {
 
-        DataLoader loader = new DealDataLoader();
+        DataWorker loader = new DealDataWorker();
 
         filename = filename.replace(".csv", "");
 
