@@ -12,6 +12,9 @@ public class Starter {
 
 
     public static void main(String[] args) throws IOException, InterruptedException {
+
+        //TODO: корневая файловая папка не создаётся. Вместо нее создаются конечные папки
+        //TODO: Сделать автотесты
         Scheduler scheduler = new Scheduler();
         while (true) {
             scheduler.run();
