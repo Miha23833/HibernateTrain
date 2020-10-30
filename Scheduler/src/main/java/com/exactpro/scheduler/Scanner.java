@@ -33,7 +33,7 @@ public class Scanner {
         int existingFilesCounter = 1;
         String template = filename + " (%s)";
         while (Files.exists(Paths.get(path + "/" + filename + extension))){
-            filename =  String.format(template, existingFilesCounter);
+            filename =  String.format(template, existingFilesCounter++);
         }
         return filename;
     }
