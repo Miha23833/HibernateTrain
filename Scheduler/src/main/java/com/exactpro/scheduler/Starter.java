@@ -18,7 +18,7 @@ public class Starter {
         while (true) {
             scheduler.run();
             try {
-                Thread.sleep(Config.getMaxThreadPool());
+                Thread.sleep(Config.getScannerPause());
             } catch (InterruptedException e) {
                 warnLogger.error(e);
                 throw new InterruptedException(e.toString());
