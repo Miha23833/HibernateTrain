@@ -44,7 +44,7 @@ public class Scheduler {
             if (!foldersInProcessPool.contains(fileName)) {
                 Function<String> lambda = scanner::loadDealsFromCSV;
                 foldersInProcessPool.add(fileName);
-                Thread CSVLoadThread = new SemaphoreThread<>(lambda, fileName, semaphore);
+                Thread CSVLoadThread = new SemaphoreThread<>(lambda, fileName, semaphore, foldersInProcessPool);
                 CSVLoadThread.start();
                 infoLogger.info(String.format("Thread %s started to load CSV to DB", CSVLoadThread.getName()));
             }

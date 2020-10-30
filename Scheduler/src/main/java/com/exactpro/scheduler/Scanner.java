@@ -25,6 +25,19 @@ public class Scanner {
 
     private final char delimiter;
 
+    private String addPostfixIfFileExists(String path, String filename, String extension){
+        if (!extension.startsWith(".")){
+            extension = "." + extension;
+        }
+
+        int existingFilesCounter = 1;
+        String template = filename + " (%s)";
+        while (Files.exists(Paths.get(path + "/" + filename + extension))){
+            filename =  String.format(template, existingFilesCounter);
+        }
+        return filename;
+    }
+
     private void checkRelatively(String path) throws IOException {
         File file = new File(path);
         if (file.isAbsolute()) {
@@ -104,20 +117,23 @@ public class Scanner {
 
         filename = filename.replace(".csv", "");
 
-
         Session session = SingleSessionFactory.getInstance().openSession();
         try {
             loader.insertData(session, sourceRoot + freshData, filename, delimiter);
 
+            String filenameWithPostfix = addPostfixIfFileExists(sourceRoot + insertedData, filename, ".csv");
+
             Files.move(Paths.get(sourceRoot + freshData + "/" + filename + ".csv"),
-                    Paths.get(sourceRoot + insertedData + "/" + filename + ".csv"),
+                    Paths.get(sourceRoot + insertedData + "/" + filenameWithPostfix + ".csv"),
                     StandardCopyOption.REPLACE_EXISTING);
 
         } catch (SQLException e) {
             warnLogger.error(e);
 
+            String filenameWithPostfix = addPostfixIfFileExists(sourceRoot + rejectedData, filename, ".csv");
+
             Files.move(Paths.get(sourceRoot + freshData + "/" + filename + ".csv"),
-                    Paths.get(sourceRoot + rejectedData + "/" + filename + ".csv"),
+                    Paths.get(sourceRoot + rejectedData + "/" + filenameWithPostfix + ".csv"),
                     StandardCopyOption.REPLACE_EXISTING);
 
             if (session.getTransaction().isActive()) {
