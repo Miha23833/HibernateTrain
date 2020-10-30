@@ -2,9 +2,12 @@ package com.exactpro.test.DAO;
 
 import com.exactpro.DAO.GenericDAO;
 import com.exactpro.DAO.SingleSessionFactory;
+import com.exactpro.cache.DealService;
 import com.exactpro.connection.DBConnection;
 import com.exactpro.entities.Customer;
-import com.exactpro.test.common.CommonUnitTests;
+import com.exactpro.loggers.StaticLogger;
+import com.exactpro.tests.CommonUnitTests;
+import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.junit.After;
@@ -20,16 +23,27 @@ class GenericDAOTest {
     Customer customer;
     private final SessionFactory sf = SingleSessionFactory.getInstance();
 
+    private final Logger infoLogger = StaticLogger.infoLogger;
+
     @BeforeEach
     void setUp() throws SQLException, ClassNotFoundException {
         CommonUnitTests.cleanDB("jdbc:mysql://localhost:3306/hibernate_unittests", "root", "password");
         customer = new Customer("TEST", "UNIT", (short) 20, 0);
+
+        DealService service = new DealService();
+        service.clean();
+        infoLogger.info("Cache was cleaned during clearing database");
     }
 
     @After
     public void tearDown() throws SQLException, ClassNotFoundException {
         customer = null;
         CommonUnitTests.cleanDB("jdbc:mysql://localhost:3306/hibernate_unittests", "root", "password");
+
+        DealService service = new DealService();
+        service.clean();
+
+        infoLogger.info("Cache was cleaned during clearing database");
     }
 
     @Test
