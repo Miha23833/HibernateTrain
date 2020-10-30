@@ -55,11 +55,11 @@ public class Scanner {
         this.delimiter = delimiter;
 
         for (String value: new String[]{sourceRoot, freshData, insertedData, rejectedData}) {
-            if (!value.startsWith("/")) {
+            if (!value.startsWith("/") && !value.startsWith(".")) {
                 value = "/" + value;
             }
             if (value.length() > 0 && !value.endsWith("/")) {
-                value = value.substring(0, value.length() - 1);
+                value = value + "/";
             }
             checkRelatively(value);
         }
@@ -85,7 +85,11 @@ public class Scanner {
     public String[] getCSVFilenames() {
         FilenameFilter filter = (dir, name) -> name.endsWith(".csv");
         File currentPath = new File(sourceRoot + freshData);
-        return currentPath.list(filter);
+        String[] csvFilenames = currentPath.list(filter);
+        if (csvFilenames == null){
+            csvFilenames = new String[]{};
+        }
+        return csvFilenames;
     }
 
     /**
@@ -98,19 +102,22 @@ public class Scanner {
 
         DataLoader loader = new DealDataLoader();
 
+        filename = filename.replace(".csv", "");
+
+
         Session session = SingleSessionFactory.getInstance().openSession();
         try {
             loader.insertData(session, sourceRoot + freshData, filename, delimiter);
 
-            Files.move(Paths.get(sourceRoot + freshData + filename + ".csv"),
+            Files.move(Paths.get(sourceRoot + freshData + "/" + filename + ".csv"),
                     Paths.get(sourceRoot + insertedData),
                     StandardCopyOption.REPLACE_EXISTING);
 
         } catch (SQLException e) {
             warnLogger.error(e);
 
-            Files.move(Paths.get(sourceRoot + freshData + filename + ".csv"),
-                    Paths.get(sourceRoot + rejectedData),
+            Files.move(Paths.get(sourceRoot + freshData + "/" + filename + ".csv"),
+                    Paths.get(sourceRoot + rejectedData + "/" + filename + ".csv"),
                     StandardCopyOption.REPLACE_EXISTING);
 
             if (session.getTransaction().isActive()) {

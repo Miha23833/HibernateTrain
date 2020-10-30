@@ -30,12 +30,14 @@ public abstract class DataLoader {
         Class.forName("org.relique.jdbc.csv.CsvDriver");
 
         Properties props = new Properties();
-        props.put("separator", separator);
+        props.put("separator", String.valueOf(separator));
+        props.put("quotechar", "\"");
 
-        Connection conn = DriverManager.getConnection("jdbc:relique:csv:" + path, props);
-        Statement stmt = conn.createStatement();
+        try(Connection conn = DriverManager.getConnection("jdbc:relique:csv:" + path, props)) {
+            Statement stmt = conn.createStatement();
 
-        return stmt.executeQuery("SELECT " + String.join(",", columns) + " FROM " + fileName);
+            return stmt.executeQuery("SELECT " + String.join(",", columns) + " FROM " + fileName);
+        }
     }
 
     protected void saveDataToCSV(ResultSet data, String path, String fileName, char separator) throws SQLException, IOException {

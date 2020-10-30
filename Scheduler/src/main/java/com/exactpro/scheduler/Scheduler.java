@@ -39,27 +39,14 @@ public class Scheduler {
 
     }
 
-    private void run() {
+    public void run() {
         for (String fileName: scanner.getCSVFilenames()) {
             if (!foldersInProcessPool.contains(fileName)) {
                 Function<String> lambda = scanner::loadDealsFromCSV;
-                Thread CSVLoadThread = new SemaphoreThread<>(lambda, fileName, semaphore);
                 foldersInProcessPool.add(fileName);
+                Thread CSVLoadThread = new SemaphoreThread<>(lambda, fileName, semaphore);
                 CSVLoadThread.start();
                 infoLogger.info(String.format("Thread %s started to load CSV to DB", CSVLoadThread.getName()));
-            }
-        }
-    }
-
-    public static void main(String[] args) throws IOException, InterruptedException {
-        while (true) {
-            Scheduler scheduler = new Scheduler();
-            scheduler.run();
-            try {
-                Thread.sleep(Config.getMaxThreadPool());
-            } catch (InterruptedException e) {
-                warnLogger.error(e);
-                throw new InterruptedException(e.toString());
             }
         }
     }

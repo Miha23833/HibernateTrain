@@ -17,6 +17,13 @@
             <version>1.0-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/net.sourceforge.csvjdbc/csvjdbc -->
+        <dependency>
+            <groupId>net.sourceforge.csvjdbc</groupId>
+            <artifactId>csvjdbc</artifactId>
+            <version>1.0.28</version>
+        </dependency>
+
     </dependencies>
 
 
