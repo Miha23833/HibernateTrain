@@ -1,8 +1,8 @@
-package com.exactpro.entities.functional;
+package com.exactpro.functional;
 
 import java.io.IOException;
 
 @FunctionalInterface
-public interface Function {
-    void execute() throws IOException, ClassNotFoundException;
+public interface Function<T> {
+    void execute(T value) throws IOException, ClassNotFoundException;
 }
