@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.sql.*;
+import java.util.Properties;
 
 /**
  * Loads data from csv to database
@@ -20,14 +21,18 @@ public abstract class DataLoader {
 
     protected String[] columns;
 
-    abstract void insertData(Session session, String path, String fileName) throws SQLException, ClassNotFoundException;
+    abstract void insertData(Session session, String path, String fileName, char delimiter) throws SQLException, ClassNotFoundException;
 
-    protected ResultSet getDataFromCSV(String path, String fileName) throws ClassNotFoundException, SQLException {
+    protected ResultSet getDataFromCSV(String path, String fileName, char separator) throws ClassNotFoundException, SQLException {
         if (fileName.contains(".") && fileName.endsWith("csv")){
             fileName = fileName.replace(".csv", "");
         }
         Class.forName("org.relique.jdbc.csv.CsvDriver");
-        Connection conn = DriverManager.getConnection("jdbc:relique:csv:" + path);
+
+        Properties props = new Properties();
+        props.put("separator", separator);
+
+        Connection conn = DriverManager.getConnection("jdbc:relique:csv:" + path, props);
         Statement stmt = conn.createStatement();
 
         return stmt.executeQuery("SELECT " + String.join(",", columns) + " FROM " + fileName);

@@ -19,8 +19,8 @@ public class DealDataLoader extends DataLoader {
     }
 
     @Override
-    void insertData(Session session, String path, String fileName) throws SQLException, ClassNotFoundException {
-        ResultSet data = this.getDataFromCSV(path, fileName);
+    void insertData(Session session, String path, String fileName, char delimiter) throws SQLException, ClassNotFoundException {
+        ResultSet data = this.getDataFromCSV(path, fileName, delimiter);
 
         session.beginTransaction();
 
