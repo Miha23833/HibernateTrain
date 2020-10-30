@@ -81,6 +81,16 @@ class DealDataWorkerTest {
         infoLogger.info("Cache was cleaned during clearing database");
     }
 
+    private int getResultSetRowCount(ResultSet resultSet) throws SQLException {
+        int result = 0;
+        resultSet.beforeFirst();
+        while (resultSet.next()){
+            result++;
+        }
+        resultSet.beforeFirst();
+        return result;
+    }
+
 
     @Test
     void insertData() throws SQLException, ClassNotFoundException, IOException {
@@ -117,13 +127,12 @@ class DealDataWorkerTest {
 
         ResultSetMetaData csvMetaData = csvData.getMetaData();
         ResultSetMetaData metaDataFromCSVFile = dataFromCSVFile.getMetaData();
+        Assert.assertEquals(csvMetaData.getColumnCount(), 6);
+        Assert.assertEquals(metaDataFromCSVFile.getColumnCount(), 6);
 
-        Assert.assertEquals(csvMetaData.getColumnCount(), metaDataFromCSVFile.getColumnCount());
+        Assert.assertEquals(rowCount, getResultSetRowCount(dataFromCSVFile));
+        Assert.assertEquals(rowCount, getResultSetRowCount(csvData));
 
-        int checkingRowCount = 0;
-
-
-        //TODO: воркер не подцепляет данные, но подцепляет названия колонок
         while (csvData.next() && dataFromCSVFile.next()) {
             Assert.assertEquals(csvData.getLong("deal_date"), dataFromCSVFile.getLong("deal_date"));
             Assert.assertEquals(csvData.getInt("customer_id"), dataFromCSVFile.getInt("customer_id"));
@@ -131,15 +140,7 @@ class DealDataWorkerTest {
             Assert.assertEquals(csvData.getInt("deal_id"), dataFromCSVFile.getInt("deal_id"));
             Assert.assertEquals(csvData.getBigDecimal("discount"), dataFromCSVFile.getBigDecimal("discount"));
             Assert.assertEquals(csvData.getBigDecimal("price"), dataFromCSVFile.getBigDecimal("price"));
-
-            // csvData and dataFromCSVFile must reach last row in the same iteration
-            Assert.assertEquals(csvData.isLast(), dataFromCSVFile.isLast());
-
-            checkingRowCount++;
         }
-
-        Assert.assertEquals(rowCount, checkingRowCount);
-
 
     }
 }
