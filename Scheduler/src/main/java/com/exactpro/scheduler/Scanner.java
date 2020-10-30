@@ -19,11 +19,19 @@ public class Scanner {
 
     private final String sourceRoot;
 
-    private String freshData = "/ToInsert";
-    private String insertedData = "/Done";
-    private String rejectedData = "/Rejected";
+    private final String freshData;
+    private final String insertedData;
+    private final String rejectedData;
 
     private final char delimiter;
+
+    private String normalizePath(String path) throws IOException {
+        if (path.length() > 0 && !path.endsWith("/")) {
+            path = path + "/";
+        }
+        checkRelatively(path);
+        return path;
+    }
 
     private String addPostfixIfFileExists(String path, String filename, String extension){
         if (!extension.startsWith(".")){
@@ -50,10 +58,10 @@ public class Scanner {
 
         try {
             for (String path: new String[]{freshData, insertedData, rejectedData}) {
-                if (!Files.exists(Paths.get(path))) {
-                    Files.createDirectories(Paths.get(path));
+                if (!Files.exists(Paths.get(sourceRoot + path))) {
+                    Files.createDirectories(Paths.get(sourceRoot + path));
 
-                    infoLogger.info(String.format(logMsg, path));
+                    infoLogger.info(String.format(logMsg, sourceRoot + path));
                 }
             }
 
@@ -67,21 +75,11 @@ public class Scanner {
 
         this.delimiter = delimiter;
 
-        for (String value: new String[]{sourceRoot, freshData, insertedData, rejectedData}) {
-            if (!value.startsWith("/") && !value.startsWith(".")) {
-                value = "/" + value;
-            }
-            if (value.length() > 0 && !value.endsWith("/")) {
-                value = value + "/";
-            }
-            checkRelatively(value);
-        }
+        this.sourceRoot = normalizePath(sourceRoot);
 
-        this.sourceRoot = sourceRoot;
-
-        this.freshData = freshData;
-        this.insertedData = insertedData;
-        this.rejectedData = rejectedData;
+        this.freshData = normalizePath(freshData);
+        this.insertedData = normalizePath(insertedData);
+        this.rejectedData = normalizePath(rejectedData);
 
         createFolders();
     }
@@ -91,6 +89,10 @@ public class Scanner {
 
         checkRelatively(sourceRoot);
         this.sourceRoot = sourceRoot;
+
+        this.freshData = "/ToInsert";
+        this.insertedData = "/Done";
+        this.rejectedData = "/Rejected";
 
         createFolders();
     }
