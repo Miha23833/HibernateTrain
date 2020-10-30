@@ -74,3 +74,7 @@ fabric.properties
 log/
 target/
 /Main/src/main/java/com/exactpro/Test.java
+/Scheduler/src/main/resources/scanner.properties
+/insert/
+/fresh/
+/reject/
