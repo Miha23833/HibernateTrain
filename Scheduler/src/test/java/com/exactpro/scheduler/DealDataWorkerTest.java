@@ -27,6 +27,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
@@ -84,22 +85,24 @@ class DealDataWorkerTest {
     @Test
     void insertData() throws SQLException, ClassNotFoundException, IOException {
 
-        ResultSet rowCount = DBConnection.executeWithResult("SELECT COUNT(*) AS count FROM HIBERNATE_UNITTESTS.DEALS");
-        rowCount.next();
+        ResultSet expectedZero = DBConnection.executeWithResult("SELECT COUNT(*) AS count FROM HIBERNATE_UNITTESTS.DEALS");
+        expectedZero.next();
 
-        Assert.assertEquals(0, rowCount.getInt("count"));
+        int rowCount = 30;
+
+        Assert.assertEquals(0, expectedZero.getInt("count"));
 
         Session session = SingleSessionFactory.getInstance().openSession();
         session.beginTransaction();
 
-        for (int i = 0; i < 30; i++) {
+        for (int i = 0; i < rowCount; i++) {
             Deal fillDeal = new Deal(customer,product,deal.getDealDate(),deal.getPrice(),deal.getDiscount());
 
             GenericDAO.insertEntity(session, fillDeal);
         }
         session.getTransaction().commit();
 
-        ResultSet csvData = DBConnection.executeWithResult("SELECT * FROM HIBERNATE_UNITTESTS.DEALS");
+        ResultSet csvData = DBConnection.executeWithResult("SELECT deal_date, customer_id, discount, product_id, price, deal_id FROM HIBERNATE_UNITTESTS.DEALS");
 
         String path = "testData";
         String filename = "testCSV";
@@ -112,23 +115,30 @@ class DealDataWorkerTest {
 
         ResultSet dataFromCSVFile = worker.getDataFromCSV(path, filename, separator);
 
-//        Assert.assertTrue(csvData.next() && dataFromCSVFile.next());
-        csvData.first();
-        dataFromCSVFile.first();
+        ResultSetMetaData csvMetaData = csvData.getMetaData();
+        ResultSetMetaData metaDataFromCSVFile = dataFromCSVFile.getMetaData();
 
-        int col = 1;
+        Assert.assertEquals(csvMetaData.getColumnCount(), metaDataFromCSVFile.getColumnCount());
+
+        int checkingRowCount = 0;
+
+
+        //TODO: воркер не подцепляет данные, но подцепляет названия колонок
         while (csvData.next() && dataFromCSVFile.next()) {
-            final Object res1 = csvData.getObject(col);
-            final Object res2 = dataFromCSVFile.getObject(col);
-            // Check values
-            Assert.assertEquals(res1, res2);
+            Assert.assertEquals(csvData.getLong("deal_date"), dataFromCSVFile.getLong("deal_date"));
+            Assert.assertEquals(csvData.getInt("customer_id"), dataFromCSVFile.getInt("customer_id"));
+            Assert.assertEquals(csvData.getInt("product_id"), dataFromCSVFile.getInt("product_id"));
+            Assert.assertEquals(csvData.getInt("deal_id"), dataFromCSVFile.getInt("deal_id"));
+            Assert.assertEquals(csvData.getBigDecimal("discount"), dataFromCSVFile.getBigDecimal("discount"));
+            Assert.assertEquals(csvData.getBigDecimal("price"), dataFromCSVFile.getBigDecimal("price"));
 
             // csvData and dataFromCSVFile must reach last row in the same iteration
             Assert.assertEquals(csvData.isLast(), dataFromCSVFile.isLast());
 
-            col++;
+            checkingRowCount++;
         }
 
+        Assert.assertEquals(rowCount, checkingRowCount);
 
 
     }

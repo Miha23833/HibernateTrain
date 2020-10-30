@@ -68,7 +68,7 @@ public abstract class DataWorker {
         props.put("quotechar", "\"");
 
         Connection conn = DriverManager.getConnection("jdbc:relique:csv:" + path, props);
-        Statement stmt = conn.createStatement();
+        Statement stmt = conn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
 
         String query = "SELECT " + String.join(",", columns) + " FROM " + String.format("\"%s\"",filename);
 
