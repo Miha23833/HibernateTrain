@@ -11,7 +11,6 @@ import org.hibernate.SessionFactory;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
-// TODO сделать прокси на все DAO с сессиями и т.п.
 
 /**
  * Cache is working for only by dealId

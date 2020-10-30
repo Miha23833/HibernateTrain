@@ -16,8 +16,6 @@ import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.List;
 
-//TODO: раз уж я знаю как делать метамодели - нужно заняться и заменой SQL на нормальный типизированный код. УРА!
-
 public class DealDAO {
 
     private static final Logger logger = StaticLogger.infoLogger;
