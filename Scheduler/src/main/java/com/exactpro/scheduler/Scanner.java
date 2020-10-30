@@ -1,7 +1,6 @@
 package com.exactpro.scheduler;
 
 import com.exactpro.DAO.SingleSessionFactory;
-import com.exactpro.functional.CreateDirFunc;
 import com.exactpro.loggers.StaticLogger;
 import org.apache.log4j.Logger;
 import org.hibernate.Session;
@@ -13,7 +12,6 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.sql.SQLException;
-import java.util.Arrays;
 
 public class Scanner {
     private final Logger infoLogger = StaticLogger.infoLogger;
@@ -29,7 +27,7 @@ public class Scanner {
 
     private void checkRelatively(String path) throws IOException {
         File file = new File(path);
-        if (file.isAbsolute()){
+        if (file.isAbsolute()) {
             throw new IOException(String.format("Path %s is not relative.", path));
         }
     }
@@ -52,16 +50,16 @@ public class Scanner {
         }
     }
 
-    public Scanner (char delimiter, String sourceRoot, String freshData, String insertedData, String rejectedData) throws IOException {
+    public Scanner(char delimiter, String sourceRoot, String freshData, String insertedData, String rejectedData) throws IOException {
 
         this.delimiter = delimiter;
 
-        for (String value: new String[] {sourceRoot, freshData, insertedData, rejectedData}) {
-            if (!value.startsWith("/")){
-                value = "/"+value;
+        for (String value: new String[]{sourceRoot, freshData, insertedData, rejectedData}) {
+            if (!value.startsWith("/")) {
+                value = "/" + value;
             }
-            if(value.length() > 0 && !value.endsWith("/")){
-                value = value.substring(0, value.length()-1);
+            if (value.length() > 0 && !value.endsWith("/")) {
+                value = value.substring(0, value.length() - 1);
             }
             checkRelatively(value);
         }
@@ -84,53 +82,51 @@ public class Scanner {
         createFolders();
     }
 
+    public String[] getCSVFilenames() {
+        FilenameFilter filter = (dir, name) -> name.endsWith(".csv");
+        File currentPath = new File(sourceRoot + freshData);
+        return currentPath.list(filter);
+    }
+
     /**
      * Looking for csv files in {@link #freshData} and loads them to database.
      * If data in file is not valid then replace it to {@link #rejectedData}.
+     *
      * @throws ClassNotFoundException if no driver is found
      */
-    public void scanAndLoadData() throws ClassNotFoundException, IOException {
-
-        FilenameFilter filter = (dir, name) -> name.endsWith(".csv");
-        File currentPath = new File(sourceRoot + freshData);
-        String [] filenames = currentPath.list(filter);
+    public void loadDealsFromCSV(String filename) throws ClassNotFoundException, IOException {
 
         DataLoader loader = new DealDataLoader();
 
         Session session = SingleSessionFactory.getInstance().openSession();
         try {
-            for (String filename: filenames) {
-                try {
-                    loader.insertData(session, sourceRoot + freshData, filename);
+            loader.insertData(session, sourceRoot + freshData, filename, delimiter);
 
-                    Files.move(Paths.get(sourceRoot + freshData + filename + ".csv"),
-                            Paths.get(sourceRoot + insertedData),
-                            StandardCopyOption.REPLACE_EXISTING);
+            Files.move(Paths.get(sourceRoot + freshData + filename + ".csv"),
+                    Paths.get(sourceRoot + insertedData),
+                    StandardCopyOption.REPLACE_EXISTING);
 
-                } catch (SQLException e) {
-                    warnLogger.error(e);
+        } catch (SQLException e) {
+            warnLogger.error(e);
 
-                    Files.move(Paths.get(sourceRoot + freshData + filename + ".csv"),
-                            Paths.get(sourceRoot + rejectedData),
-                            StandardCopyOption.REPLACE_EXISTING);
+            Files.move(Paths.get(sourceRoot + freshData + filename + ".csv"),
+                    Paths.get(sourceRoot + rejectedData),
+                    StandardCopyOption.REPLACE_EXISTING);
 
-                    if (session.getTransaction().isActive()) {
-                        session.getTransaction().rollback();
-                    }
-
-                } catch (ClassNotFoundException e) {
-                    warnLogger.error(e);
-                    throw new ClassNotFoundException(e.toString());
-                }
+            if (session.getTransaction().isActive()) {
+                session.getTransaction().rollback();
             }
-        }
-        finally {
+
+        } catch (ClassNotFoundException e) {
+            warnLogger.error(e);
+            throw new ClassNotFoundException(e.toString());
+
+        } finally {
+            if (session.getTransaction().isActive()) {
+                session.getTransaction().commit();
+            }
             session.close();
         }
-        if (session.getTransaction().isActive()) {
-            session.getTransaction().commit();
-        }
-        session.close();
     }
 
 }
