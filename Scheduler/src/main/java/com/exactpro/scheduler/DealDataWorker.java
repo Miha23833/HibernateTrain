@@ -15,12 +15,12 @@ import java.sql.SQLException;
 public class DealDataWorker extends DataWorker {
 
     public DealDataWorker() {
-        this.columns = new String[] {"deal_date"," customer_id", "discount", "product_id", "price", "customer_id", "product_id"};
+        this.columns = new String[] {"deal_date", "customer_id", "discount", "product_id", "price", "deal_id"};
     }
 
     @Override
-    void insertData(Session session, String path, String fileName, char delimiter) throws SQLException, ClassNotFoundException {
-        ResultSet data = this.getDataFromCSV(path, fileName, delimiter);
+    void insertData(Session session, String path, String filename, char delimiter) throws SQLException, ClassNotFoundException {
+        ResultSet data = this.getDataFromCSV(path, filename, delimiter);
 
         session.beginTransaction();
 

@@ -21,12 +21,46 @@ public abstract class DataWorker {
 
     protected String[] columns;
 
-    abstract void insertData(Session session, String path, String fileName, char delimiter) throws SQLException, ClassNotFoundException;
-
-    protected ResultSet getDataFromCSV(String path, String fileName, char separator) throws ClassNotFoundException, SQLException {
-        if (fileName.contains(".") && fileName.endsWith("csv")) {
-            fileName = fileName.replace(".csv", "");
+    private String addPostfixNumberIfFileExists(String path, String filename){
+        String fileExtension = ".csv";
+        int existingFilesCounter = 1;
+        String template = filename + " (%s)";
+        while (Files.exists(Paths.get(path + "/" + filename + fileExtension))){
+            filename =  String.format(template, existingFilesCounter++);
         }
+
+        if (!filename.endsWith(fileExtension)){
+            filename = filename + fileExtension;
+        }
+
+        return filename;
+    }
+
+    private String normalizeFilename(String filename){
+
+        filename = filename.replace(".csv", "");
+
+        if (!filename.startsWith("/")) {
+            filename = "/" + filename;
+        }
+
+        return filename;
+    }
+
+    private String normalizePath(String path){
+        if(path.length() > 0 && (path.endsWith("/") || path.endsWith("\\"))){
+            path = path.substring(0, path.length()-1);
+        }
+        return path;
+    }
+
+    abstract void insertData(Session session, String path, String filename, char delimiter) throws SQLException, ClassNotFoundException;
+
+    protected ResultSet getDataFromCSV(String path, String filename, char separator) throws ClassNotFoundException, SQLException {
+
+        filename = normalizeFilename(filename);
+        path = normalizePath(path);
+
         Class.forName("org.relique.jdbc.csv.CsvDriver");
 
         Properties props = new Properties();
@@ -36,32 +70,35 @@ public abstract class DataWorker {
         Connection conn = DriverManager.getConnection("jdbc:relique:csv:" + path, props);
         Statement stmt = conn.createStatement();
 
-        return stmt.executeQuery("SELECT " + String.join(",", columns) + " FROM " + fileName);
+        String query = "SELECT " + String.join(",", columns) + " FROM " + String.format("\"%s\"",filename);
+
+        return stmt.executeQuery(query);
 
     }
 
-    protected void saveDataToCSV(ResultSet data, String path, String fileName, char separator) throws SQLException, IOException {
+    /**
+     * Saves ResultSet to CSV. Returns new filename if previous was exist.
+     * For example: file.csv -> file (1).csv
+     * @param data data to insert.
+     * @param path path for file.
+     * @param filename name of file. Can be replaced and returned from this method.
+     * @param separator separator of CSV file.
+     * @return filename or filename if old was exist.
+     */
+    protected String saveDataToCSV(ResultSet data, String path, String filename, char separator) throws SQLException, IOException {
 
-        if (!fileName.startsWith("/")) {
-            fileName = "/" + fileName;
-        }
-        if(path.length() > 0 && !path.endsWith("/")){
-            path = path.substring(0, path.length()-1);
-        }
+        filename = normalizeFilename(filename);
+        path = normalizePath(path);
 
-        String namePostfix = "";
-        int existingFilesCount = 0;
-        while (Files.exists(Paths.get(path + fileName))){
-            namePostfix = String.format("(%s)", ++existingFilesCount);
-        }
-        fileName = fileName + namePostfix;
+        filename = addPostfixNumberIfFileExists(path, filename);
 
-        try (CSVWriter csvWriter = new CSVWriter(new FileWriter(path + fileName), separator, CSVWriter.DEFAULT_QUOTE_CHARACTER, CSVWriter.DEFAULT_ESCAPE_CHARACTER, CSVWriter.RFC4180_LINE_END)) {
+        try (CSVWriter csvWriter = new CSVWriter(new FileWriter(path + filename), separator, CSVWriter.DEFAULT_QUOTE_CHARACTER, CSVWriter.DEFAULT_ESCAPE_CHARACTER, CSVWriter.RFC4180_LINE_END)) {
             csvWriter.writeAll(data, true);
         }catch (SQLException e){
             warnLogger.error(e);
             throw new SQLException(e);
         }
+        return filename;
     }
 
 
