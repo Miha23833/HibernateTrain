@@ -110,7 +110,7 @@ public class Scanner {
             loader.insertData(session, sourceRoot + freshData, filename, delimiter);
 
             Files.move(Paths.get(sourceRoot + freshData + "/" + filename + ".csv"),
-                    Paths.get(sourceRoot + insertedData),
+                    Paths.get(sourceRoot + insertedData + "/" + filename + ".csv"),
                     StandardCopyOption.REPLACE_EXISTING);
 
         } catch (SQLException e) {

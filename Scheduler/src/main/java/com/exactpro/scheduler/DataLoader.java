@@ -24,7 +24,7 @@ public abstract class DataLoader {
     abstract void insertData(Session session, String path, String fileName, char delimiter) throws SQLException, ClassNotFoundException;
 
     protected ResultSet getDataFromCSV(String path, String fileName, char separator) throws ClassNotFoundException, SQLException {
-        if (fileName.contains(".") && fileName.endsWith("csv")){
+        if (fileName.contains(".") && fileName.endsWith("csv")) {
             fileName = fileName.replace(".csv", "");
         }
         Class.forName("org.relique.jdbc.csv.CsvDriver");
@@ -33,11 +33,11 @@ public abstract class DataLoader {
         props.put("separator", String.valueOf(separator));
         props.put("quotechar", "\"");
 
-        try(Connection conn = DriverManager.getConnection("jdbc:relique:csv:" + path, props)) {
-            Statement stmt = conn.createStatement();
+        Connection conn = DriverManager.getConnection("jdbc:relique:csv:" + path, props);
+        Statement stmt = conn.createStatement();
 
-            return stmt.executeQuery("SELECT " + String.join(",", columns) + " FROM " + fileName);
-        }
+        return stmt.executeQuery("SELECT " + String.join(",", columns) + " FROM " + fileName);
+
     }
 
     protected void saveDataToCSV(ResultSet data, String path, String fileName, char separator) throws SQLException, IOException {
