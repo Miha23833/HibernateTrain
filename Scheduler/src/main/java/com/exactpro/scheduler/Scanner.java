@@ -134,6 +134,7 @@ public class Scanner {
 
             String filenameWithPostfix = addPostfixIfFileExists(sourceRoot + rejectedData, filename, ".csv");
 
+            // TODO: Процесс не может получить доступ к файлу, так как этот файл занят другим процессом
             Files.move(Paths.get(sourceRoot + freshData + "/" + filename + ".csv"),
                     Paths.get(sourceRoot + rejectedData + "/" + filenameWithPostfix + ".csv"),
                     StandardCopyOption.REPLACE_EXISTING);
