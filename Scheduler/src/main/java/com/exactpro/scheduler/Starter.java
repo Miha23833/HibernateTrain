@@ -11,7 +11,7 @@ public class Starter {
     static final Logger infoLogger = StaticLogger.infoLogger;
 
 
-    public static void main(String[] args) throws IOException, InterruptedException {
+    public static void main(String[] args) throws IOException {
 
         //TODO: Сделать автотесты
         Scheduler scheduler = new Scheduler();
