@@ -56,6 +56,13 @@ public abstract class DataWorker {
 
     abstract void insertData(Session session, String path, String filename, char delimiter) throws SQLException, ClassNotFoundException;
 
+    /**
+     * Read data from csv file by given columns in deriving class
+     * @param path relative path to file
+     * @param filename name of file
+     * @param separator CSV data separator
+     * @return SQLTable-like data from csv file
+     */
     protected ResultSet getDataFromCSV(String path, String filename, char separator) throws ClassNotFoundException, SQLException {
 
         filename = normalizeFilename(filename);
