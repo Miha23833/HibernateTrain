@@ -22,8 +22,6 @@ public class DealDataWorker extends DataWorker {
     void insertData(Session session, String path, String filename, char delimiter) throws SQLException, ClassNotFoundException {
         ResultSet data = this.getDataFromCSV(path, filename, delimiter);
 
-        session.beginTransaction();
-
         while (data.next()){
             Deal dealToInsert = new Deal();
 

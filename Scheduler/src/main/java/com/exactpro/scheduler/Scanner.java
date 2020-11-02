@@ -120,6 +120,7 @@ public class Scanner {
         filename = filename.replace(".csv", "");
 
         Session session = SingleSessionFactory.getInstance().openSession();
+        session.beginTransaction();
         try {
             loader.insertData(session, sourceRoot + freshData, filename, delimiter);
 

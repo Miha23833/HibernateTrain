@@ -21,7 +21,6 @@ public class Starter {
                 Thread.sleep(Config.getScannerPause());
             } catch (InterruptedException e) {
                 warnLogger.error(e);
-                throw new InterruptedException(e.toString());
             }
         }
     }
