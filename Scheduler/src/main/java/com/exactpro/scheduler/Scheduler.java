@@ -37,7 +37,7 @@ public class Scheduler {
 
     public Scheduler() throws IOException {
 
-        scanner = new Scanner(Config.getDelimiter(),
+        scanner = new Scanner(Config.getSeparator(),
                 Config.getSourceRoot(),
                 Config.getFreshData(),
                 Config.getInsertedData(),

@@ -123,7 +123,7 @@ class DealDataWorkerTest {
 
         filename = worker.saveDataToCSV(csvData, path, filename, separator);
 
-        ResultSet dataFromCSVFile = worker.getDataFromCSV(path, filename, separator);
+        ResultSet dataFromCSVFile = worker.getDataFromCSV(path, filename);
 
         ResultSetMetaData csvMetaData = csvData.getMetaData();
         ResultSetMetaData metaDataFromCSVFile = dataFromCSVFile.getMetaData();

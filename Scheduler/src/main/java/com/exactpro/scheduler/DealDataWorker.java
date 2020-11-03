@@ -19,8 +19,8 @@ public class DealDataWorker extends DataWorker {
     }
 
     @Override
-    void insertData(Session session, String path, String filename, char delimiter) throws SQLException, ClassNotFoundException {
-        ResultSet data = this.getDataFromCSV(path, filename, delimiter);
+    void insertData(Session session, String path, String filename) throws SQLException, ClassNotFoundException {
+        ResultSet data = this.getDataFromCSV(path, filename);
 
         while (data.next()){
             Deal dealToInsert = new Deal();

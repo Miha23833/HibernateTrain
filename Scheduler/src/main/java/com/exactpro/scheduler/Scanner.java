@@ -122,7 +122,7 @@ public class Scanner {
         Session session = SingleSessionFactory.getInstance().openSession();
         session.beginTransaction();
         try {
-            loader.insertData(session, sourceRoot + freshData, filename, delimiter);
+            loader.insertData(session, sourceRoot + freshData, filename);
 
             String filenameWithPostfix = addPostfixIfFileExists(sourceRoot + insertedData, filename, ".csv");
 

@@ -9,15 +9,17 @@ public class Config {
 
     private static final String sourceRoot;
 
-    static final String freshData;
-    static final String insertedData;
-    static final String rejectedData;
+    private static final String freshData;
+    private static final String insertedData;
+    private static final String rejectedData;
 
     static final int scannerPause;
 
-    private static final char delimiter;
+    private static final char separator;
+    private static final char quoteChar;
 
     private static final int maxThreadPool;
+
 
     static {
         String resourceName = "scanner.properties";
@@ -34,7 +36,8 @@ public class Config {
         freshData = props.getProperty("freshData");
         insertedData = props.getProperty("insertedData");
         rejectedData = props.getProperty("rejectedData");
-        delimiter = props.getProperty("delimiter").toCharArray()[0];
+        separator = props.getProperty("delimiter").toCharArray()[0];
+        quoteChar = props.getProperty("quoteChar").toCharArray()[0];
         scannerPause = Integer.parseInt(props.getProperty("scannerPause"));
         maxThreadPool = Integer.parseInt(props.getProperty("maxThreadPool"));
     }
@@ -51,8 +54,12 @@ public class Config {
         return rejectedData;
     }
 
-    public static char getDelimiter(){
-        return delimiter;
+    public static char getSeparator(){
+        return separator;
+    }
+
+    public static char getQuoteChar(){
+        return quoteChar;
     }
 
     public static String getSourceRoot() {
