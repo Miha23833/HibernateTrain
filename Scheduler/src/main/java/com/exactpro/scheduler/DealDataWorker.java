@@ -9,7 +9,6 @@ import org.hibernate.Session;
 
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
@@ -25,7 +24,7 @@ public class DealDataWorker extends DataWorker {
 
     @Override
     void insertData(Session session, String path, String filename) throws IOException, CsvException, SQLException {
-        Map<String, List<String>> data = this.getDataFromCSVL(path, filename);
+        Map<String, List<String>> data = this.getDataFromCSVReader(path, filename);
 
         String randomKey = null;
         for (String key: data.keySet()) {

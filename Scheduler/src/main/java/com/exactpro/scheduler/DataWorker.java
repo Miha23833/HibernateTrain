@@ -116,7 +116,7 @@ public abstract class DataWorker {
 
     }
 
-    protected Map <String, List<String>> getDataFromCSVL(String path, String filename) throws IOException, CsvException {
+    protected Map <String, List<String>> getDataFromCSVReader(String path, String filename) throws IOException, CsvException {
 
         CSVParser csvParser = new CSVParserBuilder()
                 .withSeparator(Config.getSeparator())
