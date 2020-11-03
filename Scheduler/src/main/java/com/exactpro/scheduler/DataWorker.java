@@ -116,6 +116,13 @@ public abstract class DataWorker {
 
     }
 
+
+    /**
+     * Read data from csv file by given columns in deriving class
+     * @param path relative path to file
+     * @param filename name of file
+     * @return SQLTable-like data from csv file
+     */
     protected Map <String, List<String>> getDataFromCSVReader(String path, String filename) throws IOException, CsvException {
 
         CSVParser csvParser = new CSVParserBuilder()
