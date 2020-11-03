@@ -9,15 +9,29 @@ import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.Semaphore;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class Scheduler {
 
     final Scanner scanner;
 
+    ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
     static final Logger warnLogger = StaticLogger.warnLogger;
     static final Logger infoLogger = StaticLogger.infoLogger;
 
-    Set<String> foldersInProcessPool = new HashSet<>();
+    Set<String> foldersInProcessPool = new HashSet<>(){
+        @Override
+        public boolean remove(Object o) {
+            try {
+                readWriteLock.writeLock().lock();
+                return super.remove(o);
+            }
+            finally {
+                readWriteLock.writeLock().unlock();
+            }
+        }
+    };
 
     final Semaphore semaphore;
 
