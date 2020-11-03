@@ -2,6 +2,7 @@ package com.exactpro.runnable;
 
 import com.exactpro.functional.Function;
 import com.exactpro.loggers.StaticLogger;
+import com.opencsv.exceptions.CsvException;
 import org.apache.log4j.Logger;
 
 import java.io.IOException;
@@ -28,7 +29,7 @@ public class SemaphoreThread<T> extends Thread {
         try {
             semaphore.acquire();
             function.execute(value);
-        } catch (InterruptedException | IOException | ClassNotFoundException e) {
+        } catch (InterruptedException | IOException | ClassNotFoundException | CsvException e) {
             warnLogger.error(e);
             throw new RuntimeException(e);
         }

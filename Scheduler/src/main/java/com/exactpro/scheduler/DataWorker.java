@@ -1,16 +1,19 @@
 package com.exactpro.scheduler;
 
 import com.exactpro.loggers.StaticLogger;
-import com.opencsv.CSVWriter;
+import com.opencsv.*;
+import com.opencsv.exceptions.CsvException;
+import com.opencsv.exceptions.CsvValidationException;
 import org.apache.log4j.Logger;
 import org.hibernate.Session;
 
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.sql.*;
-import java.util.Properties;
+import java.util.*;
 
 /**
  * Loads data from csv to database
@@ -54,16 +57,46 @@ public abstract class DataWorker {
         return path;
     }
 
-    abstract void insertData(Session session, String path, String filename, char delimiter) throws SQLException, ClassNotFoundException;
+    private boolean validColumns(String[] csvColumns){
+        if (csvColumns == null || columns == null) {
+            return false;
+        }
+        String[] copyColumns = Arrays.copyOf(columns, columns.length);
+        String[] copyFileColumns = Arrays.copyOf(csvColumns, csvColumns.length);
+
+        Arrays.sort(copyFileColumns);
+        Arrays.sort(copyColumns);
+
+        return Arrays.equals(copyFileColumns, copyColumns);
+    }
+
+    private Map<String, List<String>> csvToHashmap(List<String[]> csvData){
+        Map<String, List<String>> result = new HashMap<>();
+
+        String[] columnNames = csvData.get(0);
+
+        for (String columnName: columnNames) {
+            result.put(columnName, new ArrayList<>());
+        }
+
+        for (int dataRow = 1; dataRow < csvData.size(); dataRow++) {
+            for (int dataColumn = 0; dataColumn < csvData.get(dataRow).length; dataColumn++) {
+                result.get(columnNames[dataColumn]).add(csvData.get(dataRow)[dataColumn]);
+            }
+        }
+        return result;
+    }
+
+    abstract void insertData(Session session, String path, String filename) throws SQLException, ClassNotFoundException, IOException, CsvException;
 
     /**
      * Read data from csv file by given columns in deriving class
      * @param path relative path to file
      * @param filename name of file
-     * @param separator CSV data separator
      * @return SQLTable-like data from csv file
      */
-    protected ResultSet getDataFromCSV(String path, String filename, char separator) throws ClassNotFoundException, SQLException {
+    @Deprecated
+    protected ResultSet getDataFromCSV(String path, String filename) throws ClassNotFoundException, SQLException {
 
         filename = normalizeFilename(filename);
         path = normalizePath(path);
@@ -71,8 +104,8 @@ public abstract class DataWorker {
         Class.forName("org.relique.jdbc.csv.CsvDriver");
 
         Properties props = new Properties();
-        props.put("separator", String.valueOf(separator));
-        props.put("quotechar", "\"");
+        props.put("separator", String.valueOf(Config.getSeparator()));
+        props.put("quotechar", String.valueOf(Config.getQuoteChar()));
 
         Connection conn = DriverManager.getConnection("jdbc:relique:csv:" + path, props);
         Statement stmt = conn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
@@ -81,6 +114,31 @@ public abstract class DataWorker {
 
         return stmt.executeQuery(query);
 
+    }
+
+    protected Map <String, List<String>> getDataFromCSVL(String path, String filename) throws IOException, CsvException {
+
+        CSVParser csvParser = new CSVParserBuilder()
+                .withSeparator(Config.getSeparator())
+                .withQuoteChar(Config.getQuoteChar()).build();
+
+        try (CSVReader reader = new CSVReaderBuilder(
+                new FileReader(path + filename + ".csv")).withCSVParser(csvParser).build()) {
+
+            String[] fileColumns = reader.readNext();
+
+            if (!validColumns(fileColumns)) {
+                CsvValidationException exception = new CsvValidationException("File contains incorrect columns.");
+                warnLogger.error(exception);
+                throw exception;
+            }
+
+            List<String[]> resultCSV = new ArrayList<>();
+            resultCSV.add(fileColumns);
+            resultCSV.addAll(reader.readAll());
+
+            return csvToHashmap(resultCSV);
+        }
     }
 
     /**

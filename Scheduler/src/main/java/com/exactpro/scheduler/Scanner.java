@@ -2,6 +2,7 @@ package com.exactpro.scheduler;
 
 import com.exactpro.DAO.SingleSessionFactory;
 import com.exactpro.loggers.StaticLogger;
+import com.opencsv.exceptions.CsvException;
 import org.apache.log4j.Logger;
 import org.hibernate.Session;
 
@@ -113,7 +114,7 @@ public class Scanner {
      *
      * @throws ClassNotFoundException if no driver is found
      */
-    public void loadDealsFromCSV(String filename) throws ClassNotFoundException, IOException {
+    public void loadDealsFromCSV(String filename) throws ClassNotFoundException, IOException, CsvException {
 
         DataWorker loader = new DealDataWorker();
 
@@ -130,7 +131,7 @@ public class Scanner {
                     Paths.get(sourceRoot + insertedData + "/" + filenameWithPostfix + ".csv"),
                     StandardCopyOption.REPLACE_EXISTING);
 
-        } catch (SQLException e) {
+        } catch (SQLException | CsvException e) {
             warnLogger.error(e);
 
             String filenameWithPostfix = addPostfixIfFileExists(sourceRoot + rejectedData, filename, ".csv");
@@ -146,7 +147,7 @@ public class Scanner {
 
         } catch (ClassNotFoundException e) {
             warnLogger.error(e);
-            throw new ClassNotFoundException(e.toString());
+            throw e;
 
         } finally {
             if (session.getTransaction().isActive()) {
