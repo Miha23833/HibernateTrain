@@ -33,7 +33,7 @@
         <dependency>
             <groupId>net.sourceforge.csvjdbc</groupId>
             <artifactId>csvjdbc</artifactId>
-            <version>1.0.28</version>
+            <version>1.0.36</version>
         </dependency>
 
     </dependencies>
