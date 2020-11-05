@@ -72,6 +72,7 @@ class GenericDAOTest {
         updateSession.beginTransaction();
         GenericDAO.updateTableByEntity(updateSession, customer);
         updateSession.getTransaction().commit();
+        updateSession.close();
 
         ResultSet resultSet = DBConnection.executeWithResult(
                 String.format(
@@ -95,6 +96,7 @@ class GenericDAOTest {
         insertSession.beginTransaction();
         int selectingID = GenericDAO.insertEntity(insertSession, customer);
         insertSession.getTransaction().commit();
+        insertSession.close();
 
         Session selectSession = sf.openSession();
         Customer newCustomer = GenericDAO.selectByID(selectSession, Customer.class, selectingID);

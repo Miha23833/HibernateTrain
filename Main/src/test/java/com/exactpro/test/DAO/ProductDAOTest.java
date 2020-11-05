@@ -68,6 +68,7 @@ class ProductDAOTest {
         insertSession.beginTransaction();
         int id = GenericDAO.insertEntity(insertSession, product);
         insertSession.getTransaction().commit();
+        insertSession.close();
 
         Session selectSession = sf.openSession();
         Product newProduct = ProductDAO.getByID(selectSession, id);
@@ -93,6 +94,8 @@ class ProductDAOTest {
             GenericDAO.insertEntity(insertSession, products);
         }
         insertSession.getTransaction().commit();
+        insertSession.close();
+
         List<Product> productsList = ProductDAO.getAllProducts(sf.openSession());
 
         Assert.assertEquals(productsList.size(), 10);
@@ -111,6 +114,7 @@ class ProductDAOTest {
         insertSession.beginTransaction();
         GenericDAO.insertEntity(insertSession, product);
         insertSession.getTransaction().commit();
+        insertSession.close();
 
         Session selectSession = sf.openSession();
         List<Product> products = ProductDAO.getByName(selectSession, "Name");
@@ -133,6 +137,7 @@ class ProductDAOTest {
             GenericDAO.insertEntity(insertSession, productToInsert);
         }
         insertSession.getTransaction().commit();
+        insertSession.close();
 
         // Сравнение по количеству возвращённых записей для учитывания всех енумов
         Assert.assertEquals(1, ProductDAO.getByPrice(sf.openSession(), new BigDecimal(5), ComparisonOperator.EQUAL).size());
@@ -168,6 +173,7 @@ class ProductDAOTest {
             GenericDAO.insertEntity(insertSession, deal);
         }
         insertSession.getTransaction().commit();
+        insertSession.close();
 
         List<Product> products = ProductDAO.getBoughtByCustomer(sf.openSession(), customer.getCustomerID());
 

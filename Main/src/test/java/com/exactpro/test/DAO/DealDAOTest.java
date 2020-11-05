@@ -77,6 +77,7 @@ class DealDAOTest {
             GenericDAO.insertEntity(insertSession, newDeal);
         }
         insertSession.getTransaction().commit();
+        insertSession.close();
 
         // Сравнение по количеству возвращённых записей для учитывания всех енумов
         Assert.assertEquals(1, DealDAO.getByDate(sf.openSession(), compDate, ComparisonOperator.EQUAL).size());
@@ -110,6 +111,7 @@ class DealDAOTest {
             GenericDAO.insertEntity(insertSession, newDeal);
         }
         insertSession.getTransaction().commit();
+        insertSession.close();
         // Сравнение по количеству возвращённых записей для учитывания всех енумов
         Assert.assertEquals(1, DealDAO.getByDiscount(sf.openSession(), compDiscount, ComparisonOperator.EQUAL).size());
 
@@ -142,6 +144,7 @@ class DealDAOTest {
             GenericDAO.insertEntity(insertSession, newDeal);
         }
         insertSession.getTransaction().commit();
+        insertSession.close();
 
         // Сравнение по количеству возвращённых записей для учитывания всех енумов
         Assert.assertEquals(1, DealDAO.getByPrice(sf.openSession(), compPrice, ComparisonOperator.EQUAL).size());
@@ -176,6 +179,7 @@ class DealDAOTest {
             }
         }
         insertSession.getTransaction().commit();
+        insertSession.close();
 
         List<Deal> deals = DealDAO.getByCustomerID(sf.openSession(), id);
 
@@ -210,6 +214,7 @@ class DealDAOTest {
             }
         }
         insertSession.getTransaction().commit();
+        insertSession.close();
 
         List<Deal> deals = DealDAO.getByProductID(sf.openSession(), id);
 
@@ -243,6 +248,7 @@ class DealDAOTest {
             GenericDAO.insertEntity(insertSession, newDeal);
         }
         insertSession.getTransaction().commit();
+        insertSession.close();
 
         List<Deal> deals = DealDAO.getByPeriod(sf.openSession(), compDate-3000,compDate+3000);
 

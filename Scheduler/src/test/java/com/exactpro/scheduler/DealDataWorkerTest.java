@@ -113,6 +113,7 @@ class DealDataWorkerTest {
             GenericDAO.insertEntity(session, fillDeal);
         }
         session.getTransaction().commit();
+        session.close();
 
         ResultSet csvData = DBConnection.executeWithResult("SELECT deal_date, customer_id, discount, product_id, price, deal_id FROM HIBERNATE_UNITTESTS.DEALS");
 

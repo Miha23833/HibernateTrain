@@ -67,6 +67,7 @@ class CustomerDAOTest {
             GenericDAO.insertEntity(insertSession, customer);
         }
         insertSession.getTransaction().commit();
+        insertSession.close();
 
         List<Customer> customers = CustomerDAO.getByName(sf.openSession(), "TEST3");
 
@@ -86,6 +87,7 @@ class CustomerDAOTest {
             GenericDAO.insertEntity(session, customer);
         }
         session.getTransaction().commit();
+        session.close();
 
         List<Customer> customers = CustomerDAO.getBySurname(sf.openSession(), "UNIT3");
 
@@ -101,6 +103,7 @@ class CustomerDAOTest {
         session.beginTransaction();
         GenericDAO.insertEntity(session, customer);
         session.getTransaction().commit();
+        session.close();
 
         Session selectSession = sf.openSession();
         Customer compCustomer = CustomerDAO.getByID(selectSession, customer.getCustomerID());
@@ -122,6 +125,7 @@ class CustomerDAOTest {
             GenericDAO.insertEntity(session, newCustomer);
         }
         session.getTransaction().commit();
+        session.close();
 
         List<Customer> customers = CustomerDAO.getAllCustomers(sf.openSession());
 
@@ -143,6 +147,7 @@ class CustomerDAOTest {
             GenericDAO.insertEntity(session, newCustomer);
         }
         session.getTransaction().commit();
+        session.close();
 
         List<Customer> customers = CustomerDAO.getByAge(sf.openSession(), (short)8, ComparisonOperator.EQUAL);
         Assert.assertEquals(customers.size(), 1);
@@ -188,6 +193,7 @@ class CustomerDAOTest {
             GenericDAO.insertEntity(session, deal);
         }
         session.getTransaction().commit();
+        session.close();
 
         List<Customer> customers = CustomerDAO.getWhoBoughtProduct(sf.openSession(), product.getProductID());
 
