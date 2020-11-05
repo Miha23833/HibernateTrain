@@ -11,6 +11,7 @@ import com.exactpro.loggers.StaticLogger;
 import com.exactpro.tests.CommonUnitTests;
 import com.mysql.cj.jdbc.result.ResultSetImpl;
 import com.opencsv.CSVWriter;
+import com.opencsv.exceptions.CsvException;
 import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -31,6 +32,7 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -93,7 +95,7 @@ class DealDataWorkerTest {
 
 
     @Test
-    void insertData() throws SQLException, ClassNotFoundException, IOException {
+    void insertData() throws SQLException, ClassNotFoundException, IOException, CsvException {
 
         ResultSet expectedZero = DBConnection.executeWithResult("SELECT COUNT(*) AS count FROM HIBERNATE_UNITTESTS.DEALS");
         expectedZero.next();
@@ -121,25 +123,29 @@ class DealDataWorkerTest {
         Files.createDirectories(Paths.get(path));
         DataWorker worker = new DealDataWorker();
 
-        filename = worker.saveDataToCSV(csvData, path, filename, separator);
+        filename = worker.saveDataToCSV(csvData, path, filename, separator).replace(".csv", "");
 
-        ResultSet dataFromCSVFile = worker.getDataFromCSV(path, filename);
+        Map<String, List<String>> dataFromCSVFile = worker.getDataFromCSVReader(path, filename);
 
         ResultSetMetaData csvMetaData = csvData.getMetaData();
-        ResultSetMetaData metaDataFromCSVFile = dataFromCSVFile.getMetaData();
-        Assert.assertEquals(csvMetaData.getColumnCount(), 6);
-        Assert.assertEquals(metaDataFromCSVFile.getColumnCount(), 6);
 
-        Assert.assertEquals(rowCount, getResultSetRowCount(dataFromCSVFile));
+        Assert.assertEquals(6, csvMetaData.getColumnCount());
+        Assert.assertEquals(6, dataFromCSVFile.size());
+
+        for (String key :dataFromCSVFile.keySet()){
+            Assert.assertEquals(rowCount, dataFromCSVFile.get(key).size());
+        }
         Assert.assertEquals(rowCount, getResultSetRowCount(csvData));
 
-        while (csvData.next() && dataFromCSVFile.next()) {
-            Assert.assertEquals(csvData.getLong("deal_date"), dataFromCSVFile.getLong("deal_date"));
-            Assert.assertEquals(csvData.getInt("customer_id"), dataFromCSVFile.getInt("customer_id"));
-            Assert.assertEquals(csvData.getInt("product_id"), dataFromCSVFile.getInt("product_id"));
-            Assert.assertEquals(csvData.getInt("deal_id"), dataFromCSVFile.getInt("deal_id"));
-            Assert.assertEquals(csvData.getBigDecimal("discount"), dataFromCSVFile.getBigDecimal("discount"));
-            Assert.assertEquals(csvData.getBigDecimal("price"), dataFromCSVFile.getBigDecimal("price"));
+        int rowNumber = 0;
+        while (csvData.next()) {
+            Assert.assertEquals(csvData.getLong("deal_date"), Long.parseLong(dataFromCSVFile.get("deal_date").get(rowNumber)));
+            Assert.assertEquals(csvData.getInt("customer_id"), Integer.parseInt(dataFromCSVFile.get("customer_id").get(rowNumber)));
+            Assert.assertEquals(csvData.getInt("product_id"), Integer.parseInt(dataFromCSVFile.get("product_id").get(rowNumber)));
+            Assert.assertEquals(csvData.getInt("deal_id"), Integer.parseInt(dataFromCSVFile.get("deal_id").get(rowNumber)));
+            Assert.assertEquals(csvData.getBigDecimal("discount"), new BigDecimal(dataFromCSVFile.get("discount").get(rowNumber)));
+            Assert.assertEquals(csvData.getBigDecimal("price"), new BigDecimal(dataFromCSVFile.get("price").get(rowNumber)));
+            rowNumber++;
         }
 
     }
