@@ -1,6 +1,8 @@
 package com.exactpro.scheduler.dataReader;
 
 import com.exactpro.loggers.StaticLogger;
+import com.exactpro.scheduler.config.CSVEntityTypes;
+import com.exactpro.scheduler.config.Config;
 import org.apache.log4j.Logger;
 
 import java.io.File;
@@ -20,6 +22,8 @@ public abstract class DataReader {
     protected final String insertedDataPath;
     protected final String rejectedDataPath;
 
+    protected final String[] csvColumns;
+
     /**
      * Creates folders in project.
      * @param rootPath root path.
@@ -29,31 +33,31 @@ public abstract class DataReader {
      * @param rejectedDataPath path that contains files that are not correct and not inserted in database.
      * @throws IOException if program cannot create paths.
      */
-    public DataReader(String rootPath, String freshDataPath, String inProgressDataPath, String insertedDataPath, String rejectedDataPath) throws IOException {
+    public DataReader(String rootPath, String freshDataPath, String inProgressDataPath, String insertedDataPath, String rejectedDataPath, CSVEntityTypes entity) throws IOException {
         this.rootPath = rootPath;
         this.freshDataPath = freshDataPath;
         this.inProgressDataPath = inProgressDataPath;
         this.insertedDataPath = insertedDataPath;
         this.rejectedDataPath = rejectedDataPath;
 
+        csvColumns = Config.getCSVColumns(entity);
+
         createFolders();
     }
 
     /**
-     * Creates default folders in project with custom root path.
-     * @param rootPath root path.
+     * Creates folders in project. Folder names will be get from config file.
      * @throws IOException if program cannot create paths.
      */
-    public DataReader(String rootPath) throws IOException {
-        this(rootPath, "freshData", "dataInProgress", "insertedData", "rejectedData");
-    }
-
-    /**
-     * Creates default folders in project.
-     * @throws IOException if program cannot create paths.
-     */
-    public DataReader() throws IOException {
-        this("csvData");
+    public DataReader(CSVEntityTypes entity) throws IOException {
+        this(
+                Config.getRootPath(),
+                Config.getFreshDataPath(),
+                Config.getDataInProgressPath(),
+                Config.getInsertedDataPath(),
+                Config.getRejectedDataPath(),
+                entity
+        );
     }
 
     /**

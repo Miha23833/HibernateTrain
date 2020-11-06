@@ -39,10 +39,10 @@ public class Scheduler {
     public Scheduler() throws IOException {
 
         scanner = new Scanner(Config.getSeparator(),
-                Config.getSourceRoot(),
-                Config.getFreshData(),
-                Config.getInsertedData(),
-                Config.getRejectedData());
+                Config.getRootPath(),
+                Config.getFreshDataPath(),
+                Config.getInsertedDataPath(),
+                Config.getRejectedDataPath());
 
         if (Config.getMaxThreadPool() < 1) {
             IllegalArgumentException exception = new IllegalArgumentException("MaxThreadPool must me at least 1.");
