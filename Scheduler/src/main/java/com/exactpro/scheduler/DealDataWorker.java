@@ -24,6 +24,7 @@ public class DealDataWorker extends DataWorker {
 
     @Override
     void insertData(Session session, String path, String filename) throws IOException, CsvException, SQLException {
+        //TODO: сделать разделение на Reader и Writer.
         Map<String, List<String>> data = this.getDataFromCSVReader(path, filename);
 
         String randomKey = null;

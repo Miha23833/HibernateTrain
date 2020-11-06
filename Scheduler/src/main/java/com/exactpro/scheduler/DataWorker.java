@@ -124,6 +124,7 @@ public abstract class DataWorker {
      * @return SQLTable-like data from csv file
      */
     protected Map <String, List<String>> getDataFromCSVReader(String path, String filename) throws IOException, CsvException {
+        //TODO: читать файл частями. Размер частей задавать в конфиге
 
         CSVParser csvParser = new CSVParserBuilder()
                 .withSeparator(Config.getSeparator())

@@ -18,6 +18,7 @@ public class SemaphoreThread<T> extends Thread {
 
     Logger warnLogger = StaticLogger.warnLogger;
 
+    // TODO: поменять пул на папку inProgress
     public SemaphoreThread(Function<T> function, T value, Semaphore semaphore, Set<T> pool){
         this.function = function;
         this.value = value;

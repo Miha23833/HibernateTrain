@@ -54,6 +54,9 @@ public class Scheduler {
     }
 
     public void run() {
+        /*
+        TODO: почитать про thread pool, schedule\delay
+         */
         for (String fileName: scanner.getCSVFilenames()) {
             if (!foldersInProcessPool.contains(fileName)) {
                 Function<String> lambda = scanner::loadDealsFromCSV;
