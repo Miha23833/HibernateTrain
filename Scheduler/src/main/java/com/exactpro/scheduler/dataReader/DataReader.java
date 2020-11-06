@@ -4,6 +4,7 @@ import com.exactpro.loggers.StaticLogger;
 import org.apache.log4j.Logger;
 
 import java.io.File;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -116,4 +117,16 @@ public abstract class DataReader {
             throw new IOException(e);
         }
     }
+
+    protected String[] getFilesInFreshData() {
+        FilenameFilter filter = (dir, name) -> name.endsWith(".csv");
+        File currentPath = new File(rootPath + freshDataPath);
+        String[] csvFilenames = currentPath.list(filter);
+        if (csvFilenames == null){
+            csvFilenames = new String[]{};
+        }
+        return csvFilenames;
+    }
+
+
 }
