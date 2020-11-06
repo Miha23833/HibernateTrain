@@ -1,5 +1,8 @@
 package com.exactpro.scheduler.config;
 
+import com.exactpro.loggers.StaticLogger;
+import org.apache.log4j.Logger;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
@@ -9,10 +12,12 @@ import java.util.Properties;
 
 // load data from scanner.properties
 public class Config {
+    private static final Logger warnLogger = StaticLogger.warnLogger;
 
     private static final String sourceRoot;
 
     private static final String freshData;
+    private static final String dataInProgress;
     private static final String insertedData;
     private static final String rejectedData;
 
@@ -37,10 +42,11 @@ public class Config {
             e.printStackTrace();
         }
 
-        sourceRoot = props.getProperty("sourceRoot");
-        freshData = props.getProperty("freshData");
-        insertedData = props.getProperty("insertedData");
-        rejectedData = props.getProperty("rejectedData");
+        sourceRoot = props.getProperty("rootPath");
+        freshData = props.getProperty("freshDataPath");
+        dataInProgress = props.getProperty("dataInProgressPath");
+        insertedData = props.getProperty("insertedDataPath");
+        rejectedData = props.getProperty("rejectedDataPath");
         separator = props.getProperty("delimiter").toCharArray()[0];
         quoteChar = props.getProperty("quoteChar").toCharArray()[0];
         scannerPause = Integer.parseInt(props.getProperty("scannerPause"));
@@ -77,6 +83,15 @@ public class Config {
 
     public static int getMaxThreadPool(){
         return maxThreadPool;
+    }
+
+    public static String[] getCSVColumns(CSVEntityTypes entity){
+        try {
+            return csvColumns.get(entity.toString());
+        }catch (NullPointerException e){
+            warnLogger.error(e);
+            throw e;
+        }
     }
 
 }
