@@ -5,8 +5,6 @@ import org.apache.log4j.Logger;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Properties;
 
 
@@ -28,9 +26,6 @@ public class Config {
     private static final char quoteChar;
 
     private static final int maxThreadPool;
-
-    private static final Map<String, String[]> csvColumns = new HashMap<>();
-
 
     static {
         String resourceName = "scanner.properties";
@@ -96,7 +91,7 @@ public class Config {
 
     public static String[] getCSVColumns(CSVEntityTypes entity){
         try {
-            return csvColumns.get(entity.toString());
+            return props.getProperty(entity.toString()).split(",");
         }catch (NullPointerException e){
             warnLogger.error(e);
             throw e;
