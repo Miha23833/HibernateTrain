@@ -1,6 +1,7 @@
 package com.exactpro.scheduler;
 
 import com.exactpro.loggers.StaticLogger;
+import com.exactpro.scheduler.config.Config;
 import org.apache.log4j.Logger;
 
 import java.io.IOException;

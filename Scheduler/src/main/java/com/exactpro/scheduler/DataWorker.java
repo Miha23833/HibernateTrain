@@ -1,6 +1,7 @@
 package com.exactpro.scheduler;
 
 import com.exactpro.loggers.StaticLogger;
+import com.exactpro.scheduler.config.Config;
 import com.opencsv.*;
 import com.opencsv.exceptions.CsvException;
 import com.opencsv.exceptions.CsvValidationException;

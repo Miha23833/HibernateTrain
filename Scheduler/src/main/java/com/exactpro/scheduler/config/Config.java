@@ -1,6 +1,9 @@
-package com.exactpro.scheduler;
+package com.exactpro.scheduler.config;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
 
@@ -19,6 +22,8 @@ public class Config {
     private static final char quoteChar;
 
     private static final int maxThreadPool;
+
+    private static final Map<String, String[]> csvColumns = new HashMap<>();
 
 
     static {
@@ -73,4 +78,5 @@ public class Config {
     public static int getMaxThreadPool(){
         return maxThreadPool;
     }
+
 }
