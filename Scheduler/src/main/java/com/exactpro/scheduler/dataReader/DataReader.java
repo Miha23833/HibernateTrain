@@ -122,7 +122,7 @@ public abstract class DataReader {
         }
     }
 
-    protected String[] getFilesInFreshData() {
+    protected String[] getFilenamesInFreshData() {
         FilenameFilter filter = (dir, name) -> name.endsWith(".csv");
         File currentPath = new File(rootPath + freshDataPath);
         String[] csvFilenames = currentPath.list(filter);
