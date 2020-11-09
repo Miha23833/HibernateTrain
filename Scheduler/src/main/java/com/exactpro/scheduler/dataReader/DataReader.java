@@ -26,19 +26,20 @@ public abstract class DataReader {
 
     /**
      * Creates folders in project.
-     * @param rootPath root path.
-     * @param freshDataPath path that contains only files that awaiting for processing.
+     *
+     * @param rootPath           root path.
+     * @param freshDataPath      path that contains only files that awaiting for processing.
      * @param inProgressDataPath path that contains files that are already being processed.
-     * @param insertedDataPath path that contains files that are correct and already inserted in database.
-     * @param rejectedDataPath path that contains files that are not correct and not inserted in database.
+     * @param insertedDataPath   path that contains files that are correct and already inserted in database.
+     * @param rejectedDataPath   path that contains files that are not correct and not inserted in database.
      * @throws IOException if program cannot create paths.
      */
     public DataReader(String rootPath, String freshDataPath, String inProgressDataPath, String insertedDataPath, String rejectedDataPath, CSVEntityTypes entity) throws IOException {
-        this.rootPath = rootPath;
-        this.freshDataPath = freshDataPath;
-        this.inProgressDataPath = inProgressDataPath;
-        this.insertedDataPath = insertedDataPath;
-        this.rejectedDataPath = rejectedDataPath;
+        this.rootPath = normalizePath(rootPath);
+        this.freshDataPath = normalizePath(freshDataPath);
+        this.inProgressDataPath = normalizePath(inProgressDataPath);
+        this.insertedDataPath = normalizePath(insertedDataPath);
+        this.rejectedDataPath = normalizePath(rejectedDataPath);
 
         csvColumns = Config.getCSVColumns(entity);
 
@@ -47,6 +48,7 @@ public abstract class DataReader {
 
     /**
      * Creates folders in project. Folder names will be get from config file.
+     *
      * @throws IOException if program cannot create paths.
      */
     public DataReader(CSVEntityTypes entity) throws IOException {
@@ -62,6 +64,7 @@ public abstract class DataReader {
 
     /**
      * Adds slash to end of path.
+     *
      * @param path relative path.
      * @return normalized path like "pathname/".
      * @throws IOException if path is not relative.
@@ -76,20 +79,21 @@ public abstract class DataReader {
 
     /**
      * Adds number in brackets after filename if file with that name exists.
-     * @param path path to scan for existing filename.
-     * @param filename default name of file.
+     *
+     * @param path      path to scan for existing filename.
+     * @param filename  default name of file.
      * @param extension file extension like ".csv".
      * @return filename with postfix like "file (20)" without extension
      */
-    protected String addPostfixIfFileExists(String path, String filename, String extension){
-        if (!extension.startsWith(".")){
+    protected String addPostfixIfFileExists(String path, String filename, String extension) {
+        if (!extension.startsWith(".")) {
             extension = "." + extension;
         }
 
         int existingFilesCounter = 1;
         String template = filename + " (%s)";
-        while (Files.exists(Paths.get(String.join("", path,"/", filename, extension)))){
-            filename =  String.format(template, existingFilesCounter++);
+        while (Files.exists(Paths.get(String.join("", path, "/", filename, extension)))) {
+            filename = String.format(template, existingFilesCounter++);
         }
         return filename;
     }
@@ -103,6 +107,7 @@ public abstract class DataReader {
 
     /**
      * Creates folders to work with files.
+     *
      * @throws IOException if cannot crate path.
      */
     protected void createFolders() throws IOException {
@@ -122,11 +127,11 @@ public abstract class DataReader {
         }
     }
 
-    protected String[] getFilenamesInFreshData() {
+    protected String[] getFilesFromFresh() {
         FilenameFilter filter = (dir, name) -> name.endsWith(".csv");
         File currentPath = new File(rootPath + freshDataPath);
         String[] csvFilenames = currentPath.list(filter);
-        if (csvFilenames == null){
+        if (csvFilenames == null) {
             csvFilenames = new String[]{};
         }
         return csvFilenames;
