@@ -29,7 +29,7 @@ public class Config {
     private static final int maxThreadPool;
 
 
-    private static void checkRelativety(String path) throws IOException {
+    private static void isRelatively(String path) throws IOException {
         File file = new File(path);
         if (file.isAbsolute()) {
             throw new IOException(String.format("Path %s is not relative.", path));
@@ -47,7 +47,7 @@ public class Config {
         if (path.length() > 0 && !path.endsWith("/")) {
             path = path + "/";
         }
-        checkRelativety(path);
+        isRelatively(path);
         return path;
     }
 
