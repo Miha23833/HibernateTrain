@@ -3,6 +3,7 @@ package com.exactpro.scheduler.config;
 import com.exactpro.loggers.StaticLogger;
 import org.apache.log4j.Logger;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
@@ -13,12 +14,12 @@ public class Config {
     private static final Properties props;
     private static final Logger warnLogger = StaticLogger.warnLogger;
 
-    private static final String rootPath;
+    private static String rootPath = null;;
 
-    private static final String freshDataPath;
-    private static final String dataInProgressPath;
-    private static final String insertedDataPath;
-    private static final String rejectedDataPath;
+    private static String freshDataPath = null;;
+    private static String dataInProgressPath = null;
+    private static String insertedDataPath = null;;
+    private static String rejectedDataPath = null;;
 
     static final int scannerPause;
 
@@ -26,6 +27,29 @@ public class Config {
     private static final char quoteChar;
 
     private static final int maxThreadPool;
+
+
+    private static void checkRelativety(String path) throws IOException {
+        File file = new File(path);
+        if (file.isAbsolute()) {
+            throw new IOException(String.format("Path %s is not relative.", path));
+        }
+    }
+
+    /**
+     * Adds slash to end of path.
+     *
+     * @param path relative path.
+     * @return normalized path like "pathname/".
+     * @throws IOException if path is not relative.
+     */
+    private static String normalizePath(String path) throws IOException {
+        if (path.length() > 0 && !path.endsWith("/")) {
+            path = path + "/";
+        }
+        checkRelativety(path);
+        return path;
+    }
 
     static {
         String resourceName = "scanner.properties";
@@ -38,11 +62,17 @@ public class Config {
             e.printStackTrace();
         }
 
-        rootPath = props.getProperty("rootPath");
-        freshDataPath = props.getProperty("freshDataPath");
-        dataInProgressPath = props.getProperty("dataInProgressPath");
-        insertedDataPath = props.getProperty("insertedDataPath");
-        rejectedDataPath = props.getProperty("rejectedDataPath");
+        try {
+            rootPath = normalizePath(props.getProperty("rootPath"));
+            freshDataPath = normalizePath(props.getProperty("freshDataPath"));
+            dataInProgressPath = normalizePath(props.getProperty("dataInProgressPath"));
+            insertedDataPath = normalizePath(props.getProperty("insertedDataPath"));
+            rejectedDataPath = normalizePath(props.getProperty("rejectedDataPath"));
+        } catch (IOException e){
+            warnLogger.error(e);
+            System.exit(-1);
+        }
+
         separator = props.getProperty("delimiter").toCharArray()[0];
         quoteChar = props.getProperty("quoteChar").toCharArray()[0];
         scannerPause = Integer.parseInt(props.getProperty("scannerPause"));
