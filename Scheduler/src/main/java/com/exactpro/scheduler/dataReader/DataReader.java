@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-public abstract class DataReader {
+public class DataReader {
     protected final Logger infoLogger = StaticLogger.infoLogger;
     protected final Logger warnLogger = StaticLogger.warnLogger;
 
