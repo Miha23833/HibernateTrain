@@ -64,10 +64,10 @@ public class Config {
 
         try {
             rootPath = normalizePath(props.getProperty("rootPath"));
-            freshDataPath = normalizePath(props.getProperty("freshDataPath"));
-            dataInProgressPath = normalizePath(props.getProperty("dataInProgressPath"));
-            insertedDataPath = normalizePath(props.getProperty("insertedDataPath"));
-            rejectedDataPath = normalizePath(props.getProperty("rejectedDataPath"));
+            freshDataPath = normalizePath(String.join("", rootPath, props.getProperty("freshDataPath")));
+            dataInProgressPath = normalizePath(String.join("", props.getProperty("dataInProgressPath")));
+            insertedDataPath = normalizePath(String.join("", props.getProperty("insertedDataPath")));
+            rejectedDataPath = normalizePath(String.join("", props.getProperty("rejectedDataPath")));
         } catch (IOException e){
             warnLogger.error(e);
             System.exit(-1);
