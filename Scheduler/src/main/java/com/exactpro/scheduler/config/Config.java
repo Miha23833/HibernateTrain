@@ -122,7 +122,7 @@ public class Config {
     public static String[] getCSVColumns(CSVEntityTypes entity){
         try {
             return props.getProperty(entity.toString()).split(",");
-        }catch (NullPointerException e){
+        }catch (Exception e){
             warnLogger.error(e);
             throw e;
         }
