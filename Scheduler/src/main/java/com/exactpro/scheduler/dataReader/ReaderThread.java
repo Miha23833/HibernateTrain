@@ -11,9 +11,7 @@ import com.opencsv.exceptions.CsvException;
 import com.opencsv.exceptions.CsvValidationException;
 import org.apache.log4j.Logger;
 
-import java.io.File;
 import java.io.FileReader;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -23,20 +21,12 @@ import java.util.*;
 public class ReaderThread implements Runnable {
 
     private final String[] dataColumns;
+    private final String processFile;
     Logger warnLogger = StaticLogger.warnLogger;
 
-    public ReaderThread(String[] dataColumns){
+    public ReaderThread(String filename, String[] dataColumns){
+        this.processFile = filename;
         this.dataColumns = dataColumns;
-    }
-
-    private String getFirstUncheckedFile() {
-        FilenameFilter filter = (dir, name) -> name.endsWith(".csv");
-        File currentPath = new File(Config.getFreshDataPath());
-        String[] csvFilenames = currentPath.list(filter);
-        if (csvFilenames.length < 1){
-            return null;
-        }
-        return csvFilenames[0];
     }
 
     private boolean validColumns(String[] csvFileColumns){
@@ -53,7 +43,7 @@ public class ReaderThread implements Runnable {
      * @param filename  default name of file.
      * @return filename with postfix like "file (20)" without extension
      */
-    private String addPostfixIfFileExists(String path, String filename){
+    private static String addPostfixIfFileExists(String path, String filename){
         int existingFilesCounter = 1;
         String template = filename + " (%s)";
         while (Files.exists(Paths.get(path + "/" + filename + ".csv"))){
@@ -62,7 +52,7 @@ public class ReaderThread implements Runnable {
         return filename;
     }
 
-    private void moveFile(String PathFrom, String PathTo, String filename) throws IOException {
+    private static void moveFile(String PathFrom, String PathTo, String filename) throws IOException {
 
         String filenameWithPostfix = addPostfixIfFileExists(PathTo, filename);
 
@@ -90,18 +80,14 @@ public class ReaderThread implements Runnable {
 
     @Override
     public void run() {
-        String filename = getFirstUncheckedFile();
-
         try {
-            moveFile(Config.getFreshDataPath(), Config.getDataInProgressPath(), filename);
-
-            String filePath = Config.getDataInProgressPath();
+            moveFile(Config.getFreshDataPath(), Config.getDataInProgressPath(), processFile);
 
             CSVParser csvParser = new CSVParserBuilder()
                     .withSeparator(Config.getSeparator())
                     .withQuoteChar(Config.getQuoteChar()).build();
 
-            try (CSVReader reader = new CSVReaderBuilder(new FileReader(filePath + filename + ".csv")).withCSVParser(csvParser).build()) {
+            try (CSVReader reader = new CSVReaderBuilder(new FileReader(Config.getDataInProgressPath() + processFile + ".csv")).withCSVParser(csvParser).build()) {
 
                 String[] fileColumns = reader.readNext();
 
@@ -115,12 +101,12 @@ public class ReaderThread implements Runnable {
                 resultCSV.add(fileColumns);
                 resultCSV.addAll(reader.readAll());
 
-                FileDataKeeper.add(filename, csvToHashmap(resultCSV));
+                FileDataKeeper.add(processFile, csvToHashmap(resultCSV));
             }
         }catch (CsvException | IOException e) {
             warnLogger.error(e);
             try {
-                moveFile(Config.getDataInProgressPath(), Config.getRejectedDataPath(), filename);
+                moveFile(Config.getDataInProgressPath(), Config.getRejectedDataPath(), processFile);
             } catch (IOException ioException) {
                 warnLogger.error(ioException);
             }

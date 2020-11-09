@@ -28,6 +28,9 @@ public class Config {
 
     private static final int maxThreadPool;
 
+    private static final CSVEntityTypes entity;
+    private static final String[] csvColumns;
+
 
     private static void isRelatively(String path) throws IOException {
         File file = new File(path);
@@ -49,6 +52,20 @@ public class Config {
         }
         isRelatively(path);
         return path;
+    }
+
+    private static CSVEntityTypes parseEntityType(){
+        String value = props.getProperty("entityType");
+        switch (value){
+            case "customer":
+                return CSVEntityTypes.CUSTOMER;
+            case "product":
+                return CSVEntityTypes.PRODUCT;
+            case "deal":
+                return CSVEntityTypes.DEAL;
+            default:
+                throw new IllegalArgumentException(String.format("Entity with config name %s was not found.", value));
+        }
     }
 
     static {
@@ -77,6 +94,9 @@ public class Config {
         quoteChar = props.getProperty("quoteChar").toCharArray()[0];
         scannerPause = Integer.parseInt(props.getProperty("scannerPause"));
         maxThreadPool = Integer.parseInt(props.getProperty("maxThreadPool"));
+
+        entity = parseEntityType();
+        csvColumns = props.getProperty(entity.toString()).split(",");
     }
 
     public static boolean containsKey(String key){
@@ -119,13 +139,8 @@ public class Config {
         return maxThreadPool;
     }
 
-    public static String[] getCSVColumns(CSVEntityTypes entity){
-        try {
-            return props.getProperty(entity.toString()).split(",");
-        }catch (Exception e){
-            warnLogger.error(e);
-            throw e;
-        }
+    public static String[] getCSVColumns(){
+        return csvColumns;
     }
 
 }

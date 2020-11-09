@@ -15,7 +15,7 @@ public class DataWriter {
     private final String[] dataColumns;
 
     public DataWriter(CSVEntityTypes entity) throws IOException {
-        dataColumns = Config.getCSVColumns(entity);
+        dataColumns = Config.getCSVColumns();
         StaticMethods.createFolders( new String[]{Config.getFreshDataPath(), Config.getDataInProgressPath(), Config.getInsertedDataPath(), Config.getRejectedDataPath()});
     }
 
