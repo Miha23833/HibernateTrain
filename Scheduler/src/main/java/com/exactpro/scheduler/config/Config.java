@@ -14,12 +14,12 @@ public class Config {
     private static final Properties props;
     private static final Logger warnLogger = StaticLogger.warnLogger;
 
-    private static String rootPath = null;;
+    private static String rootPath = null;
 
-    private static String freshDataPath = null;;
+    private static String freshDataPath = null;
     private static String dataInProgressPath = null;
-    private static String insertedDataPath = null;;
-    private static String rejectedDataPath = null;;
+    private static String insertedDataPath = null;
+    private static String rejectedDataPath = null;
 
     static final int scannerPause;
 
