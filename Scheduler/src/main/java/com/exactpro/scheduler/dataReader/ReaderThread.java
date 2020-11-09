@@ -2,6 +2,7 @@ package com.exactpro.scheduler.dataReader;
 
 import com.exactpro.loggers.StaticLogger;
 import com.exactpro.scheduler.config.Config;
+import com.exactpro.scheduler.dataExchanger.FileDataKeeper;
 import com.opencsv.CSVParser;
 import com.opencsv.CSVParserBuilder;
 import com.opencsv.CSVReader;
@@ -107,9 +108,7 @@ public class ReaderThread implements Runnable {
                 resultCSV.add(fileColumns);
                 resultCSV.addAll(reader.readAll());
 
-
-
-//                return csvToHashmap(resultCSV);
+                FileDataKeeper.add(filename, csvToHashmap(resultCSV));
             }
         }catch (CsvException | IOException e) {
             warnLogger.error(e);
