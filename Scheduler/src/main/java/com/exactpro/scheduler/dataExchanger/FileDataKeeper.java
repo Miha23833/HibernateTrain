@@ -20,4 +20,8 @@ public class FileDataKeeper {
         return files.keySet();
     }
 
+    public static Map<String, List<String>> get(String key){
+        return files.get(key);
+    }
+
 }

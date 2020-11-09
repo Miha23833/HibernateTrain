@@ -46,6 +46,13 @@ public class ReaderThread implements Runnable {
         return Arrays.asList(csvFileColumns).containsAll(Arrays.asList(dataColumns));
     }
 
+    /**
+     * Adds number in brackets after filename if file with that name exists.
+     *
+     * @param path      path to scan for existing filename.
+     * @param filename  default name of file.
+     * @return filename with postfix like "file (20)" without extension
+     */
     private String addPostfixIfFileExists(String path, String filename){
         int existingFilesCounter = 1;
         String template = filename + " (%s)";
