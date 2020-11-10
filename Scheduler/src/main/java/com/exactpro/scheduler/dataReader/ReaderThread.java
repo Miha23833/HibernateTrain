@@ -78,6 +78,13 @@ public class ReaderThread implements Runnable {
         return result;
     }
 
+    /**
+     * Load data from csv to database if it is correct
+     * and move file to "inserted" folder. If data is not
+     * correct then move file to "rejected" folder.
+     * Every file in process will be moved to dataInProgress folder
+     * before reading.
+     */
     @Override
     public void run() {
         try {
