@@ -1,9 +1,14 @@
 package com.exactpro.scheduler.dataReader;
 
+import com.exactpro.DAO.GenericDAO;
+import com.exactpro.DAO.SingleSessionFactory;
+import com.exactpro.entities.Customer;
+import com.exactpro.entities.Deal;
+import com.exactpro.entities.Product;
 import com.exactpro.loggers.StaticLogger;
 import com.exactpro.scheduler.common.StaticMethods;
 import com.exactpro.scheduler.config.Config;
-import com.exactpro.scheduler.dataExchanger.FileDataKeeper;
+import com.exactpro.scheduler.dataExchanger.DealExchanger;
 import com.opencsv.CSVParser;
 import com.opencsv.CSVParserBuilder;
 import com.opencsv.CSVReader;
@@ -11,9 +16,12 @@ import com.opencsv.CSVReaderBuilder;
 import com.opencsv.exceptions.CsvException;
 import com.opencsv.exceptions.CsvValidationException;
 import org.apache.log4j.Logger;
+import org.hibernate.Session;
 
 import java.io.FileReader;
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.sql.SQLException;
 import java.util.*;
 
 public class ReaderThread implements Runnable {
@@ -81,7 +89,44 @@ public class ReaderThread implements Runnable {
                 resultCSV.add(fileColumns);
                 resultCSV.addAll(reader.readAll());
 
-                FileDataKeeper.add(processFile, csvToHashmap(resultCSV));
+                Map<String, List<String>> resultMap = csvToHashmap(resultCSV);
+
+                Session session = SingleSessionFactory.getInstance().openSession();
+                try {
+
+                    for (int i = 0; i < resultCSV.size(); i++) {
+                        Deal dealToInsert = new Deal();
+
+                        Product product = GenericDAO.selectByID(session, Product.class, Integer.parseInt(resultMap.get("product_id").get(i)));
+                        Customer customer = GenericDAO.selectByID(session, Customer.class, Integer.parseInt(resultMap.get("customer_id").get(i)));
+
+                        if (product == null && customer == null) {
+                            throw new SQLException("Product and customer does not exist.");
+                        }
+                        else if (product == null) {
+                            throw new SQLException("Product does not exist.");
+                        }
+                        else if (customer == null) {
+                            throw new SQLException("Customer does not exist.");
+                        }
+
+                        dealToInsert.setDealDate(Long.parseLong(resultMap.get("deal_date").get(i)));
+                        dealToInsert.setPrice(new BigDecimal(resultMap.get("price").get(i)));
+                        dealToInsert.setDiscount(new BigDecimal(resultMap.get("discount").get(i)));
+                        dealToInsert.setProduct(product);
+                        dealToInsert.setCustomer(customer);
+
+                        DealExchanger.put(dealToInsert);
+
+                    }
+                } catch (SQLException e){
+                    warnLogger.error(e);
+                }
+                finally {
+                    session.close();
+                }
+
+                // TODO: сделать лимитированным, так как при большом файле можно словить OutOfMemoryError
             }
         }catch (CsvException | IOException e) {
             warnLogger.error(e);
