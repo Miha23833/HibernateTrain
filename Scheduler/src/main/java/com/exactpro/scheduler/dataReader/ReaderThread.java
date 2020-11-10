@@ -1,6 +1,7 @@
 package com.exactpro.scheduler.dataReader;
 
 import com.exactpro.loggers.StaticLogger;
+import com.exactpro.scheduler.common.StaticMethods;
 import com.exactpro.scheduler.config.Config;
 import com.exactpro.scheduler.dataExchanger.FileDataKeeper;
 import com.opencsv.CSVParser;
@@ -13,9 +14,6 @@ import org.apache.log4j.Logger;
 
 import java.io.FileReader;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.util.*;
 
 public class ReaderThread implements Runnable {
@@ -34,31 +32,6 @@ public class ReaderThread implements Runnable {
             return false;
         }
         return Arrays.asList(csvFileColumns).containsAll(Arrays.asList(dataColumns));
-    }
-
-    /**
-     * Adds number in brackets after filename if file with that name exists.
-     *
-     * @param path      path to scan for existing filename.
-     * @param filename  default name of file.
-     * @return filename with postfix like "file (20)" without extension
-     */
-    private static String addPostfixIfFileExists(String path, String filename){
-        int existingFilesCounter = 1;
-        String template = filename + " (%s)";
-        while (Files.exists(Paths.get(path + "/" + filename + ".csv"))){
-            filename =  String.format(template, existingFilesCounter++);
-        }
-        return filename;
-    }
-
-    private static void moveFile(String PathFrom, String PathTo, String filename) throws IOException {
-
-        String filenameWithPostfix = addPostfixIfFileExists(PathTo, filename);
-
-        Files.move(Paths.get(String.join("", PathFrom, filename + ".csv")),
-                Paths.get(String.join("", PathTo, filenameWithPostfix + ".csv")),
-                StandardCopyOption.REPLACE_EXISTING);
     }
 
     private Map<String, List<String>> csvToHashmap(List<String[]> csvData){
@@ -88,7 +61,7 @@ public class ReaderThread implements Runnable {
     @Override
     public void run() {
         try {
-            moveFile(Config.getFreshDataPath(), Config.getDataInProgressPath(), processFile);
+            StaticMethods.moveFile(Config.getFreshDataPath(), Config.getDataInProgressPath(), processFile, ".csv");
 
             CSVParser csvParser = new CSVParserBuilder()
                     .withSeparator(Config.getSeparator())
@@ -113,7 +86,7 @@ public class ReaderThread implements Runnable {
         }catch (CsvException | IOException e) {
             warnLogger.error(e);
             try {
-                moveFile(Config.getDataInProgressPath(), Config.getRejectedDataPath(), processFile);
+                StaticMethods.moveFile(Config.getDataInProgressPath(), Config.getRejectedDataPath(), processFile, ".csv");
             } catch (IOException ioException) {
                 warnLogger.error(ioException);
             }
