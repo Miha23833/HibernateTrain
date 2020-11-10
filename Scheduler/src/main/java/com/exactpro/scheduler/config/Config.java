@@ -31,6 +31,8 @@ public class Config {
     private static final String tableToInsert;
     private static final String[] csvColumns;
 
+    private static final Integer dataKeeperCapacity;
+
 
     private static void isRelatively(String path) throws IOException {
         File file = new File(path);
@@ -83,6 +85,8 @@ public class Config {
 
         tableToInsert = props.getProperty("tableToInsert");
         csvColumns = props.getProperty("dataColumns").split(",");
+
+        dataKeeperCapacity = Integer.parseInt(props.getProperty("dataKeeperCapacity"));
     }
 
     public static boolean containsKey(String key){
@@ -131,6 +135,10 @@ public class Config {
 
     public static String getTableToInsert(){
         return tableToInsert;
+    }
+
+    public static Integer getDataKeeperCapacity() {
+        return dataKeeperCapacity;
     }
 
 }

@@ -1,40 +1,39 @@
 package com.exactpro.scheduler.dataExchanger;
 
+import com.exactpro.entities.Deal;
+import com.exactpro.scheduler.config.Config;
+
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
-public class FileDataKeeper<T>{
+public class DealExchanger{
 
-    ConditionWaiter waiter;
-    private final List<T> data = new LinkedList<>();
-    private final ReadWriteLock lock = new ReentrantReadWriteLock();
+    private final static int capacity = Config.getDataKeeperCapacity();
+    private final static List<Deal> data = new LinkedList<>();
+    private final static ReadWriteLock lock = new ReentrantReadWriteLock();
 
-    public FileDataKeeper(int queueSize) {
-        waiter  = new ConditionWaiter(() -> data.size() < queueSize, 300);
-    }
-
-    public void put(T entity) {
+    public static void put(Deal deal) {
         try {
-            waiter.await();
+            new ConditionWaiter(() -> data.size() < capacity, 300).await();
         } catch (InterruptedException e){
             e.printStackTrace();
         }
 
         lock.writeLock().lock();
         try {
-            data.add(entity);
+            data.add(deal);
         }
         finally {
             lock.writeLock().unlock();
         }
     }
 
-    public List<T> getAllData(){
+    public static List<Deal> getAllData(){
         lock.writeLock().lock();
         try {
-            List<T> copyData = new LinkedList<>(data);
+            List<Deal> copyData = new LinkedList<>(data);
             data.clear();
             return copyData;
         }
@@ -43,7 +42,7 @@ public class FileDataKeeper<T>{
         }
     }
 
-    public T getLast(){
+    public static Deal getLast(){
         if (data.size() > 0) {
             return data.remove(data.size() - 1);
         }
