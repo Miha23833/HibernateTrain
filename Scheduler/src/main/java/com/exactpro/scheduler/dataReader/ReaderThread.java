@@ -24,6 +24,14 @@ import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.*;
 
+
+//TODO: переделать так, чтобы из файла бралось по одной строке и она уже должна быть в виде DEAL и попадать в DealExchanger
+// вообще, можно сделать так, чтобы мы брали из первой строки имена столбцов и соотношали их с индексами в Map<String, Integer>
+// и мы будем в пределах одного файла знать на каком месте какой столбец и, читая линию, обращаться к колонкам по имени, а не
+// по индексу. В идеале - стоит вынести это в отдельную сущность. Подозреваю, что это можно сделать и в Generic-виде, но не факт.
+// Раз уж я часть итак делаю как хардкод для Deal - пусть так и будет, если не получится.
+
+//TODO: Подумать как можно реализовать оба эти класса как Generic, ибо разве мы хотим останавливаться на загрузке только одной сущности?
 public class ReaderThread implements Runnable {
 
     private final String[] dataColumns;
@@ -91,8 +99,7 @@ public class ReaderThread implements Runnable {
 
                 Map<String, List<String>> resultMap = csvToHashmap(resultCSV);
 
-                Session session = SingleSessionFactory.getInstance().openSession();
-                try {
+                try (Session session = SingleSessionFactory.getInstance().openSession()) {
 
                     for (int i = 0; i < resultCSV.size(); i++) {
                         Deal dealToInsert = new Deal();
@@ -119,16 +126,9 @@ public class ReaderThread implements Runnable {
                         DealExchanger.put(dealToInsert);
 
                     }
-                } catch (SQLException e){
-                    warnLogger.error(e);
                 }
-                finally {
-                    session.close();
-                }
-
-                // TODO: сделать лимитированным, так как при большом файле можно словить OutOfMemoryError
             }
-        }catch (CsvException | IOException e) {
+        }catch (CsvException | IOException | SQLException e) {
             warnLogger.error(e);
             try {
                 StaticMethods.moveFile(Config.getDataInProgressPath(), Config.getRejectedDataPath(), processFile, ".csv");
