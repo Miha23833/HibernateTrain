@@ -125,8 +125,12 @@ public class ReaderThread implements Runnable {
                 }
 
                 try (Session session = SingleSessionFactory.getInstance().openSession()) {
-                    while (reader.readNext() != null) {
-                        Map<String, String> csvRow = csvRowToMap(reader.peek(), fileColumns);
+                    while (true) {
+                        String[] currentValue = reader.readNext();
+                        if (currentValue == null){
+                            break;
+                        }
+                        Map<String, String> csvRow = csvRowToMap(currentValue, fileColumns);
 
                         Deal dealToInsert = new Deal();
 
