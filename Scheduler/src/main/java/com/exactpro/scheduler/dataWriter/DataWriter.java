@@ -1,9 +1,9 @@
 package com.exactpro.scheduler.dataWriter;
 
-import com.exactpro.entities.Deal;
 import com.exactpro.loggers.StaticLogger;
+import com.exactpro.scheduler.common.Record;
 import com.exactpro.scheduler.config.Config;
-import com.exactpro.scheduler.dataExchanger.DealExchanger;
+import com.exactpro.scheduler.dataExchanger.DataExchanger;
 import org.apache.log4j.Logger;
 
 import java.util.List;
@@ -20,7 +20,7 @@ public class DataWriter implements Runnable {
         ExecutorService threadPool = Executors.newFixedThreadPool(Config.getDataWriterMaxThreadPool());
 
         while (true) {
-            List<Deal> data =DealExchanger.getPart();
+            List<Record> data = DataExchanger.getPart();
 
             if (data.size() > 0) {
                 threadPool.execute(new WriterThread(data));

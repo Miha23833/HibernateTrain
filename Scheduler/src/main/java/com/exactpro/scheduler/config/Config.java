@@ -25,11 +25,14 @@ public class Config {
 
     private static final char separator;
     private static final char quoteChar;
+    private static final int skippingCSVLinesCount;
+    private static final String csvMetaPredicate;
+    private static final String csvMetaKeyValueDelimiter;
 
     private static final int dataReaderMaxThreadPool;
     private static final int dataWriterMaxThreadPool;
 
-    private static final Integer dealExchangerCapacity;
+    private static final Integer dataExchangerCapacity;
 
 
     private static void isRelatively(String path) throws IOException {
@@ -78,12 +81,16 @@ public class Config {
 
         separator = props.getProperty("delimiter").toCharArray()[0];
         quoteChar = props.getProperty("quoteChar").toCharArray()[0];
+        skippingCSVLinesCount = Integer.parseInt(props.getProperty("skippingCSVLinesCount"));
+        csvMetaPredicate = props.getProperty("csvMetaPredicate");
+        csvMetaKeyValueDelimiter = props.getProperty("csvMetaKeyValueDelimiter");
+
         scannerPause = Integer.parseInt(props.getProperty("scannerPause"));
 
         dataReaderMaxThreadPool = Integer.parseInt(props.getProperty("maxDataReaderThreadPool"));
         dataWriterMaxThreadPool = Integer.parseInt(props.getProperty("maxDataWriterThreadPool"));
 
-        dealExchangerCapacity = Integer.parseInt(props.getProperty("dataKeeperCapacity"));
+        dataExchangerCapacity = Integer.parseInt(props.getProperty("dataKeeperCapacity"));
     }
 
     public static boolean containsKey(String key){
@@ -130,8 +137,20 @@ public class Config {
         return dataWriterMaxThreadPool;
     }
 
-    public static Integer getDealExchangerCapacity() {
-        return dealExchangerCapacity;
+    public static Integer getDataExchangerCapacity() {
+        return dataExchangerCapacity;
+    }
+
+    public static int getSkippingCSVLinesCount(){
+        return skippingCSVLinesCount;
+    }
+
+    public static String getCsvMetaPredicate(){
+        return csvMetaPredicate;
+    }
+
+    public static String getCsvMetaKeyValueDelimiter(){
+        return csvMetaKeyValueDelimiter;
     }
 
 }

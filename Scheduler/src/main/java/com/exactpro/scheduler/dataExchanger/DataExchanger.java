@@ -1,7 +1,7 @@
 package com.exactpro.scheduler.dataExchanger;
 
-import com.exactpro.entities.Deal;
 import com.exactpro.loggers.StaticLogger;
+import com.exactpro.scheduler.common.Record;
 import com.exactpro.scheduler.config.Config;
 import org.apache.log4j.Logger;
 
@@ -10,14 +10,14 @@ import java.util.List;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
-public class DealExchanger{
+public class DataExchanger {
 
     private static Logger warnLogger = StaticLogger.warnLogger;
-    private final static int capacity = Config.getDealExchangerCapacity();
-    private final static LinkedList<Deal> data = new LinkedList<>();
+    private final static int capacity = Config.getDataExchangerCapacity();
+    private final static LinkedList<Record> data = new LinkedList<>();
     private final static ReadWriteLock lock = new ReentrantReadWriteLock();
 
-    public static void put(Deal deal) {
+    public static void put(Record dataRow) {
         try {
             new ConditionWaiter(() -> data.size() < capacity, 300).await();
         } catch (InterruptedException e){
@@ -26,17 +26,17 @@ public class DealExchanger{
 
         lock.writeLock().lock();
         try {
-            data.add(deal);
+            data.add(dataRow);
         }
         finally {
             lock.writeLock().unlock();
         }
     }
 
-    public static List<Deal> getAllData(){
+    public static List<Record> getAllData(){
         lock.writeLock().lock();
         try {
-            List<Deal> copyData = new LinkedList<>(data);
+            List<Record> copyData = new LinkedList<>(data);
             data.clear();
             return copyData;
         }
@@ -45,7 +45,7 @@ public class DealExchanger{
         }
     }
 
-    public static Deal getLast(){
+    public static Record getLast(){
         if (data.size() > 0) {
             return data.remove(data.size() - 1);
         }
@@ -63,18 +63,18 @@ public class DealExchanger{
         }
     }
 
-    public static List<Deal> getPart(){
+    public static List<Record> getPart(){
         if (size() == 0){
             return new LinkedList<>();
         }
 
         lock.writeLock().lock();
         try {
-            List<Deal> partOfData = new LinkedList<>();
-            int partSize = Config.getDealExchangerCapacity() / Config.getDataWriterMaxThreadPool();
+            List<Record> partOfData = new LinkedList<>();
+            int partSize = Config.getDataExchangerCapacity() / Config.getDataWriterMaxThreadPool();
 
             if (data.size() <= partSize){
-                List<Deal> copyData = new LinkedList<>(data);
+                List<Record> copyData = new LinkedList<>(data);
                 data.clear();
                 return copyData;
             }

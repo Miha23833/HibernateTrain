@@ -17,9 +17,8 @@ public class StaticMethods {
     /**
      * Creates folders to work with files.
      *
-     * @throws IOException if cannot crate path.
      */
-    public static void createFolders(String[] folders) throws IOException {
+    public static void createFolders(String[] folders) {
         String logMsg = "Path %s created because it did not exist.";
 
         try {
@@ -31,7 +30,6 @@ public class StaticMethods {
             }
         } catch (IOException e) {
             warnLogger.error(e);
-            throw new IOException(e);
         }
     }
 
@@ -84,6 +82,15 @@ public class StaticMethods {
                 StandardCopyOption.REPLACE_EXISTING);
 
         infoLogger.info(String.format("File %s was moved from %s to %s", filename+extension, pathFrom, pathTo));
+    }
+
+    public static void safeMoveFile(String pathFrom, String pathTo, String filename, String extension){
+        try{
+            moveFile(pathFrom, pathTo, filename,extension);
+        } catch (IOException e){
+            warnLogger.error(e);
+        }
+
     }
 
 }

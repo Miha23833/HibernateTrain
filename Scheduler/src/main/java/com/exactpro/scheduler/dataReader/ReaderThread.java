@@ -1,26 +1,20 @@
 package com.exactpro.scheduler.dataReader;
 
-import com.exactpro.DAO.GenericDAO;
-import com.exactpro.DAO.SingleSessionFactory;
-import com.exactpro.entities.Customer;
-import com.exactpro.entities.Deal;
-import com.exactpro.entities.Product;
 import com.exactpro.loggers.StaticLogger;
+import com.exactpro.scheduler.common.CSVMetaData;
+import com.exactpro.scheduler.common.Record;
 import com.exactpro.scheduler.common.StaticMethods;
 import com.exactpro.scheduler.config.Config;
-import com.exactpro.scheduler.dataExchanger.DealExchanger;
+import com.exactpro.scheduler.dataExchanger.DataExchanger;
 import com.opencsv.CSVParser;
 import com.opencsv.CSVParserBuilder;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
 import com.opencsv.exceptions.CsvValidationException;
 import org.apache.log4j.Logger;
-import org.hibernate.Session;
 
 import java.io.FileReader;
 import java.io.IOException;
-import java.math.BigDecimal;
-import java.sql.SQLException;
 import java.util.*;
 
 
@@ -41,15 +35,21 @@ public class ReaderThread implements Runnable {
             "price",
             "deal_id"
     };
-    private final String processFile;
+    private final String filename;
     Logger warnLogger = StaticLogger.warnLogger;
 
     public ReaderThread(String filename) {
-        if (filename.contains(".")){
-            this.processFile = filename.substring(0, filename.lastIndexOf("."));
+        if (filename.contains(".")) {
+            this.filename = filename.substring(0, filename.lastIndexOf("."));
         }
         else {
-            this.processFile = filename;
+            this.filename = filename;
+        }
+    }
+
+    private void skipMetaRows(CSVReader reader) throws IOException, CsvValidationException {
+        while (reader.peek() != null && CSVMetaData.isMetaRow(reader.peek())) {
+            reader.readNext();
         }
     }
 
@@ -108,76 +108,45 @@ public class ReaderThread implements Runnable {
     @Override
     public void run() {
 
-        try {
-            StaticMethods.createFolders(new String[]{
-                    Config.getFreshDataPath(),
-                    Config.getDataInProgressPath(),
-                    Config.getInsertedDataPath(),
-                    Config.getRejectedDataPath(),
-                    Config.getRootPath()
-            });
+        StaticMethods.createFolders(new String[]{
+                Config.getFreshDataPath(),
+                Config.getDataInProgressPath(),
+                Config.getInsertedDataPath(),
+                Config.getRejectedDataPath(),
+                Config.getRootPath()
+        });
 
-            StaticMethods.moveFile(Config.getFreshDataPath(), Config.getDataInProgressPath(), processFile, ".csv");
+        StaticMethods.safeMoveFile(Config.getFreshDataPath(), Config.getDataInProgressPath(), filename, ".csv");
 
-            CSVParser csvParser = new CSVParserBuilder()
-                    .withSeparator(Config.getSeparator())
-                    .withQuoteChar(Config.getQuoteChar()).build();
+        CSVParser csvParser = new CSVParserBuilder()
+                .withSeparator(Config.getSeparator())
+                .withQuoteChar(Config.getQuoteChar()).build();
 
-            try (CSVReader reader = new CSVReaderBuilder(new FileReader(Config.getDataInProgressPath() + processFile + ".csv")).withCSVParser(csvParser).build()) {
+        try (
+                CSVReader reader = new CSVReaderBuilder(
+                        new FileReader(Config.getDataInProgressPath() + filename + ".csv"))
+                        .withCSVParser(csvParser)
+                        .withSkipLines(Config.getSkippingCSVLinesCount()).build()) {
 
-                String[] fileColumns = reader.readNext();
+            String[] fileColumns = reader.readNext();
+            CSVMetaData metaData = new CSVMetaData(reader);
 
-                if (!validColumns(fileColumns)) {
-                    CsvValidationException exception = new CsvValidationException("File contains incorrect columns.");
-                    warnLogger.error(exception);
-                    throw exception;
+            while (true) {
+                String[] cursorData = reader.readNext();
+                if (cursorData == null) {
+                    break;
                 }
 
-                try (Session session = SingleSessionFactory.getInstance().openSession()) {
-                    while (true) {
-                        String[] currentValue = reader.readNext();
-                        if (currentValue == null){
-                            break;
-                        }
-                        Map<String, String> csvRow = csvRowToMap(currentValue, fileColumns);
+                Record csvRow = new Record(fileColumns, cursorData, filename, metaData);
+                DataExchanger.put(csvRow);
 
-                        Deal dealToInsert = new Deal();
-
-                        Product product = GenericDAO.selectByID(session, Product.class, Integer.parseInt(csvRow.get("product_id")));
-                        Customer customer = GenericDAO.selectByID(session, Customer.class, Integer.parseInt(csvRow.get("customer_id")));
-
-                        if (product == null && customer == null) {
-                            throw new SQLException("Product and customer does not exist.");
-                        }
-                        else if (product == null) {
-                            throw new SQLException("Product does not exist.");
-                        }
-                        else if (customer == null) {
-                            throw new SQLException("Customer does not exist.");
-                        }
-
-                        dealToInsert.setDealDate(Long.parseLong(csvRow.get("deal_date")));
-                        dealToInsert.setPrice(new BigDecimal(csvRow.get("price")));
-                        dealToInsert.setDiscount(new BigDecimal(csvRow.get("discount")));
-                        dealToInsert.setProduct(product);
-                        dealToInsert.setCustomer(customer);
-
-                        DealExchanger.put(dealToInsert);
-                    }
-                }
             }
-            try {
-                StaticMethods.moveFile(Config.getDataInProgressPath(), Config.getInsertedDataPath(), processFile, ".csv");
-            } catch (IOException e) {
-                warnLogger.error(e);
-            }
+            StaticMethods.safeMoveFile(Config.getDataInProgressPath(), Config.getInsertedDataPath(), filename, ".csv");
+
+
         } catch (Exception e) {
             warnLogger.error(e);
-            try {
-                StaticMethods.moveFile(Config.getDataInProgressPath(), Config.getRejectedDataPath(), processFile, ".csv");
-            } catch (IOException ioException) {
-                warnLogger.error(ioException);
-            }
+            StaticMethods.safeMoveFile(Config.getDataInProgressPath(), Config.getRejectedDataPath(), filename, ".csv");
         }
     }
 
