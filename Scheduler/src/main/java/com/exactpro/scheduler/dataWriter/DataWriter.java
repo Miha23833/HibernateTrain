@@ -2,6 +2,7 @@ package com.exactpro.scheduler.dataWriter;
 
 import com.exactpro.loggers.StaticLogger;
 import com.exactpro.scheduler.config.Config;
+import com.exactpro.scheduler.dataExchanger.ConditionWaiter;
 import com.exactpro.scheduler.dataExchanger.DealExchanger;
 import org.apache.log4j.Logger;
 
@@ -15,18 +16,29 @@ public class DataWriter implements Runnable {
     @Override
     public void run() {
         infoLogger.info("DataWriter was start");
+        ExecutorService threadPool = Executors.newFixedThreadPool(1);
+
+        ConditionWaiter waiter = new ConditionWaiter(
+                () -> (int)(((float) DealExchanger.size() / (float) Config.getDealExchangerCapacity()) * 100) > 70,
+                Config.getScannerPause()
+        );
 
 
         while (true) {
-            ExecutorService threadPool = Executors.newFixedThreadPool(Config.getDataWriterMaxThreadPool());
-
-            for (int i = 0;
-                    i < (int)(((float) DealExchanger.size() / (float) Config.getDealExchangerCapacity()) * 10) ;
-                    i++) {
-                threadPool.execute(new WriterThread());
+            try {
+                waiter.await();
+            } catch (InterruptedException e) {
+                warnLogger.error(e);
             }
+            threadPool.execute(new WriterThread());
 
-            threadPool.shutdown();
+            try {
+                Thread.sleep(Config.getScannerPause());
+            } catch (InterruptedException e) {
+                warnLogger.error(e);
+            }
         }
+
     }
+
 }

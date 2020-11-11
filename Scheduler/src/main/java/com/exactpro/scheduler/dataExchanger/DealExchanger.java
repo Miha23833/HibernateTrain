@@ -34,13 +34,6 @@ public class DealExchanger{
     }
 
     public static List<Deal> getAllData(){
-
-        try {
-            new ConditionWaiter(() -> (float) data.size() % (float) capacity > 50).await();
-        } catch (InterruptedException e) {
-            warnLogger.error(e);
-        }
-
         lock.writeLock().lock();
         try {
             List<Deal> copyData = new LinkedList<>(data);
