@@ -44,13 +44,13 @@ public class Scheduler {
                 Config.getInsertedDataPath(),
                 Config.getRejectedDataPath());
 
-        if (Config.getMaxThreadPool() < 1) {
+        if (Config.getDataReaderMaxThreadPool() < 1) {
             IllegalArgumentException exception = new IllegalArgumentException("MaxThreadPool must me at least 1.");
             warnLogger.error(exception);
             throw exception;
         }
 
-        semaphore = new Semaphore(Config.getMaxThreadPool());
+        semaphore = new Semaphore(Config.getDataReaderMaxThreadPool());
 
     }
 

@@ -13,7 +13,6 @@ import com.opencsv.CSVParser;
 import com.opencsv.CSVParserBuilder;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
-import com.opencsv.exceptions.CsvException;
 import com.opencsv.exceptions.CsvValidationException;
 import org.apache.log4j.Logger;
 import org.hibernate.Session;
@@ -38,19 +37,19 @@ public class ReaderThread implements Runnable {
     private final String processFile;
     Logger warnLogger = StaticLogger.warnLogger;
 
-    public ReaderThread(String filename, String[] dataColumns){
+    public ReaderThread(String filename, String[] dataColumns) {
         this.processFile = filename;
         this.dataColumns = dataColumns;
     }
 
-    private boolean validColumns(String[] csvFileColumns){
-        if (csvFileColumns == null || csvFileColumns.length < dataColumns.length){
+    private boolean validColumns(String[] csvFileColumns) {
+        if (csvFileColumns == null || csvFileColumns.length < dataColumns.length) {
             return false;
         }
         return Arrays.asList(csvFileColumns).containsAll(Arrays.asList(dataColumns));
     }
 
-    private Map<String, List<String>> csvToHashmap(List<String[]> csvData){
+    private Map<String, List<String>> csvToHashmap(List<String[]> csvData) {
         Map<String, List<String>> result = new HashMap<>();
 
         String[] columnNames = csvData.get(0);
@@ -65,6 +64,27 @@ public class ReaderThread implements Runnable {
             }
         }
         return result;
+    }
+
+    private List<Map<String, String>> csvToRecordSet(List<String[]> csvData, String[] columns) {
+        List<Map<String, String>> result = new ArrayList<>();
+
+        for (String[] row: csvData) {
+            result.add(csvRowToMap(row, columns));
+        }
+
+        return result;
+    }
+
+    private Map<String, String> csvRowToMap(String[] csvRow, String[] columns) {
+        if (csvRow.length != columns.length) {
+            throw new IllegalArgumentException("Number of columns both in csvRow and columns must be equal!");
+        }
+        Map<String, String> record = new HashMap<>();
+        for (int i = 0; i < csvRow.length; i++) {
+            record.put(columns[i], csvRow[i]);
+        }
+        return record;
     }
 
     /**
@@ -93,19 +113,14 @@ public class ReaderThread implements Runnable {
                     throw exception;
                 }
 
-                List<String[]> resultCSV = new ArrayList<>();
-                resultCSV.add(fileColumns);
-                resultCSV.addAll(reader.readAll());
-
-                Map<String, List<String>> resultMap = csvToHashmap(resultCSV);
-
                 try (Session session = SingleSessionFactory.getInstance().openSession()) {
+                    while (reader.readNext() != null) {
+                        Map<String, String> csvRow = csvRowToMap(reader.peek(), fileColumns);
 
-                    for (int i = 0; i < resultCSV.size(); i++) {
                         Deal dealToInsert = new Deal();
 
-                        Product product = GenericDAO.selectByID(session, Product.class, Integer.parseInt(resultMap.get("product_id").get(i)));
-                        Customer customer = GenericDAO.selectByID(session, Customer.class, Integer.parseInt(resultMap.get("customer_id").get(i)));
+                        Product product = GenericDAO.selectByID(session, Product.class, Integer.parseInt(csvRow.get("product_id")));
+                        Customer customer = GenericDAO.selectByID(session, Customer.class, Integer.parseInt(csvRow.get("customer_id")));
 
                         if (product == null && customer == null) {
                             throw new SQLException("Product and customer does not exist.");
@@ -117,18 +132,17 @@ public class ReaderThread implements Runnable {
                             throw new SQLException("Customer does not exist.");
                         }
 
-                        dealToInsert.setDealDate(Long.parseLong(resultMap.get("deal_date").get(i)));
-                        dealToInsert.setPrice(new BigDecimal(resultMap.get("price").get(i)));
-                        dealToInsert.setDiscount(new BigDecimal(resultMap.get("discount").get(i)));
+                        dealToInsert.setDealDate(Long.parseLong(csvRow.get("deal_date")));
+                        dealToInsert.setPrice(new BigDecimal(csvRow.get("price")));
+                        dealToInsert.setDiscount(new BigDecimal(csvRow.get("discount")));
                         dealToInsert.setProduct(product);
                         dealToInsert.setCustomer(customer);
 
                         DealExchanger.put(dealToInsert);
-
                     }
                 }
             }
-        }catch (CsvException | IOException | SQLException e) {
+        } catch (Exception e) {
             warnLogger.error(e);
             try {
                 StaticMethods.moveFile(Config.getDataInProgressPath(), Config.getRejectedDataPath(), processFile, ".csv");

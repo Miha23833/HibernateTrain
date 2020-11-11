@@ -2,21 +2,34 @@ package com.exactpro.scheduler.dataWriter;
 
 import com.exactpro.loggers.StaticLogger;
 import com.exactpro.scheduler.common.StaticMethods;
-import com.exactpro.scheduler.config.CSVEntityTypes;
 import com.exactpro.scheduler.config.Config;
+import com.exactpro.scheduler.dataExchanger.DealExchanger;
 import org.apache.log4j.Logger;
 
 import java.io.IOException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class DataWriter {
-    protected final Logger infoLogger = StaticLogger.infoLogger;
-    protected final Logger warnLogger = StaticLogger.warnLogger;
+    static final Logger infoLogger = StaticLogger.infoLogger;
+    static final Logger warnLogger = StaticLogger.warnLogger;
 
-    private final String[] dataColumns;
+    public static void main(String[] args) throws IOException, InterruptedException {
+        StaticMethods.createFolders(new String[]{Config.getFreshDataPath(), Config.getDataInProgressPath(), Config.getInsertedDataPath(), Config.getRejectedDataPath()});
 
-    public DataWriter(CSVEntityTypes entity) throws IOException {
-        dataColumns = Config.getCSVColumns();
-        StaticMethods.createFolders( new String[]{Config.getFreshDataPath(), Config.getDataInProgressPath(), Config.getInsertedDataPath(), Config.getRejectedDataPath()});
+        final String[] csvColumns = Config.getCSVColumns();
+        infoLogger.info(String.format("Data reader has start working with given columns: %s", String.join(",", csvColumns)));
+
+        ExecutorService threadPool = Executors.newFixedThreadPool(Config.getDataWriterMaxThreadPool());
+
+        while (true) {
+            for (int i = 0; i < DealExchanger.size(); i++) {
+
+            }
+
+            Thread.sleep(Config.getScannerPause());
+        }
+
     }
 
 

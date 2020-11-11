@@ -26,7 +26,8 @@ public class Config {
     private static final char separator;
     private static final char quoteChar;
 
-    private static final int maxThreadPool;
+    private static final int dataReaderMaxThreadPool;
+    private static final int dataWriterMaxThreadPool;
 
     private static final String tableToInsert;
     private static final String[] csvColumns;
@@ -81,7 +82,9 @@ public class Config {
         separator = props.getProperty("delimiter").toCharArray()[0];
         quoteChar = props.getProperty("quoteChar").toCharArray()[0];
         scannerPause = Integer.parseInt(props.getProperty("scannerPause"));
-        maxThreadPool = Integer.parseInt(props.getProperty("maxThreadPool"));
+
+        dataReaderMaxThreadPool = Integer.parseInt(props.getProperty("maxDataReaderThreadPool"));
+        dataWriterMaxThreadPool = Integer.parseInt(props.getProperty("maxDataWriterThreadPool"));
 
         tableToInsert = props.getProperty("tableToInsert");
         csvColumns = props.getProperty("dataColumns").split(",");
@@ -125,8 +128,12 @@ public class Config {
         return scannerPause;
     }
 
-    public static int getMaxThreadPool(){
-        return maxThreadPool;
+    public static int getDataReaderMaxThreadPool(){
+        return dataReaderMaxThreadPool;
+    }
+
+    public static int getDataWriterMaxThreadPool(){
+        return dataWriterMaxThreadPool;
     }
 
     public static String[] getCSVColumns(){

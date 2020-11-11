@@ -16,7 +16,7 @@ public class DataReader {
         final String[] csvColumns = Config.getCSVColumns();
         infoLogger.info(String.format("Data reader has start working with given columns: %s", String.join(",", csvColumns)));
 
-        ExecutorService threadPool = Executors.newFixedThreadPool(Config.getMaxThreadPool());
+        ExecutorService threadPool = Executors.newFixedThreadPool(Config.getDataWriterMaxThreadPool());
 
         while (true) {
             for (String filename: StaticMethods.getCSVFilenamesInFolder(Config.getFreshDataPath())) {
