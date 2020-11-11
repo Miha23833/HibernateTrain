@@ -15,10 +15,8 @@ public class DataWriter {
     static final Logger warnLogger = StaticLogger.warnLogger;
 
     public static void main(String[] args) throws IOException, InterruptedException {
+        infoLogger.info("DataWriter was start");
         StaticMethods.createFolders(new String[]{Config.getFreshDataPath(), Config.getDataInProgressPath(), Config.getInsertedDataPath(), Config.getRejectedDataPath()});
-
-        final String[] csvColumns = Config.getCSVColumns();
-        infoLogger.info(String.format("Data writer has start working with given columns: %s", String.join(",", csvColumns)));
 
         ExecutorService threadPool = Executors.newFixedThreadPool(Config.getDataWriterMaxThreadPool());
 

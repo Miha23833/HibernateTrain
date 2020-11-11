@@ -33,13 +33,19 @@ import java.util.*;
 //TODO: Подумать как можно реализовать оба эти класса как Generic, ибо разве мы хотим останавливаться на загрузке только одной сущности?
 public class ReaderThread implements Runnable {
 
-    private final String[] dataColumns;
+    private final String[] dataColumns = new String[]{
+            "deal_date",
+            "customer_id",
+            "discount",
+            "product_id",
+            "price",
+            "deal_id"
+    };
     private final String processFile;
     Logger warnLogger = StaticLogger.warnLogger;
 
-    public ReaderThread(String filename, String[] dataColumns) {
+    public ReaderThread(String filename) {
         this.processFile = filename;
-        this.dataColumns = dataColumns;
     }
 
     private boolean validColumns(String[] csvFileColumns) {

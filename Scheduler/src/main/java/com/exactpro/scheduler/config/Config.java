@@ -29,9 +29,6 @@ public class Config {
     private static final int dataReaderMaxThreadPool;
     private static final int dataWriterMaxThreadPool;
 
-    private static final String tableToInsert;
-    private static final String[] csvColumns;
-
     private static final Integer dealExchangerCapacity;
 
 
@@ -86,9 +83,6 @@ public class Config {
         dataReaderMaxThreadPool = Integer.parseInt(props.getProperty("maxDataReaderThreadPool"));
         dataWriterMaxThreadPool = Integer.parseInt(props.getProperty("maxDataWriterThreadPool"));
 
-        tableToInsert = props.getProperty("tableToInsert");
-        csvColumns = props.getProperty("dataColumns").split(",");
-
         dealExchangerCapacity = Integer.parseInt(props.getProperty("dataKeeperCapacity"));
     }
 
@@ -134,14 +128,6 @@ public class Config {
 
     public static int getDataWriterMaxThreadPool(){
         return dataWriterMaxThreadPool;
-    }
-
-    public static String[] getCSVColumns(){
-        return csvColumns;
-    }
-
-    public static String getTableToInsert(){
-        return tableToInsert;
     }
 
     public static Integer getDealExchangerCapacity() {
