@@ -107,7 +107,16 @@ public class ReaderThread implements Runnable {
      */
     @Override
     public void run() {
+
         try {
+            StaticMethods.createFolders(new String[]{
+                    Config.getFreshDataPath(),
+                    Config.getDataInProgressPath(),
+                    Config.getInsertedDataPath(),
+                    Config.getRejectedDataPath(),
+                    Config.getRootPath()
+            });
+
             StaticMethods.moveFile(Config.getFreshDataPath(), Config.getDataInProgressPath(), processFile, ".csv");
 
             CSVParser csvParser = new CSVParserBuilder()
