@@ -13,7 +13,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 public class DealExchanger{
 
     private static Logger warnLogger = StaticLogger.warnLogger;
-    private final static int capacity = Config.getDataKeeperCapacity();
+    private final static int capacity = Config.getDealExchangerCapacity();
     private final static List<Deal> data = new LinkedList<>();
     private final static ReadWriteLock lock = new ReentrantReadWriteLock();
 

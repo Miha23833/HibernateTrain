@@ -18,13 +18,15 @@ public class DataWriter {
         StaticMethods.createFolders(new String[]{Config.getFreshDataPath(), Config.getDataInProgressPath(), Config.getInsertedDataPath(), Config.getRejectedDataPath()});
 
         final String[] csvColumns = Config.getCSVColumns();
-        infoLogger.info(String.format("Data reader has start working with given columns: %s", String.join(",", csvColumns)));
+        infoLogger.info(String.format("Data writer has start working with given columns: %s", String.join(",", csvColumns)));
 
         ExecutorService threadPool = Executors.newFixedThreadPool(Config.getDataWriterMaxThreadPool());
 
         while (true) {
-            for (int i = 0; i < DealExchanger.size(); i++) {
-
+            for (int i = 0;
+                    i < (int) ((float) DealExchanger.size() / (float) Config.getDealExchangerCapacity()) * 10 ;
+                    i++) {
+                threadPool.execute(new WriterThread());
             }
 
             Thread.sleep(Config.getScannerPause());
