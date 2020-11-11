@@ -45,7 +45,12 @@ public class ReaderThread implements Runnable {
     Logger warnLogger = StaticLogger.warnLogger;
 
     public ReaderThread(String filename) {
-        this.processFile = filename;
+        if (filename.contains(".")){
+            this.processFile = filename.substring(0, filename.lastIndexOf("."));
+        }
+        else {
+            this.processFile = filename;
+        }
     }
 
     private boolean validColumns(String[] csvFileColumns) {
