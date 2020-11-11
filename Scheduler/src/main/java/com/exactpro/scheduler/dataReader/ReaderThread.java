@@ -125,11 +125,10 @@ public class ReaderThread implements Runnable {
         try (
                 CSVReader reader = new CSVReaderBuilder(
                         new FileReader(Config.getDataInProgressPath() + filename + ".csv"))
-                        .withCSVParser(csvParser)
-                        .withSkipLines(Config.getSkippingCSVLinesCount()).build()) {
+                        .withCSVParser(csvParser).build()) {
 
-            String[] fileColumns = reader.readNext();
             CSVMetaData metaData = new CSVMetaData(reader);
+            String[] fileColumns = reader.readNext();
 
             while (true) {
                 String[] cursorData = reader.readNext();

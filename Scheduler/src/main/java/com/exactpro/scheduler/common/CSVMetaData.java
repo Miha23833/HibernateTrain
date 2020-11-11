@@ -46,6 +46,10 @@ public class CSVMetaData {
         return metadata.keySet();
     }
 
+    public boolean containsKey(String key){
+        return metadata.containsKey(key);
+    }
+
     public static boolean isMetaRow(String[] row) {
         if (row == null || row.length != 1){
             return false;
@@ -57,4 +61,5 @@ public class CSVMetaData {
                 rowValue.contains(Config.getCsvMetaKeyValueDelimiter());
 
     }
+
 }

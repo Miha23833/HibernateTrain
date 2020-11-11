@@ -5,6 +5,7 @@ import com.exactpro.scheduler.common.Record;
 import com.exactpro.scheduler.config.Config;
 import org.apache.log4j.Logger;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.locks.ReadWriteLock;
@@ -14,7 +15,7 @@ public class DataExchanger {
 
     private static Logger warnLogger = StaticLogger.warnLogger;
     private final static int capacity = Config.getDataExchangerCapacity();
-    private final static LinkedList<Record> data = new LinkedList<>();
+    private final static ArrayList<Record> data = new ArrayList<>();
     private final static ReadWriteLock lock = new ReentrantReadWriteLock();
 
     public static void put(Record dataRow) {
@@ -80,7 +81,7 @@ public class DataExchanger {
             }
 
             for (int i = 0; i < partSize; i++) {
-                partOfData.add(data.removeLast());
+                partOfData.add(data.remove(data.size()-1));
             }
             return partOfData;
         } finally {

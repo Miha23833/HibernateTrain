@@ -1,6 +1,5 @@
 package com.exactpro.scheduler.dataWriter;
 
-import com.exactpro.DAO.GenericDAO;
 import com.exactpro.DAO.SingleSessionFactory;
 import com.exactpro.loggers.StaticLogger;
 import com.exactpro.scheduler.common.Record;
@@ -26,10 +25,27 @@ public class WriterThread implements Runnable {
         infoLogger.info(String.format("Thread %s was started", Thread.currentThread().getName()));
         Session session = SingleSessionFactory.getInstance().openSession();
         session.beginTransaction();
+        int savedDataCount = 0;
 
         try {
-            for (Record deal: dataToSave) {
-                GenericDAO.insertEntity(session, deal);
+            for (Record dataRow: dataToSave) {
+                if (!dataRow.getMetaData().containsKey("tableName")){
+                    System.out.println("not contains tableName");
+                    continue;
+                }
+                try {
+                    String query = String.format("INSERT INTO %s ( %s ) VALUES ( %s )",
+                            dataRow.getMetaData().get("tableName"),
+                            String.join(", ", dataRow.getColumns()),
+                            String.join(", ", dataRow.getData()));
+                    session.createQuery(query).executeUpdate();
+
+                    infoLogger.info("Query " + query + " was executed.");
+                    savedDataCount++;
+                } catch (Exception e){
+                    e.printStackTrace();
+                    warnLogger.error(e);
+                }
             }
         }
         finally {
@@ -39,7 +55,8 @@ public class WriterThread implements Runnable {
             if (session.isOpen()){
                 session.close();
             }
-            infoLogger.info("Data was saved. Size is "+dataToSave.size());
+            infoLogger.info(String.join(" ","Data was saved. Size is ", Integer.toString(savedDataCount), "."
+                    , "Rejected data size: ", String.valueOf(dataToSave.size() - savedDataCount)));
         }
     }
 }
