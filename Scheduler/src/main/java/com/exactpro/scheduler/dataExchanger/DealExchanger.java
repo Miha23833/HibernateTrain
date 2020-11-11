@@ -14,14 +14,14 @@ public class DealExchanger{
 
     private static Logger warnLogger = StaticLogger.warnLogger;
     private final static int capacity = Config.getDealExchangerCapacity();
-    private final static List<Deal> data = new LinkedList<>();
+    private final static LinkedList<Deal> data = new LinkedList<>();
     private final static ReadWriteLock lock = new ReentrantReadWriteLock();
 
     public static void put(Deal deal) {
         try {
             new ConditionWaiter(() -> data.size() < capacity, 300).await();
         } catch (InterruptedException e){
-            e.printStackTrace();
+            warnLogger.error(e);
         }
 
         lock.writeLock().lock();
@@ -60,6 +60,31 @@ public class DealExchanger{
             return data.size();
         } finally {
             lock.readLock().unlock();
+        }
+    }
+
+    public static List<Deal> getPart(){
+        if (size() == 0){
+            return new LinkedList<>();
+        }
+
+        lock.writeLock().lock();
+        try {
+            List<Deal> partOfData = new LinkedList<>();
+            int partSize = Config.getDealExchangerCapacity() / Config.getDataWriterMaxThreadPool();
+
+            if (data.size() <= partSize){
+                List<Deal> copyData = new LinkedList<>(data);
+                data.clear();
+                return copyData;
+            }
+
+            for (int i = 0; i < partSize; i++) {
+                partOfData.add(data.removeLast());
+            }
+            return partOfData;
+        } finally {
+            lock.writeLock().unlock();
         }
     }
 }
