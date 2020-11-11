@@ -166,6 +166,11 @@ public class ReaderThread implements Runnable {
                     }
                 }
             }
+            try {
+                StaticMethods.moveFile(Config.getDataInProgressPath(), Config.getInsertedDataPath(), processFile, ".csv");
+            } catch (IOException e) {
+                warnLogger.error(e);
+            }
         } catch (Exception e) {
             warnLogger.error(e);
             try {

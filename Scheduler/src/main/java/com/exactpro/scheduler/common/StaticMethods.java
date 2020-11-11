@@ -64,24 +64,26 @@ public class StaticMethods {
 
     /**
      * Move file to other folder.
-     * @param PathFrom current path to file.
-     * @param PathTo target path to file.
+     * @param pathFrom current path to file.
+     * @param pathTo target path to file.
      * @param filename name of file without extension.
      * @param extension extension
      * @throws IOException if moving is not finished correctly.
      * @apiNote file extension should not change.
      */
-    public static void moveFile(String PathFrom, String PathTo, String filename, String extension) throws IOException {
+    public static void moveFile(String pathFrom, String pathTo, String filename, String extension) throws IOException {
 
         if(!extension.startsWith(".")){
             extension = "." + extension;
         }
 
-        String filenameWithPostfix = addPostfixIfFileExists(PathTo, filename);
+        String filenameWithPostfix = addPostfixIfFileExists(pathTo, filename);
 
-        Files.move(Paths.get(String.join("", PathFrom, filename + extension)),
-                Paths.get(String.join("", PathTo, filenameWithPostfix + extension)),
+        Files.move(Paths.get(String.join("", pathFrom, filename + extension)),
+                Paths.get(String.join("", pathTo, filenameWithPostfix + extension)),
                 StandardCopyOption.REPLACE_EXISTING);
+
+        infoLogger.info(String.format("File %s was moved from %s to %s", filename+extension, pathFrom, pathTo));
     }
 
 }
