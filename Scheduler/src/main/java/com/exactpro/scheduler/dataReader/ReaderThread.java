@@ -27,14 +27,6 @@ import java.util.*;
 //TODO: Подумать как можно реализовать оба эти класса как Generic, ибо разве мы хотим останавливаться на загрузке только одной сущности?
 public class ReaderThread implements Runnable {
 
-    private final String[] dataColumns = new String[]{
-            "deal_date",
-            "customer_id",
-            "discount",
-            "product_id",
-            "price",
-            "deal_id"
-    };
     private final String filename;
     Logger warnLogger = StaticLogger.warnLogger;
 
@@ -51,13 +43,6 @@ public class ReaderThread implements Runnable {
         while (reader.peek() != null && CSVMetaData.isMetaRow(reader.peek())) {
             reader.readNext();
         }
-    }
-
-    private boolean validColumns(String[] csvFileColumns) {
-        if (csvFileColumns == null || csvFileColumns.length < dataColumns.length) {
-            return false;
-        }
-        return Arrays.asList(csvFileColumns).containsAll(Arrays.asList(dataColumns));
     }
 
     private Map<String, List<String>> csvToHashmap(List<String[]> csvData) {
@@ -140,12 +125,14 @@ public class ReaderThread implements Runnable {
                 DataExchanger.put(csvRow);
 
             }
-            StaticMethods.safeMoveFile(Config.getDataInProgressPath(), Config.getInsertedDataPath(), filename, ".csv");
 
 
         } catch (Exception e) {
             warnLogger.error(e);
             StaticMethods.safeMoveFile(Config.getDataInProgressPath(), Config.getRejectedDataPath(), filename, ".csv");
+        }
+        finally {
+            StaticMethods.safeMoveFile(Config.getDataInProgressPath(), Config.getInsertedDataPath(), filename, ".csv");
         }
     }
 
