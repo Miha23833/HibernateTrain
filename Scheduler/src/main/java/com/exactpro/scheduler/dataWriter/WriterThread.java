@@ -30,25 +30,28 @@ public class WriterThread implements Runnable {
             int savedDataCount = 0;
             for (Record dataRow: dataToSave) {
                 if (!dataRow.getMetaData().containsKey("tableName")) {
+
                     if (!filenames.contains(dataRow.getFilename())) {
                         infoLogger.warn("File " + dataRow.getFilename() + " does not contains tableName. Row ");
                         filenames.add(dataRow.getFilename());
                     }
+
                     continue;
                 }
                 try {
                     session.beginTransaction();
-                    // TODO: сделать через helper. Нафиг этот hibernate
                     String query = String.format("INSERT INTO %s ( %s ) VALUES ( %s )",
                             dataRow.getMetaData().get("tableName"),
                             String.join(", ", dataRow.getColumns()),
                             String.join(", ", dataRow.getData()));
                     session.createNativeQuery(query).executeUpdate();
-                    session.getTransaction().commit();
                     infoLogger.info("Query " + query + " was executed.");
                     savedDataCount++;
                 } catch (Exception e) {
                     warnLogger.error(e);
+                    if (session.getTransaction().isActive()) {
+                        session.getTransaction().rollback();
+                    }
                 } finally {
                     if (session.getTransaction().isActive()) {
                         session.getTransaction().commit();

@@ -10,6 +10,7 @@ import com.opencsv.CSVParser;
 import com.opencsv.CSVParserBuilder;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
+import com.opencsv.enums.CSVReaderNullFieldIndicator;
 import com.opencsv.exceptions.CsvValidationException;
 import org.apache.log4j.Logger;
 
@@ -105,7 +106,9 @@ public class ReaderThread implements Runnable {
 
         CSVParser csvParser = new CSVParserBuilder()
                 .withSeparator(Config.getSeparator())
-                .withQuoteChar(Config.getQuoteChar()).build();
+                .withQuoteChar(Config.getQuoteChar())
+                .withFieldAsNull(CSVReaderNullFieldIndicator.NEITHER)
+                .build();
 
         try (
                 CSVReader reader = new CSVReaderBuilder(
@@ -129,6 +132,7 @@ public class ReaderThread implements Runnable {
 
         } catch (Exception e) {
             warnLogger.error(e);
+            //TODO: Продумать логику перемещений файла
             StaticMethods.safeMoveFile(Config.getDataInProgressPath(), Config.getRejectedDataPath(), filename, ".csv");
         }
         finally {
