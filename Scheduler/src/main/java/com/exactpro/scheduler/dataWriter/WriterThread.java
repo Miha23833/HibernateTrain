@@ -6,7 +6,9 @@ import com.exactpro.scheduler.common.Record;
 import org.apache.log4j.Logger;
 import org.hibernate.Session;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 
 //TODO убрать работу с перемещением, ибо это должно быть заботой DataReader. Пусть только он валидирует.
@@ -23,39 +25,37 @@ public class WriterThread implements Runnable {
     @Override
     public void run() {
         infoLogger.info(String.format("Thread %s was started", Thread.currentThread().getName()));
-        Session session = SingleSessionFactory.getInstance().openSession();
-        session.beginTransaction();
-        int savedDataCount = 0;
-
-        try {
+        Set<String> filenames = new HashSet<>();
+        try (Session session = SingleSessionFactory.getInstance().openSession()) {
+            int savedDataCount = 0;
             for (Record dataRow: dataToSave) {
-                if (!dataRow.getMetaData().containsKey("tableName")){
-                    System.out.println("not contains tableName");
+                if (!dataRow.getMetaData().containsKey("tableName")) {
+                    if (!filenames.contains(dataRow.getFilename())) {
+                        infoLogger.warn("File " + dataRow.getFilename() + " does not contains tableName. Row ");
+                        filenames.add(dataRow.getFilename());
+                    }
                     continue;
                 }
                 try {
+                    session.beginTransaction();
+                    // TODO: сделать через helper. Нафиг этот hibernate
                     String query = String.format("INSERT INTO %s ( %s ) VALUES ( %s )",
                             dataRow.getMetaData().get("tableName"),
                             String.join(", ", dataRow.getColumns()),
                             String.join(", ", dataRow.getData()));
-                    session.createQuery(query).executeUpdate();
-
+                    session.createNativeQuery(query).executeUpdate();
+                    session.getTransaction().commit();
                     infoLogger.info("Query " + query + " was executed.");
                     savedDataCount++;
-                } catch (Exception e){
-                    e.printStackTrace();
+                } catch (Exception e) {
                     warnLogger.error(e);
+                } finally {
+                    if (session.getTransaction().isActive()) {
+                        session.getTransaction().commit();
+                    }
                 }
             }
-        }
-        finally {
-            if (session.getTransaction().isActive()){
-                session.getTransaction().commit();
-            }
-            if (session.isOpen()){
-                session.close();
-            }
-            infoLogger.info(String.join(" ","Data was saved. Size is ", Integer.toString(savedDataCount), "."
+            infoLogger.info(String.join(" ", "Data was saved. Size is ", Integer.toString(savedDataCount), "."
                     , "Rejected data size: ", String.valueOf(dataToSave.size() - savedDataCount)));
         }
     }
