@@ -81,7 +81,6 @@ public class MultiThreadTest {
         for (int i = 0; i < dealReaders.length; i++) {
             dealReaders[i] = new DealReader(deals[i].getDealID());
             dealReaders[i].start();
-            // TODO: если сделать join в следующем цикле - падает. Подозреваю ленивую инициализацию
             dealReaders[i].join();
         }
 

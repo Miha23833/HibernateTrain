@@ -19,16 +19,9 @@ import java.io.IOException;
 import java.util.*;
 
 
-//TODO: переделать так, чтобы из файла бралось по одной строке и она уже должна быть в виде DEAL и попадать в DealExchanger
-// вообще, можно сделать так, чтобы мы брали из первой строки имена столбцов и соотношали их с индексами в Map<String, Integer>
-// и мы будем в пределах одного файла знать на каком месте какой столбец и, читая линию, обращаться к колонкам по имени, а не
-// по индексу. В идеале - стоит вынести это в отдельную сущность. Подозреваю, что это можно сделать и в Generic-виде, но не факт.
-// Раз уж я часть итак делаю как хардкод для Deal - пусть так и будет, если не получится.
-
-//TODO: Подумать как можно реализовать оба эти класса как Generic, ибо разве мы хотим останавливаться на загрузке только одной сущности?
 public class ReaderThread implements Runnable {
 
-    private final String filename;
+    private String filename;
     Logger warnLogger = StaticLogger.warnLogger;
 
     public ReaderThread(String filename) {
@@ -102,7 +95,7 @@ public class ReaderThread implements Runnable {
                 Config.getRootPath()
         });
 
-        StaticMethods.safeMoveFile(Config.getFreshDataPath(), Config.getDataInProgressPath(), filename, ".csv");
+        filename = StaticMethods.safeMoveFile(Config.getFreshDataPath(), Config.getDataInProgressPath(), filename, ".csv");
 
         CSVParser csvParser = new CSVParserBuilder()
                 .withSeparator(Config.getSeparator())
@@ -132,7 +125,6 @@ public class ReaderThread implements Runnable {
 
         } catch (Exception e) {
             warnLogger.error(e);
-            //TODO: Продумать логику перемещений файла
             StaticMethods.safeMoveFile(Config.getDataInProgressPath(), Config.getRejectedDataPath(), filename, ".csv");
         }
         finally {

@@ -13,44 +13,53 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class DataExchanger {
 
-    private static Logger warnLogger = StaticLogger.warnLogger;
+    private static final Logger warnLogger = StaticLogger.warnLogger;
     private final static int capacity = Config.getDataExchangerCapacity();
     private final static ArrayList<Record> data = new ArrayList<>();
     private final static ReadWriteLock lock = new ReentrantReadWriteLock();
 
     public static void put(Record dataRow) {
         try {
-            new ConditionWaiter(() -> data.size() < capacity, 300).await();
-        } catch (InterruptedException e){
+            while (data.size() >= capacity) {
+                synchronized (data) {
+                    data.wait();
+                }
+            }
+        } catch (InterruptedException e) {
             warnLogger.error(e);
         }
 
         lock.writeLock().lock();
         try {
             data.add(dataRow);
-        }
-        finally {
+        } finally {
             lock.writeLock().unlock();
         }
     }
 
-    public static List<Record> getAllData(){
+    public static List<Record> getAllData() {
         lock.writeLock().lock();
         try {
             List<Record> copyData = new LinkedList<>(data);
             data.clear();
             return copyData;
-        }
-        finally {
+        } finally {
             lock.writeLock().unlock();
+            synchronized (data) {
+                data.notifyAll();
+            }
         }
     }
 
-    public static Record getLast(){
+    public static Record getLast() {
         if (data.size() > 0) {
-            return data.remove(data.size() - 1);
+            Record lastOne = data.remove(data.size() - 1);
+            synchronized (data) {
+                data.notifyAll();
+            }
+            return lastOne;
         }
-        else{
+        else {
             return null;
         }
     }
@@ -64,8 +73,8 @@ public class DataExchanger {
         }
     }
 
-    public static List<Record> getPart(){
-        if (size() == 0){
+    public static List<Record> getPart() {
+        if (size() == 0) {
             return new LinkedList<>();
         }
 
@@ -74,18 +83,21 @@ public class DataExchanger {
             List<Record> partOfData = new LinkedList<>();
             int partSize = Config.getDataExchangerCapacity() / Config.getDataWriterMaxThreadPool();
 
-            if (data.size() <= partSize){
+            if (data.size() <= partSize) {
                 List<Record> copyData = new LinkedList<>(data);
                 data.clear();
                 return copyData;
             }
 
             for (int i = 0; i < partSize; i++) {
-                partOfData.add(data.remove(data.size()-1));
+                partOfData.add(data.remove(data.size() - 1));
             }
             return partOfData;
         } finally {
             lock.writeLock().unlock();
+            synchronized (data) {
+                data.notifyAll();
+            }
         }
     }
 }

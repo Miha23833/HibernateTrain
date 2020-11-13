@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Set;
 
 
-//TODO убрать работу с перемещением, ибо это должно быть заботой DataReader. Пусть только он валидирует.
 public class WriterThread implements Runnable {
 
     private static final Logger warnLogger = StaticLogger.warnLogger;
@@ -48,6 +47,7 @@ public class WriterThread implements Runnable {
                     infoLogger.info("Query " + query + " was executed.");
                     savedDataCount++;
                 } catch (Exception e) {
+                    infoLogger.info("Query " + String.join(", ", dataRow.getData()) + " was not executed.");
                     warnLogger.error(e);
                     if (session.getTransaction().isActive()) {
                         session.getTransaction().rollback();

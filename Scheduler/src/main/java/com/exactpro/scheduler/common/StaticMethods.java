@@ -69,7 +69,7 @@ public class StaticMethods {
      * @throws IOException if moving is not finished correctly.
      * @apiNote file extension should not change.
      */
-    public static void moveFile(String pathFrom, String pathTo, String filename, String extension) throws IOException {
+    public static String moveFile(String pathFrom, String pathTo, String filename, String extension) throws IOException {
 
         if(!extension.startsWith(".")){
             extension = "." + extension;
@@ -82,14 +82,17 @@ public class StaticMethods {
                 StandardCopyOption.REPLACE_EXISTING);
 
         infoLogger.info(String.format("File %s was moved from %s to %s", filename+extension, pathFrom, pathTo));
+        return filenameWithPostfix;
     }
 
-    public static void safeMoveFile(String pathFrom, String pathTo, String filename, String extension){
+    public static String safeMoveFile(String pathFrom, String pathTo, String filename, String extension){
+        String resultFilename = filename;
         try{
-            moveFile(pathFrom, pathTo, filename,extension);
+            resultFilename = moveFile(pathFrom, pathTo, filename,extension);
         } catch (IOException e){
             warnLogger.error(e);
         }
+        return resultFilename;
 
     }
 
