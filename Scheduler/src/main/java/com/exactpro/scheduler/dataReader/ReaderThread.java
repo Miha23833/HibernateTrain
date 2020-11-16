@@ -121,14 +121,12 @@ public class ReaderThread implements Runnable {
                 DataExchanger.put(csvRow);
 
             }
+            StaticMethods.safeMoveFile(Config.getDataInProgressPath(), Config.getViewedDataPath(), filename, ".csv");
 
 
         } catch (Exception e) {
             warnLogger.error(e);
             StaticMethods.safeMoveFile(Config.getDataInProgressPath(), Config.getRejectedDataPath(), filename, ".csv");
-        }
-        finally {
-            StaticMethods.safeMoveFile(Config.getDataInProgressPath(), Config.getViewedDataPath(), filename, ".csv");
         }
     }
 
