@@ -90,7 +90,7 @@ public class ReaderThread implements Runnable {
         StaticMethods.createFolders(new String[]{
                 Config.getFreshDataPath(),
                 Config.getDataInProgressPath(),
-                Config.getInsertedDataPath(),
+                Config.getViewedDataPath(),
                 Config.getRejectedDataPath(),
                 Config.getRootPath()
         });
@@ -128,7 +128,7 @@ public class ReaderThread implements Runnable {
             StaticMethods.safeMoveFile(Config.getDataInProgressPath(), Config.getRejectedDataPath(), filename, ".csv");
         }
         finally {
-            StaticMethods.safeMoveFile(Config.getDataInProgressPath(), Config.getInsertedDataPath(), filename, ".csv");
+            StaticMethods.safeMoveFile(Config.getDataInProgressPath(), Config.getViewedDataPath(), filename, ".csv");
         }
     }
 

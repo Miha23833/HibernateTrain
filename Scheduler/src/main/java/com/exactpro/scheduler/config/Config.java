@@ -18,7 +18,7 @@ public class Config {
 
     private static String freshDataPath = null;
     private static String dataInProgressPath = null;
-    private static String insertedDataPath = null;
+    private static String viewedDataPath = null;
     private static String rejectedDataPath = null;
 
     static final int scannerPause;
@@ -72,7 +72,7 @@ public class Config {
             rootPath = normalizePath(props.getProperty("rootPath"));
             freshDataPath = normalizePath(String.join("", rootPath, props.getProperty("freshDataPath")));
             dataInProgressPath = normalizePath(String.join("",rootPath, props.getProperty("dataInProgressPath")));
-            insertedDataPath = normalizePath(String.join("", rootPath, props.getProperty("insertedDataPath")));
+            viewedDataPath = normalizePath(String.join("", rootPath, props.getProperty("insertedDataPath")));
             rejectedDataPath = normalizePath(String.join("", rootPath, props.getProperty("rejectedDataPath")));
         } catch (IOException e){
             warnLogger.error(e);
@@ -105,8 +105,8 @@ public class Config {
         return dataInProgressPath;
     }
 
-    public static String getInsertedDataPath(){
-        return insertedDataPath;
+    public static String getViewedDataPath(){
+        return viewedDataPath;
     }
 
     public static String getRejectedDataPath(){
