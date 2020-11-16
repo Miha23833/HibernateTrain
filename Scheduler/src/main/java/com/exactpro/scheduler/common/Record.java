@@ -45,4 +45,27 @@ public class Record implements Comparable<Record> {
     public int compareTo(@NotNull Record o) {
         return Arrays.compare(this.columns, o.getColumns());
     }
+
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+
+        builder.append("Data: { ");
+        for (int i = 0; i < data.length; i++) {
+            builder.append(columns[i]).append(": ").append(data[i]);
+            if (i != data.length - 1){
+                builder.append(", ");
+            }
+        }
+        builder.append(" } ");
+
+        builder.append("Metadata: { ");
+        for (String key : metaData.keySet()) {
+            builder.append(key).append(": ").append(metaData.get(key)).append(", ");
+        }
+        builder.append("filename: ").append(filename);
+        builder.append(" } ");
+
+        return builder.toString();
+    }
 }

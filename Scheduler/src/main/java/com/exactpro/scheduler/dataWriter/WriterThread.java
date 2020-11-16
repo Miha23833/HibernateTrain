@@ -49,6 +49,7 @@ public class WriterThread implements Runnable {
                 } catch (Exception e) {
                     infoLogger.info("Query " + String.join(", ", dataRow.getData()) + " was not executed.");
                     warnLogger.error(e);
+                    StaticLogger.csvRejectedDataLogger.info(dataRow.toString());
                     if (session.getTransaction().isActive()) {
                         session.getTransaction().rollback();
                     }
