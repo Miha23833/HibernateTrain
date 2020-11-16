@@ -91,7 +91,6 @@ public class ReaderThread implements Runnable {
                 Config.getFreshDataPath(),
                 Config.getDataInProgressPath(),
                 Config.getViewedDataPath(),
-                Config.getRejectedDataPath(),
                 Config.getRootPath()
         });
 
@@ -117,16 +116,20 @@ public class ReaderThread implements Runnable {
                     break;
                 }
 
-                Record csvRow = new Record(fileColumns, cursorData, filename, metaData);
-                DataExchanger.put(csvRow);
+                try {
+                    Record csvRow = new Record(fileColumns, cursorData, filename, metaData);
+                    DataExchanger.put(csvRow);
+                } catch (Exception e){
+                    warnLogger.error(e);
+                }
 
             }
-            StaticMethods.safeMoveFile(Config.getDataInProgressPath(), Config.getViewedDataPath(), filename, ".csv");
 
 
         } catch (Exception e) {
             warnLogger.error(e);
-            StaticMethods.safeMoveFile(Config.getDataInProgressPath(), Config.getRejectedDataPath(), filename, ".csv");
+        } finally {
+            StaticMethods.safeMoveFile(Config.getDataInProgressPath(), Config.getViewedDataPath(), filename, ".csv");
         }
     }
 

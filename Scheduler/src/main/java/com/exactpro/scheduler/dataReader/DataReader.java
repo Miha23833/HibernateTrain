@@ -20,7 +20,6 @@ public class DataReader implements Runnable{
                 Config.getFreshDataPath(),
                 Config.getDataInProgressPath(),
                 Config.getViewedDataPath(),
-                Config.getRejectedDataPath(),
                 Config.getRootPath()
         });
 
