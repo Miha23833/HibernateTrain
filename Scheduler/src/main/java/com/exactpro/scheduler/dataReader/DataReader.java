@@ -15,6 +15,15 @@ public class DataReader implements Runnable{
     @Override
     public void run() {
         infoLogger.info("DataReader was start");
+
+        StaticMethods.createFolders(new String[]{
+                Config.getFreshDataPath(),
+                Config.getDataInProgressPath(),
+                Config.getViewedDataPath(),
+                Config.getRejectedDataPath(),
+                Config.getRootPath()
+        });
+
         ExecutorService threadPool = Executors.newFixedThreadPool(Config.getDataReaderMaxThreadPool());
 
         while (true) {
