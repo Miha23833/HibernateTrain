@@ -25,6 +25,7 @@
         <module>Main</module>
         <module>HibernateCommon</module>
         <module>Scheduler</module>
+        <module>Site</module>
     </modules>
 
     <dependencies>
