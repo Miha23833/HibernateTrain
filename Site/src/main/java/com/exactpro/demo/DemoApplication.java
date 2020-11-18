@@ -18,9 +18,4 @@ public class DemoApplication {
 	public String sayHello(@RequestParam(value = "myName", defaultValue = "World") String name) {
 		return String.format("Hello %s!", name);
 	}
-
-	@GetMapping("/")
-	public String sayHelloIndex(){
-		return String.format("Hello %s!", "world");
-	}
 }

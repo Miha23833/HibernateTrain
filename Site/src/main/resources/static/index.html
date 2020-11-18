@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:v-on="http://www.w3.org/1999/xhtml">
+
+<head>
+    <title>Изучаем Vue 3</title>
+    <meta charset="utf-8" />
+    <script src="https://unpkg.com/vue@next"></script>
+    <script type="text/javascript" src="js/index.js"></script>
+</head>
+
+<body>
+    <div id="app">
+        <input type="text" v-on:input="setMessage" />
+        <p>{{message}}</p>
+    </div>
+
+    <div id="myDiv">
+        <input type="button" value="update time!" v-on:click="setTime">
+        <p>{{message}}</p>
+    </div>
+</body>
+
+</html>
