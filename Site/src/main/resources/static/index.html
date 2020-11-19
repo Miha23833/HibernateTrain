@@ -10,16 +10,18 @@
 
 <body>
     <header>
-        <div class="header-left">CoolLogo</div>
+        <div class="header-left">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Amazon_logo.svg/1200px-Amazon_logo.svg.png" alt="normal" />
+        </div>
         <div class="header-center">
             <ul>
-                <li><a href="//localhost:8080/Customers">Customers</a></li>
-                <li><a href="//localhost:8080/Products">Products</a></li>
-                <li><a href="//localhost:8080/Deals">Deals</a></li>
+                <li><input type="button" value="Customers" v-on:click="getCustomersPage"></li>
+                <li><input type="button" value="Products" v-on:click="getProductsPage"></li>
+                <li><input type="button" value="Deals" v-on:click="getDealsPage"></li>
             </ul>
         </div>
         <div class="header-right">
-            <button>Buy now</button>
+            <button>Log in</button>
         </div>
     </header>
 

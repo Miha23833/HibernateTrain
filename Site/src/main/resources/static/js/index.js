@@ -1,28 +1,16 @@
-const hello = Vue.createApp({
+const headerButton = Vue.createApp({
     data() {
-        return {
-            message: 'Hello Vue 3!'
-        }
+        return null;
     },
     methods: {
-        setMessage(event) {
-            this.message = event.target.value;
+        getCustomersPage(event) {
+            alert("getCustomersPage");
+        },
+        getProductsPage(event) {
+            alert("getProductsPage");
+        },
+        getDealsPage(event) {
+            alert("getDealsPage");
         }
     }
 }).mount('#app');
-
-const timer = Vue.createApp({
-    data() {
-        return {
-            message: 'SomeMSG'
-        }
-    },
-    methods: {
-        setTimeWithTimeOut() {
-            setTimeout(this.setTime, 200, null);
-        },
-        setTime(event) {
-            this.message = Date.now();
-        }
-    }
-}).mount('#myDiv')
