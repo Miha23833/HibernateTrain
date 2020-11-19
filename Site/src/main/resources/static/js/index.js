@@ -1,6 +1,8 @@
 Vue.createApp({
-    data: {
-        name: 'Vue.js'
+    data() {
+        return {
+            name: 'Vue.js'
+        }
     },
     methods: {
         getCustomersPage(event) {
