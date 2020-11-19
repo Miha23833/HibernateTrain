@@ -1,6 +1,6 @@
-const headerButton = Vue.createApp({
-    data() {
-        return null;
+Vue.createApp({
+    data: {
+        name: 'Vue.js'
     },
     methods: {
         getCustomersPage(event) {
@@ -13,4 +13,4 @@ const headerButton = Vue.createApp({
             alert("getDealsPage");
         }
     }
-}).mount('#app');
+}).mount('#header-center');

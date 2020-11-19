@@ -5,22 +5,23 @@
     <title>Изучаем Vue 3</title>
     <meta charset="utf-8" />
     <script src="https://unpkg.com/vue@next"></script>
+    <script type="text/javascript" src="/js/index.js"></script>
     <link type="text/css" rel="stylesheet" href="/css/index.css" />
 </head>
 
 <body>
     <header>
-        <div class="header-left">
+        <div id="header-left">
             <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Amazon_logo.svg/1200px-Amazon_logo.svg.png" alt="normal" />
         </div>
-        <div class="header-center">
+        <div id="header-center">
             <ul>
-                <li><input type="button" value="Customers" v-on:click="getCustomersPage"></li>
-                <li><input type="button" value="Products" v-on:click="getProductsPage"></li>
-                <li><input type="button" value="Deals" v-on:click="getDealsPage"></li>
+                <li><button @click="getCustomersPage">Customers</button></li>
+                <li><button @click="getProductsPage">Products</button></li>
+                <li><button @click="getDealsPage">Deals</button></li>
             </ul>
         </div>
-        <div class="header-right">
+        <div id="header-right">
             <button>Log in</button>
         </div>
     </header>

@@ -40,6 +40,8 @@ header a {
     color: black;
 }
 
+
+/*
 header button {
     background: #d1d1d1;
     background: -webkit-gradient(linear, 0 0, 0 bottom, from(#d1d1d1), to(#afafaf));
@@ -51,8 +53,9 @@ header button {
     color: #555;
     text-shadow: 0 1px 0 #d6d6d6;
 }
+*/
 
-.header-center ul {
+#header-center ul {
     border: 1px dotted black;
     padding: 0;
     display: table;
@@ -60,30 +63,30 @@ header button {
     box-sizing: border-box;
 }
 
-.header-center li {
+#header-center li {
     display: table-cell;
     text-align: center;
     width: 50em;
 }
 
-.header-left {
+#header-left {
     width: 15%;
     height: 100%;
     display: flex;
     justify-content: center;
 }
 
-.header-left img {
+#header-left img {
     padding: 1em;
     width: 70%;
     height: 70%;
 }
 
-.header-center {
+#header-center {
     width: 70%;
 }
 
-.header-right {
+#header-right {
     width: 15%;
     display: flex;
     justify-content: center;
