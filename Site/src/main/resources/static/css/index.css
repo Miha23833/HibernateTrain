@@ -1,12 +1,25 @@
+body {
+    margin: 0;
+    padding: 0;
+}
+
+main {
+    /*Центрируем контент*/
+    width: 70%;
+    margin-left: auto;
+    margin-right: auto;
+    padding-top: 2em;
+}
+
 header {
     /* Включаем режим Flexbox. */
     display: flex;
     /* Распределяем элементы внутри шапки */
-    justify-content: space-between;
+    justify-content: space-evenly;
     /* Выравниваем элементы вертикально по центру. */
     align-items: center;
-    width: 70%;
     /*Центрируем всю шапку*/
+    width: 100%;
     margin-left: auto;
     margin-right: auto;
     background-color: white;
@@ -23,10 +36,14 @@ header {
 
 .header-center li {
     display: table-cell;
+    text-align: center;
+    width: 100px;
 }
 
 .header-left {
     width: 15%;
+    display: flex;
+    justify-content: center;
 }
 
 .header-center {
@@ -35,4 +52,10 @@ header {
 
 .header-right {
     width: 15%;
+    display: flex;
+    justify-content: center;
+}
+
+body {
+    background-color: gainsboro;
 }
