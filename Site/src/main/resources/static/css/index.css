@@ -1,30 +1,38 @@
-html,
-body,
-section,
-div {
-    margin: 0;
-    height: 100%;
-}
-
-#header-container {
+header {
+    /* Включаем режим Flexbox. */
+    display: flex;
+    /* Распределяем элементы внутри шапки */
+    justify-content: space-between;
+    /* Выравниваем элементы вертикально по центру. */
+    align-items: center;
+    width: 70%;
+    /*Центрируем всю шапку*/
     margin-left: auto;
     margin-right: auto;
+    background-color: white;
+    height: 6em;
+}
+
+.header-center ul {
+    border: 1px dotted black;
+    padding: 0;
+    display: table;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.header-center li {
+    display: table-cell;
+}
+
+.header-left {
+    width: 15%;
+}
+
+.header-center {
     width: 70%;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: center;
-    align-content: center;
 }
 
-#header-plate {
-    margin: 0;
-    padding: 4px;
-}
-
-#header-plate li {
-    display: inline;
-    margin-right: 5px;
-    border: 1px solid;
-    padding: 3px;
+.header-right {
+    width: 15%;
 }
