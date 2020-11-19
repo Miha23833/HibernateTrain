@@ -1,6 +1,7 @@
 body {
     margin: 0;
     padding: 0;
+    background-color: #cecccc;
 }
 
 main {
@@ -8,7 +9,15 @@ main {
     width: 70%;
     margin-left: auto;
     margin-right: auto;
+    /*Отступ от границы и размытие*/
     padding-top: 2em;
+    padding-bottom: 2em;
+    padding-left: 4em;
+    border-left: 10px solid gainsboro;
+    padding-right: 4em;
+    border-right: 10px solid gainsboro;
+    background-color: gainsboro;
+    box-shadow: 0 5px 10px gainsboro;
 }
 
 header {
@@ -24,6 +33,9 @@ header {
     margin-right: auto;
     background-color: white;
     height: 6em;
+    border-bottom-left-radius: 3.6em;
+    border-bottom-right-radius: 3.6em;
+    box-shadow: 0 5px 10px white;
 }
 
 .header-center ul {
@@ -37,7 +49,7 @@ header {
 .header-center li {
     display: table-cell;
     text-align: center;
-    width: 100px;
+    width: 50em;
 }
 
 .header-left {
@@ -54,8 +66,4 @@ header {
     width: 15%;
     display: flex;
     justify-content: center;
-}
-
-body {
-    background-color: gainsboro;
 }
