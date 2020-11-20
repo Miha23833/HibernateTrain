@@ -5,6 +5,7 @@
     <title>Изучаем Vue 3</title>
     <meta charset="utf-8" />
     <script src="https://unpkg.com/vue@next"></script>
+    <script type="text/javascript" src="/js/index.js"></script>
     <link type="text/css" rel="stylesheet" href="/css/index.css" />
 </head>
 
@@ -20,16 +21,23 @@
                 <li><button @click="getDealsPage">Deals</button></li>
             </ul>
         </div>
-        <script type="text/javascript" src="/js/index.js"></script>
+        <script>
+            getHeaderButtonsActions()
+        </script>
         <div id="header-right">
             <button>Log in</button>
         </div>
     </header>
 
     <main>
-        Some text Some text Some text Some text Some text Some text Some text Some text Some text Some text Some text Some text Some text Some text Some text Some text Some text Some text Some text Some text Some text Some text Some text Some text Some text Some
-        text Some text Some text Some text Some text Some text Some text Some text Some text Some text Some text Some text Some text Some text Some text Some text Some text Some text Some text Some text Some text Some text Some text Some text Some text
-        Some text Some text Some text Some text Some text Some text Some text Some text Some text Some text
+        <ul id="array-rendering" class="demo">
+            <li v-for="item in items">
+                {{ item.message }}
+            </li>
+        </ul>
+        <script>
+            getDataToMain()
+        </script>
         <!-- <div id="app">
         <input type="text" v-on:input="setMessage" />
         <p>{{message}}</p>
