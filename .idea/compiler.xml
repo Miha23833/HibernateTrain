@@ -10,6 +10,7 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="Site" />
+        <module name="ServletSite" />
         <module name="Main" />
         <module name="Scheduler" />
         <module name="HibernateCommon" />
