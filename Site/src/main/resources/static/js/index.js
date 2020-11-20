@@ -28,3 +28,22 @@ getDataToMain = function() {
         }
     }).mount('#array-rendering')
 }
+
+getData = function() {
+    Vue.createApp({
+        data() {
+            return {
+                data: null
+            }
+        },
+        methods: {
+            get() {
+                data = axios.post('/test', {
+                        firstName: 'Finn',
+                        lastName: 'Williams'
+                    })
+                    .then(response => (this.data = response.data));
+            }
+        }
+    }).mount('#axios-get')
+}
