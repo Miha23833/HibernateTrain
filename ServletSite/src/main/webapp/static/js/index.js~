@@ -49,31 +49,11 @@ getData = function() {
 }
 
 initComponent = function() {
-    Vue.createApp({
-        props: ['messages'],
-        data() {
-            return {
-                messages = []
-            }
-        },
-        template: '<div id="body">' +
-            '<message-form :messages="messages" :messageAttr="message" />' +
-            '<message-row v-for="message in messages" :key="message.id" :message="message" ' +
-            ':editMethod="editMethod" :messages="messages" />' +
-            '</div>',
-        created() {
-            axios.get('/test').then(response => {
-                console.log(response);
-                this.messages.push.apply(response.data)
-            })
-        },
-        methods: {
-            getMessages() {
-                axios.get('/test').then(response => {
-                    console.log(response);
-                    this.messages.push.apply(response.data)
-                })
-            }
-        }
-    }).mount('#data-container')
+    import DataContainer from 'vue/DataContainer'
+
+    new Vue({
+        el: '#data-container',
+        template: '<App/>',
+        components: { DataContainer }
+    })
 }
