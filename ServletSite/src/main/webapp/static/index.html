@@ -35,10 +35,17 @@
         <div id="axios-get">
             <button @click="get">Customers</button> {{data}}
             <br/>
-            <button @click="getServerData">Increment!</button>
+            <button @click="getServerData">getData!</button>
             <table>
-                <tr v-for="item in serverData">
-                    {{ item }}
+                <tr>
+                    <th v-for="column in serverData.columns">
+                        {{column}}
+                    </th>
+                </tr>
+                <tr v-for="data in serverData.data">
+                    <td v-for="item in data">
+                        {{item}}
+                    </td>
                 </tr>
             </table>
         </div>

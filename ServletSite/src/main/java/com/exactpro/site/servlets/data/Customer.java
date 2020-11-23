@@ -1,5 +1,6 @@
 package com.exactpro.site.servlets.data;
 
+import org.json.JSONObject;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -8,6 +9,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @WebServlet(urlPatterns = "get-data/Customers")
 public class Customer extends HttpServlet {
@@ -24,14 +28,40 @@ public class Customer extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        // TODO: сделать json, а потом распарсить её в таблицу на фронте.
-
-//        resp.getWriter().write(new Gson().toJson(respData));
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        resp.getWriter().write("Hello, world! MF");
+        System.out.println(req.getReader().lines().collect(Collectors.joining(", ")));
+        Map<String, Map<String, String>> data = new HashMap<>();
+
+        int usersCount = 10;
+        String[] fields = new String[5];
+
+        for (int i = 0; i < fields.length; i++) {
+            fields[i] = "Field "+i;
+        }
+
+        for (int i = 0; i < usersCount; i++) {
+            Map<String, String> userData = new HashMap<>();
+            for (int j = 0, fieldsLength = fields.length; j < fieldsLength; j++) {
+                String field = fields[j];
+                if (j == 0){
+                    userData.put(field, "User "+i);
+                }
+                else {
+                    userData.put(field, String.valueOf(i));
+                }
+            }
+            data.put("User "+i, userData);
+        }
+
+        JSONObject json = new JSONObject();
+
+        json.put("columns", fields);
+        json.put("data", data);
+
+        resp.getWriter().write(json.toString());
     }
 
     @Override

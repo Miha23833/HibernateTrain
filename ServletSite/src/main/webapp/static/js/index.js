@@ -41,13 +41,21 @@ getData = function() {
         methods: {
             get() {
                 data = axios.post('/test', {
-                    firstName: 'Finn',
-                    lastName: 'Williams'
-                })
+                        firstName: 'Finn',
+                        lastName: 'Williams'
+                    })
                     .then(response => (this.data = response.data));
             },
             getServerData() {
-                axios.get('/get-data/Customers').then(resp => this.serverData = resp.data)
+                axios.post('/get-data/Customers', {
+                    params: {
+                        val1: "val1",
+                        val2: "val2",
+                        val3: "val3",
+                        val4: "val4",
+                        val5: "val5"
+                    }
+                }).then(resp => this.serverData = resp.data)
             }
         }
     }).mount('#axios-get')
