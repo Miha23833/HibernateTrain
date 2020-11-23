@@ -47,13 +47,3 @@ getData = function() {
         }
     }).mount('#axios-get')
 }
-
-initComponent = function() {
-    import DataContainer from 'js/components/vue/DataContainer'
-
-    new Vue({
-        el: '#data-container',
-        template: '<App/>',
-        components: { DataContainer }
-    })
-}
