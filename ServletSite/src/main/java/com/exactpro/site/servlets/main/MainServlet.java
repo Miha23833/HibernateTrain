@@ -1,4 +1,4 @@
-package com.exactpro.site.servlets;
+package com.exactpro.site.servlets.main;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;

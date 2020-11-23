@@ -34,20 +34,17 @@
     <main>
         <div id="axios-get">
             <button @click="get">Customers</button> {{data}}
+            <br/>
+            <button @click="getServerData">Increment!</button>
+            <table>
+                <tr v-for="item in serverData">
+                    {{ item }}
+                </tr>
+            </table>
         </div>
         <script>
             getData()
         </script>
-        <!-- <div id="app">
-        <input type="text" v-on:input="setMessage" />
-        <p>{{message}}</p>
-    </div>
-
-    <div id="myDiv">
-        <input type="button" value="update time!" v-on:click="setTime">
-        <p>{{message}}</p>
-    </div>
-    <script type="text/javascript" src="js/index.js"></script> -->
     </main>
 </body>
 
