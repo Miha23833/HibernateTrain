@@ -2,6 +2,8 @@ package com.exactpro.site.querymanager;
 
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -13,7 +15,7 @@ public class SQLQuery {
         this.query = query;
     }
 
-    public SQLQuery(String query, JSONObject parameters){
+    public SQLQuery(String query, JSONObject parameters) {
         this(query);
         setParameters(parameters);
     }
@@ -25,8 +27,14 @@ public class SQLQuery {
 
         Matcher matcher = parameterPattern.matcher(query);
 
+        List<Integer[]> parametersPos = new ArrayList<>();
+
         while (matcher.find()) {
-            String key = builder.substring(matcher.start(), matcher.end());
+            parametersPos.add(new Integer[]{matcher.start(), matcher.end()});
+        }
+
+        for (int i = parametersPos.size() - 1; i >= 0; i--) {
+            String key = builder.substring(parametersPos.get(i)[0] + 1, parametersPos.get(i)[1]);
             String parameterValue = "null";
             if (parameters.keySet().contains(key)) {
                 Object parameter = parameters.get(key);
@@ -40,17 +48,17 @@ public class SQLQuery {
                 }
 
             }
-            builder.replace(matcher.start(), matcher.end(), parameterValue);
+            builder.replace(parametersPos.get(i)[0], parametersPos.get(i)[1], parameterValue);
         }
         parametrizedQuery = builder.toString();
 
     }
 
-    public String getParametrizedQuery(){
+    public String getParametrizedQuery() {
         return parametrizedQuery;
     }
 
-    public String getNotParametrizedQuery(){
+    public String getNotParametrizedQuery() {
         return query;
     }
 }
