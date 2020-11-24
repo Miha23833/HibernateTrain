@@ -1,5 +1,11 @@
 package com.exactpro.site.servlets.data;
 
+import com.exactpro.connection.DBConnection;
+import com.exactpro.site.querymanager.JSONConvertor;
+import com.exactpro.site.querymanager.QueryManager;
+import com.exactpro.site.querymanager.SQLQuery;
+import org.json.JSONObject;
+
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -7,6 +13,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.stream.Collectors;
 
 @WebServlet(urlPatterns = "get-data/Customers")
@@ -28,7 +36,18 @@ public class Customer extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        System.out.println(req.getReader().lines().collect(Collectors.joining("\n")));
+        JSONObject reqJSON = new JSONObject(req.getReader().lines().collect(Collectors.joining()));
+        JSONObject queryParams = reqJSON.getJSONObject("queryParams");
+
+        SQLQuery query = new SQLQuery(QueryManager.customersSQL, queryParams);
+
+        ResultSet respData = null;
+        try {
+            respData = DBConnection.executeWithResult(query.getParametrizedQuery());
+            resp.getWriter().write(JSONConvertor.toJSON(respData).toString());
+        } catch (ClassNotFoundException | SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
