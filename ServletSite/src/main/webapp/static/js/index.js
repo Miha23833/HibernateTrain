@@ -48,12 +48,8 @@ getData = function() {
             },
             getServerData() {
                 axios.post('/get-data/Customers', {
-                    params: {
-                        val1: "val1",
-                        val2: "val2",
-                        val3: "val3",
-                        val4: "val4",
-                        val5: "val5"
+                    queryParams: {
+                        customer_id: 26
                     }
                 }).then(resp => this.serverData = resp.data)
             }
