@@ -43,7 +43,6 @@ public class Customer extends HttpServlet {
 
         try {
             ResultSet respData = DBConnection.executeWithResult(query.getParametrizedQuery());
-            System.out.println(JSONConvertor.toJSON(respData).toString());
             resp.getWriter().write(JSONConvertor.toJSON(respData).toString());
         } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();

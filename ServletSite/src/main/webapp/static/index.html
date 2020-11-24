@@ -6,8 +6,6 @@
     <meta charset="utf-8" />
     <script src="https://unpkg.com/vue@next"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-
-    <script type="text/javascript" src="static/js/index.js"></script>
     <link type="text/css" rel="stylesheet" href="static/css/index.css" />
 </head>
 
@@ -23,23 +21,20 @@
                 <li><button @click="getDealsPage">Deals</button></li>
             </ul>
         </div>
-        <script>
-            getHeaderButtonsActions()
-        </script>
         <div id="header-right">
             <button>Log in</button>
         </div>
     </header>
 
     <main>
-        <div id="main-data">
+        <div id="main-data" ref="main_data">
             <table>
                 <tr>
-                    <th v-for="column in serverData.columns">
+                    <th v-for="column in columns">
                         {{column}}
                     </th>
                 </tr>
-                <tr v-for="data in serverData.response">
+                <tr v-for="data in response">
                     <td v-for="item in data">
                         {{item}}
                     </td>
@@ -54,10 +49,8 @@
             <input type="number" v-model="queryParams.favourite_product" placeholder="favourite product"><br>
             <button @click="getServerData">getData!</button>
         </div>
-        <script>
-            getData()
-        </script>
     </main>
 </body>
+<script type="text/javascript" src="static/js/index.js"></script>
 
 </html>

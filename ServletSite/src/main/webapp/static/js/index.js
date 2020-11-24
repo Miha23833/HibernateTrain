@@ -1,49 +1,53 @@
-getHeaderButtonsActions = function() {
-    Vue.createApp({
-        data() {
-            return {
-                name: 'Vue.js'
-            }
+let headerButtonsComponent = Vue.createApp({
+    data() {
+        return {
+            name: 'Vue.js'
+        }
+    },
+    methods: {
+        getCustomersPage(event) {
+            alert("getCustomersPage");
         },
-        methods: {
-            getCustomersPage(event) {
-                alert("getCustomersPage");
-            },
-            getProductsPage(event) {
-                alert("getProductsPage");
-            },
-            getDealsPage(event) {
-                alert("getDealsPage");
-            }
-        }
-    }).mount('#header-center');
-}
-
-getDataToMain = function() {
-    Vue.createApp({
-        data() {
-            return {
-                items: [{ message: 'Foo' }, { message: 'Bar' }]
-            }
-        }
-    }).mount('#array-rendering')
-}
-
-getData = function() {
-    Vue.createApp({
-        data() {
-            return {
-                queryParams: {},
-                serverData: []
-            }
+        getProductsPage(event) {
+            alert("getProductsPage");
         },
-        methods: {
-            getServerData() {
-                let queryParams = this.queryParams
-                axios.post('/get-data/Customers', {
-                    queryParams
-                }).then(resp => this.serverData.push(resp.data))
-            }
+        getDealsPage(event) {
+            alert("getDealsPage");
         }
-    }).mount('#filter')
-}
+    }
+}).mount('#header-center');
+
+const staticServerData = Vue.reactive({
+    columns: [],
+    response: []
+})
+
+let mainDataComponent = Vue.createApp({
+    data() {
+        return staticServerData
+    }
+}).mount('#main-data')
+
+let filterComponent = Vue.createApp({
+    components: {
+        mainDataComponent
+    },
+    data() {
+        return {
+            queryParams: {}
+        }
+    },
+    methods: {
+        getServerData() {
+            let queryParams = this.queryParams
+            axios.post('/get-data/Customers', {
+                queryParams
+            }).then(resp => {
+                resp.data.response.forEach(
+                    (elem) => staticServerData.response.push(elem)
+                )
+                staticServerData.columns = resp.data.columns;
+            })
+        }
+    }
+}).mount('#filter')
