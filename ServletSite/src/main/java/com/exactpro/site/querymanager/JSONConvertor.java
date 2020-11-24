@@ -17,7 +17,7 @@ public class JSONConvertor {
         JSONObject result = new JSONObject();
 
         List<String> columns = new ArrayList<>();
-        for (int i = 0; i < metaData.getColumnCount(); i++) {
+        for (int i = 1; i <= metaData.getColumnCount(); i++) {
             columns.add(metaData.getColumnName(i));
         }
         result.put("columns", new JSONArray(columns));
@@ -25,7 +25,7 @@ public class JSONConvertor {
         JSONArray jArray = new JSONArray();
         JSONObject jsonObject = null;
         int columnCount = metaData.getColumnCount();
-        do {
+        while (data.next()) {
             jsonObject = new JSONObject();
             for (int index = 1; index <= columnCount; index++) {
                 String column = metaData.getColumnName(index);
@@ -39,7 +39,7 @@ public class JSONConvertor {
                 }
             }
             jArray.put(jsonObject);
-        } while (data.next());
+        }
         result.put("response", jArray);
         return result;
     }
