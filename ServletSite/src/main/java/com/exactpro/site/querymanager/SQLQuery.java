@@ -20,6 +20,12 @@ public class SQLQuery {
         setParameters(parameters);
     }
 
+    private String uninject(String parameter){
+        parameter = parameter.replace("\\'", "'");
+        parameter = parameter.replace("'", "\\'");
+        return parameter;
+    }
+
     public void setParameters(JSONObject parameters) {
         Pattern parameterPattern = Pattern.compile("(?<!['\\w])(:[\\w\\d]+)", Pattern.MULTILINE);
 
@@ -42,7 +48,7 @@ public class SQLQuery {
                 if (parameter == null || parameter.toString().equals("null")) {
                     parameterValue = "null";
                 } else if (parameter instanceof String || parameter instanceof Character) {
-                    parameterValue = String.join("", "'", parameter.toString(), "'");
+                    parameterValue = String.join("", "'", uninject(parameter.toString()), "'");
                 } else {
                     parameterValue = parameter.toString();
                 }
