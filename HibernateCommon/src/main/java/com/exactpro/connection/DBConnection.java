@@ -25,6 +25,13 @@ public class DBConnection {
         infoLogger.info(String.format("Connection data changed. User: %s, Url: %s", user, url));
     }
 
+    public static Connection getConnection() throws ClassNotFoundException, SQLException {
+        Class.forName("com.mysql.cj.jdbc.Driver");
+        return DriverManager.getConnection(url, user, password);
+    }
+
+//    public static ResultSet executeParametrizedQuery(String query, )
+
     public static ResultSet executeWithResult(String query) throws ClassNotFoundException, SQLException {
         Class.forName("com.mysql.cj.jdbc.Driver");
         ResultSet resultSet;

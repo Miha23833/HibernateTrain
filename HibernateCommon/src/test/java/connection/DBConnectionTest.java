@@ -1,4 +1,4 @@
-package com.exactpro.test.connection;
+package connection;
 
 import com.exactpro.connection.DBConnection;
 import org.junit.Assert;
