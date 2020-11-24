@@ -1,6 +1,7 @@
 body {
     margin: 0;
     padding: 0;
+    background-color: #242424;
 }
 
 main {
@@ -9,11 +10,12 @@ main {
     margin-left: auto;
     margin-right: auto;
     /*Отступ от границы и размытие*/
-    border-left: 10px solid gainsboro;
+    border-left: 10px solid #676767;
     padding: 2em 4em;
-    border-right: 10px solid gainsboro;
-    background-color: gainsboro;
-    box-shadow: 0 5px 10px gainsboro;
+    border-right: 10px solid #676767;
+    background-color: #676767;
+    box-shadow: 0 5px 10px #676767;
+    display: flex;
 }
 
 header {
@@ -27,11 +29,11 @@ header {
     width: 100%;
     margin-left: auto;
     margin-right: auto;
-    background-color: #597da3;
+    background-color: #394d63;
     height: 6em;
     border-bottom-left-radius: 3.6em;
     border-bottom-right-radius: 3.6em;
-    box-shadow: 0 5px 10px white;
+    box-shadow: 0 5px 10px #676767;
 }
 
 header a {
@@ -85,4 +87,8 @@ header button {
     width: 15%;
     display: flex;
     justify-content: center;
+}
+
+#main-data {
+    width: 86%;
 }

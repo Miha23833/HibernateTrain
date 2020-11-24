@@ -32,10 +32,7 @@
     </header>
 
     <main>
-        <div id="axios-get">
-            <button @click="get">Customers</button> {{data}}
-            <br/>
-            <button @click="getServerData">getData!</button>
+        <div id="main-data">
             <table>
                 <tr>
                     <th v-for="column in serverData.columns">
@@ -48,6 +45,14 @@
                     </td>
                 </tr>
             </table>
+        </div>
+        <div id="filter">
+            <input type="number" v-model="queryParams.customer_id" placeholder="customer id"><br>
+            <input type="text" v-model="queryParams.name" placeholder="name"><br>
+            <input type="text" v-model="queryParams.surname" placeholder="surname"><br>
+            <input type="number" v-model="queryParams.age" placeholder="age"><br>
+            <input type="number" v-model="queryParams.favourite_product" placeholder="favourite product"><br>
+            <button @click="getServerData">getData!</button>
         </div>
         <script>
             getData()

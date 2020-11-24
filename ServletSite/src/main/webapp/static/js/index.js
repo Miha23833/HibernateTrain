@@ -33,26 +33,17 @@ getData = function() {
     Vue.createApp({
         data() {
             return {
-                data: null,
-                pressedCount: 0,
+                queryParams: {},
                 serverData: []
             }
         },
         methods: {
-            get() {
-                data = axios.post('/test', {
-                        firstName: 'Finn',
-                        lastName: 'Williams'
-                    })
-                    .then(response => (this.data = response.data));
-            },
             getServerData() {
+                let queryParams = this.queryParams
                 axios.post('/get-data/Customers', {
-                    queryParams: {
-                        customer_id: 26
-                    }
-                }).then(resp => this.serverData = resp.data)
+                    queryParams
+                }).then(resp => this.serverData.push(resp.data))
             }
         }
-    }).mount('#axios-get')
+    }).mount('#filter')
 }
