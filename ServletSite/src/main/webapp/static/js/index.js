@@ -1,3 +1,12 @@
+const staticServerData = Vue.reactive({
+    columns: [],
+    response: []
+})
+const filterData = Vue.reactive({
+    queryParams: {},
+    filterTemplate: ""
+})
+
 let headerButtonsComponent = Vue.createApp({
     data() {
         return {
@@ -6,7 +15,9 @@ let headerButtonsComponent = Vue.createApp({
     },
     methods: {
         getCustomersPage(event) {
-            alert("getCustomersPage");
+            axios.get('/get-data/Customers').then(resp => {
+                filterData.filterTemplate = resp.data.filterTemplate;
+            })
         },
         getProductsPage(event) {
             alert("getProductsPage");
@@ -17,11 +28,6 @@ let headerButtonsComponent = Vue.createApp({
     }
 }).mount('#header-center');
 
-const staticServerData = Vue.reactive({
-    columns: [],
-    response: []
-})
-
 let mainDataComponent = Vue.createApp({
     data() {
         return staticServerData
@@ -29,13 +35,8 @@ let mainDataComponent = Vue.createApp({
 }).mount('#main-data')
 
 let filterComponent = Vue.createApp({
-    components: {
-        mainDataComponent
-    },
     data() {
-        return {
-            queryParams: {}
-        }
+        return filterData
     },
     methods: {
         getServerData() {

@@ -31,7 +31,13 @@ public class Customer extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
+        JSONObject response = new JSONObject();
+        response.put("filterTemplate", "<input type=\"number\" v-model=\"queryParams.customer_id\" placeholder=\"customer id\"><br>\n" +
+                "            <input type=\"text\" v-model=\"queryParams.name\" placeholder=\"name\"><br>\n" +
+                "            <input type=\"text\" v-model=\"queryParams.surname\" placeholder=\"surname\"><br>\n" +
+                "            <input type=\"number\" v-model=\"queryParams.age\" placeholder=\"age\"><br>\n" +
+                "            <input type=\"number\" v-model=\"queryParams.favourite_product\" placeholder=\"favourite product\"><br>\n");
+        resp.getWriter().write(response.toString());
     }
 
     @Override

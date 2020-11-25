@@ -9,7 +9,7 @@
     <link type="text/css" rel="stylesheet" href="static/css/index.css" />
 </head>
 
-<body bgcolor="whitesmoke">
+<body>
     <header>
         <div id="header-left">
             <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Amazon_logo.svg/1200px-Amazon_logo.svg.png" alt="normal" />
@@ -42,11 +42,12 @@
             </table>
         </div>
         <div id="filter">
-            <input type="number" v-model="queryParams.customer_id" placeholder="customer id"><br>
+            <div v-html="filterTemplate"></div>
+            <!-- <input type="number" v-model="queryParams.customer_id" placeholder="customer id"><br>
             <input type="text" v-model="queryParams.name" placeholder="name"><br>
             <input type="text" v-model="queryParams.surname" placeholder="surname"><br>
             <input type="number" v-model="queryParams.age" placeholder="age"><br>
-            <input type="number" v-model="queryParams.favourite_product" placeholder="favourite product"><br>
+            <input type="number" v-model="queryParams.favourite_product" placeholder="favourite product"><br> -->
             <button @click="getServerData">getData!</button>
         </div>
     </main>
