@@ -22,25 +22,24 @@ public class JSONConvertor {
         }
         result.put("columns", new JSONArray(columns));
 
-        JSONArray jArray = new JSONArray();
+        List<Object> row = new ArrayList<>();
         JSONObject jsonObject = null;
-        int columnCount = metaData.getColumnCount();
         while (data.next()) {
             jsonObject = new JSONObject();
-            for (int index = 1; index <= columnCount; index++) {
-                String column = metaData.getColumnName(index);
+            for (String column: columns){
                 Object value = data.getObject(column);
                 if (value == null) {
-                    jsonObject.put(column, "");
+                    jsonObject.putOpt(column, "");
                 } else if (value instanceof Date) {
-                    jsonObject.put(column, ((Date) value).getTime());
+                    jsonObject.putOpt(column, ((Date) value).getTime());
                 } else  {
-                    jsonObject.put(column, value);
+                    jsonObject.putOpt(column, value);
                 }
             }
-            jArray.put(jsonObject);
+            row.add(jsonObject);
         }
-        result.put("response", jArray);
+        result.put("columns", new JSONArray(columns));
+        result.put("response", row);
         return result;
     }
 

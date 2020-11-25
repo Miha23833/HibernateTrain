@@ -35,8 +35,8 @@
                     </th>
                 </tr>
                 <tr v-for="data in response">
-                    <td v-for="item in data">
-                        {{item}}
+                    <td v-for="item in columns">
+                        {{data[item]}}
                     </td>
                 </tr>
             </table>
@@ -49,8 +49,8 @@
                 <input type="number" v-model="queryParams.age" placeholder="age"><br>
                 <input type="number" v-model="queryParams.favourite_product" placeholder="favourite product"><br>
             </div>
-            <div v-if="filterTemplate === 'Products'" id="filter-products">prod</div>
-            <div v-if="filterTemplate === 'Deals'" id="filter-deals">deals</div>
+            <div v-else-if="filterTemplate === 'Products'" id="filter-products">prod</div>
+            <div v-else-if="filterTemplate === 'Deals'" id="filter-deals">deals</div>
             <div v-else>
                 pls pick entity!
             </div>

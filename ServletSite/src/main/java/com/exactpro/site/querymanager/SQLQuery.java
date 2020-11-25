@@ -45,7 +45,7 @@ public class SQLQuery {
             if (parameters.keySet().contains(key)) {
                 Object parameter = parameters.get(key);
 
-                if (parameter == null || parameter.toString().equals("null")) {
+                if (parameter == null || parameter.toString().equals("null") || parameter.toString().equals("")) {
                     parameterValue = "null";
                 } else if (parameter instanceof String || parameter instanceof Character) {
                     parameterValue = String.join("", "'", uninject(parameter.toString()), "'");
