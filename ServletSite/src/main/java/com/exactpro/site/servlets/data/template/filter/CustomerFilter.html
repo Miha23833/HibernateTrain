@@ -1,10 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-
-</body>
-</html>
+<input type="number" v-model="filterData.queryParams.customer_id" placeholder="customer id"><br>
+<input type="text" v-model="filterData.queryParams.name" placeholder="name"><br>
+<input type="text" v-model="filterData.queryParams.surname" placeholder="surname"><br>
+<input type="number" v-model="filterData.queryParams.age" placeholder="age"><br>
+<input type="number" v-model="filterData.queryParams.favourite_product" placeholder="favourite product"><br>
+<button @click="getServerData">getData!</button>

@@ -4,7 +4,8 @@ const staticServerData = Vue.reactive({
 })
 const filterData = Vue.reactive({
     queryParams: {},
-    filterTemplate: ""
+    filterTemplate: "",
+    filterMapping: ""
 })
 
 let headerButtonsComponent = Vue.createApp({
@@ -17,6 +18,7 @@ let headerButtonsComponent = Vue.createApp({
         getCustomersPage(event) {
             axios.get('/get-data/Customers').then(resp => {
                 filterData.filterTemplate = resp.data.filterTemplate;
+                filterData.filterMapping = resp.data.filterMapping;
             })
         },
         getProductsPage(event) {
@@ -40,15 +42,16 @@ let filterComponent = Vue.createApp({
     },
     methods: {
         getServerData() {
-            let queryParams = this.queryParams
-            axios.post('/get-data/Customers', {
+            let queryParams = this.queryParams;
+            axios.post(this.filterMapping, {
                 queryParams
             }).then(resp => {
                 resp.data.response.forEach(
                     (elem) => staticServerData.response.push(elem)
                 )
                 staticServerData.columns = resp.data.columns;
-            })
+            });
+            render();
         }
     }
 }).mount('#filter')

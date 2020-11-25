@@ -13,12 +13,24 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.stream.Collectors;
 
 @WebServlet(urlPatterns = "get-data/Customers")
 public class Customer extends HttpServlet {
+
+    private final String filterTemplate;
+
+    public Customer() throws IOException {
+        Path templateFile = Paths.get(
+                "src/main/java/com/exactpro/site/servlets/data/template/filter/CustomerFilter.html/");
+        filterTemplate = new String(Files.readAllBytes(templateFile));
+    }
+
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
@@ -32,11 +44,8 @@ public class Customer extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         JSONObject response = new JSONObject();
-        response.put("filterTemplate", "<input type=\"number\" v-model=\"queryParams.customer_id\" placeholder=\"customer id\"><br>\n" +
-                "            <input type=\"text\" v-model=\"queryParams.name\" placeholder=\"name\"><br>\n" +
-                "            <input type=\"text\" v-model=\"queryParams.surname\" placeholder=\"surname\"><br>\n" +
-                "            <input type=\"number\" v-model=\"queryParams.age\" placeholder=\"age\"><br>\n" +
-                "            <input type=\"number\" v-model=\"queryParams.favourite_product\" placeholder=\"favourite product\"><br>\n");
+        response.put("filterTemplate", filterTemplate);
+        response.put("filterMapping", "/get-data/Customers");
         resp.getWriter().write(response.toString());
     }
 
