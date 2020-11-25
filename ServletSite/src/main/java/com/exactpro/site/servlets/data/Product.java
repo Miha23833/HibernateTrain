@@ -44,7 +44,9 @@ public class Product extends HttpServlet implements Mapping {
 
         try {
             ResultSet respData = DBConnection.executeWithResult(query.getParametrizedQuery());
-            resp.getWriter().write(JSONConvertor.toJSON(respData).toString());
+            JSONObject jsonResult = JSONConvertor.toJSON(respData);
+            resp.setCharacterEncoding("utf-8");
+            resp.getWriter().write(jsonResult.toString());
         } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
         }
