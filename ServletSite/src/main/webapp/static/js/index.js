@@ -16,16 +16,19 @@ let headerButtonsComponent = Vue.createApp({
     },
     methods: {
         getCustomersPage(event) {
-            axios.get('/get-data/Customers').then(resp => {
-                filterData.filterTemplate = resp.data.filterTemplate;
-                filterData.filterMapping = resp.data.filterMapping;
-            })
+            filterData.queryParams = {};
+            filterData.filterTemplate = "Customers";
+            filterData.filterMapping = "/get-data/Customers";
         },
         getProductsPage(event) {
-            alert("getProductsPage");
+            filterData.queryParams = {};
+            filterData.filterTemplate = "Products";
+            filterData.filterMapping = "/get-data/Products";
         },
         getDealsPage(event) {
-            alert("getDealsPage");
+            filterData.queryParams = {};
+            filterData.filterTemplate = "Deals";
+            filterData.filterMapping = "/get-data/Deals";
         }
     }
 }).mount('#header-center');
@@ -51,7 +54,6 @@ let filterComponent = Vue.createApp({
                 )
                 staticServerData.columns = resp.data.columns;
             });
-            render();
         }
     }
-}).mount('#filter')
+}).mount('#filter');

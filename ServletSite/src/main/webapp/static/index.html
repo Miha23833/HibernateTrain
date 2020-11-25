@@ -42,7 +42,19 @@
             </table>
         </div>
         <div id="filter">
-            <div v-html="filterTemplate"></div>
+            <div v-if="filterTemplate === 'Customers'" id="filter-customers">
+                <input type="number" v-model="queryParams.customer_id" placeholder="customer id"><br>
+                <input type="text" v-model="queryParams.name" placeholder="name"><br>
+                <input type="text" v-model="queryParams.surname" placeholder="surname"><br>
+                <input type="number" v-model="queryParams.age" placeholder="age"><br>
+                <input type="number" v-model="queryParams.favourite_product" placeholder="favourite product"><br>
+            </div>
+            <div v-if="filterTemplate === 'Products'" id="filter-products">prod</div>
+            <div v-if="filterTemplate === 'Deals'" id="filter-deals">deals</div>
+            <div v-else>
+                pls pick entity!
+            </div>
+            <button @click="getServerData">getData!</button>
         </div>
     </main>
 </body>
