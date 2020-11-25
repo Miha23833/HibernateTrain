@@ -1,4 +1,4 @@
-SELECT customer_id, name, surname, age, favourite_product
+SELECT customer_id as `Customer id`, name as `Name`, surname as `Surname`, age as `Age`, favourite_product as `Favourite product`
 FROM customers
 WHERE
 (:customer_id IS NULL OR customer_id = :customer_id)

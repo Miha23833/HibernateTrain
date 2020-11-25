@@ -18,7 +18,7 @@ public class JSONConvertor {
 
         List<String> columns = new ArrayList<>();
         for (int i = 1; i <= metaData.getColumnCount(); i++) {
-            columns.add(metaData.getColumnName(i));
+            columns.add(metaData.getColumnLabel(i));
         }
         result.put("columns", new JSONArray(columns));
 

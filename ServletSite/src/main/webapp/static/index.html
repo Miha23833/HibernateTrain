@@ -28,7 +28,7 @@
 
     <main>
         <div id="main-data" ref="main_data">
-            <table>
+            <table class="fl-table">
                 <tr>
                     <th v-for="column in columns">
                         {{column}}
@@ -43,11 +43,11 @@
         </div>
         <div id="filter">
             <div v-if="filterTemplate === 'Customers'" id="filter-customers">
-                <input type="number" v-model="queryParams.customer_id" placeholder="customer id"><br>
-                <input type="text" v-model="queryParams.name" placeholder="name"><br>
-                <input type="text" v-model="queryParams.surname" placeholder="surname"><br>
-                <input type="number" v-model="queryParams.age" placeholder="age"><br>
-                <input type="number" v-model="queryParams.favourite_product" placeholder="favourite product"><br>
+                <input class="filter-input" type="number" v-model="queryParams.customer_id" placeholder="customer id"><br>
+                <input class="filter-input" type="text" v-model="queryParams.name" placeholder="name"><br>
+                <input class="filter-input" type="text" v-model="queryParams.surname" placeholder="surname"><br>
+                <input class="filter-input" type="number" v-model="queryParams.age" placeholder="age"><br>
+                <input class="filter-input" type="number" v-model="queryParams.favourite_product" placeholder="favourite product"><br>
             </div>
             <div v-else-if="filterTemplate === 'Products'" id="filter-products">prod</div>
             <div v-else-if="filterTemplate === 'Deals'" id="filter-deals">deals</div>
