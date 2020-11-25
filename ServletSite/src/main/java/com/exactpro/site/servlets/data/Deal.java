@@ -16,8 +16,8 @@ import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-@WebServlet(urlPatterns = "get-data/Customers")
-public class Customer extends HttpServlet implements Mapping {
+@WebServlet(urlPatterns = "get-data/Deals")
+public class Deal extends HttpServlet implements Mapping {
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
@@ -29,18 +29,18 @@ public class Customer extends HttpServlet implements Mapping {
     }
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         JSONObject response = new JSONObject();
-        response.put("filterMapping", "/get-data/Customers");
+        response.put("filterMapping", "/get-data/Deals");
         resp.getWriter().write(response.toString());
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         JSONObject reqJSON = requestToJSON(req);
         JSONObject queryParams = reqJSON.getJSONObject("queryParams");
 
-        SQLQuery query = new SQLQuery(QueryManager.customersSQL, queryParams);
+        SQLQuery query = new SQLQuery(QueryManager.dealsSQL, queryParams);
 
         try {
             ResultSet respData = DBConnection.executeWithResult(query.getParametrizedQuery());

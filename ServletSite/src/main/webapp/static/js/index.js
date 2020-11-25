@@ -16,23 +16,23 @@ let headerButtonsComponent = Vue.createApp({
     },
     methods: {
         getCustomersPage(event) {
+            filterData.queryParams = {};
             staticServerData.columns = [];
             staticServerData.response = [];
-            filterData.queryParams = {};
             filterData.filterTemplate = "Customers";
             filterData.filterMapping = "/get-data/Customers";
         },
         getProductsPage(event) {
-            filterData.queryParams = [];
+            filterData.queryParams = {};
             staticServerData.columns = [];
-            staticServerData.response = {};
+            staticServerData.response = [];
             filterData.filterTemplate = "Products";
             filterData.filterMapping = "/get-data/Products";
         },
         getDealsPage(event) {
-            filterData.queryParams = [];
+            filterData.queryParams = {};
             staticServerData.columns = [];
-            staticServerData.response = {};
+            staticServerData.response = [];
             filterData.filterTemplate = "Deals";
             filterData.filterMapping = "/get-data/Deals";
         }

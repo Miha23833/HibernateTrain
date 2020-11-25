@@ -49,8 +49,21 @@
                 <input class="filter-input" type="number" v-model="queryParams.age" placeholder="age"><br>
                 <input class="filter-input" type="number" v-model="queryParams.favourite_product" placeholder="favourite product"><br>
             </div>
-            <div v-else-if="filterTemplate === 'Products'" id="filter-products">prod</div>
-            <div v-else-if="filterTemplate === 'Deals'" id="filter-deals">deals</div>
+            <div v-else-if="filterTemplate === 'Products'" id="filter-products">
+                <input class="filter-input" type="text" v-model="queryParams.product_name" placeholder="product_name"><br>
+                <input class="filter-input" type="text" v-model="queryParams.description" placeholder="description"><br>
+                <input class="filter-input" type="number" v-model="queryParams.price" placeholder="price"><br>
+                <input class="filter-input" type="number" v-model="queryParams.product_id" placeholder="product_id"><br>
+            </div>
+            <div v-else-if="filterTemplate === 'Deals'" id="filter-deals">
+                <input class="filter-input" type="date" v-model="queryParams.deal_date_before" placeholder="deal_date_before"><br>
+                <input class="filter-input" type="date" v-model="queryParams.deal_date_after" placeholder="deal_date_after"><br>
+                <input class="filter-input" type="number" v-model="queryParams.customer_id" placeholder="customer_id"><br>
+                <input class="filter-input" type="number" v-model="queryParams.discount" placeholder="discount"><br>
+                <input class="filter-input" type="number" v-model="queryParams.product_id" placeholder="product_id"><br>
+                <input class="filter-input" type="number" v-model="queryParams.min_price" placeholder="min_price"><br>
+                <input class="filter-input" type="number" v-model="queryParams.deal_id" placeholder="deal_id"><br>
+            </div>
             <div v-else>
                 pls pick entity!
             </div>
