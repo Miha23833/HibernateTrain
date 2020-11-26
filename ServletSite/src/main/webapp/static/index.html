@@ -68,7 +68,7 @@
             <div v-else>
                 pls pick entity!
             </div>
-            <button @click="getServerData">getData!</button>
+            <button v-if="filterTemplate!= null && filterTemplate != ''" @click="getServerData">getData!</button>
         </div>
     </main>
 </body>
