@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/servlet_site_frontend/servlet_site_frontend.iml" filepath="$PROJECT_DIR$/servlet_site_frontend/servlet_site_frontend.iml" />
+      <module fileurl="file://$PROJECT_DIR$/HibernateCommon/HibernateCommon.iml" filepath="$PROJECT_DIR$/HibernateCommon/HibernateCommon.iml" />
       <module fileurl="file://$PROJECT_DIR$/HibernateCommon/target/target.iml" filepath="$PROJECT_DIR$/HibernateCommon/target/target.iml" />
       <module fileurl="file://$PROJECT_DIR$/HibernateCommon/src/test/test.iml" filepath="$PROJECT_DIR$/HibernateCommon/src/test/test.iml" />
     </modules>
