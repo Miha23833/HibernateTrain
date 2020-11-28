@@ -46,20 +46,4 @@ let mainDataComponent = Vue.createApp({
 }).mount('#main-data')
 
 let filterComponent = Vue.createApp({
-    data() {
-        return filterData
-    },
-    methods: {
-        getServerData() {
-            let queryParams = this.queryParams;
-            axios.post(this.filterMapping, {
-                queryParams
-            }).then(resp => {
-                resp.data.response.forEach(
-                    (elem) => staticServerData.response.push(elem)
-                )
-                staticServerData.columns = resp.data.columns;
-            });
-        }
-    }
 }).mount('#filter');

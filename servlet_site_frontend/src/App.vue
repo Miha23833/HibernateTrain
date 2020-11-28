@@ -1,23 +1,38 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
-  </div>
+  <main>
+    <HeaderButtons/>
+    <MainTable/>
+    <EntityFilter/>
+  </main>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import EntityFilter from "@/components/EntityFilter";
+import HeaderButtons from "@/components/HeaderButtons";
+import MainTable from "@/components/MainTable";
 
 export default {
   name: 'App',
+  data(){
+    return {
+      entity: {}
+    }
+  },
   components: {
-    HelloWorld
+    EntityFilter,
+    HeaderButtons,
+    MainTable
+  },
+  methods: {
+    setCurrentEntity(entity){
+      this.entity = entity;
+    }
   }
 }
 </script>
 
 <style>
-#app {
+main {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
