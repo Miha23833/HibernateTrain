@@ -1,11 +1,11 @@
 <template>
-  <div v-if="filterTemplate === 'Customers'" id="filter-customers">
+  <div v-if="entityFilter === PRIVATE_ENTITIES.Customers" id="filter-customers">
     <Customers/>
   </div>
-  <div v-else-if="filterTemplate === 'Products'" id="filter-products">
+  <div v-else-if="entityFilter === PRIVATE_ENTITIES.Products" id="filter-products">
     <Products/>
   </div>
-  <div v-else-if="filterTemplate === 'Deals'" id="filter-deals">
+  <div v-else-if="entityFilter === PRIVATE_ENTITIES.Deals" id="filter-deals">
     <Deals/>
   </div>
   <div v-else>
@@ -15,6 +15,8 @@
 
 <script>
 import axios from 'axios'
+
+import {ENTITIES} from '@/components/enums/ENTITIES'
 
 import Customers from "@/components/entityFilters/Customers";
 import Products from "@/components/entityFilters/Products";
@@ -28,15 +30,15 @@ export default {
   },
   data() {
     return {
-      filterTemplate: "",
-      filterMapping: "",
+      PRIVATE_ENTITIES: ENTITIES,
+      entityFilter: {},
       queryParams: {}
     }
   },
   methods: {
     getServerData() {
       let queryParams = this.queryParams;
-      axios.post(this.filterMapping, {
+      axios.post(this.PRIVATE_ENTITIES.mapping, {
         queryParams
       }).then(resp => {
         resp.data.response.forEach(

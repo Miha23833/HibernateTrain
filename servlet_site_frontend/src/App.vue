@@ -23,6 +23,7 @@ export default {
     HeaderButtons,
     MainTable
   },
+  // TODO: дописать методы, посмотреть на MainTable
   methods: {
     setCurrentEntity(entity){
       this.entity = entity;
