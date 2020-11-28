@@ -1,0 +1,29 @@
+<template>
+  <label>
+    <input class="filter-input" type="text" v-model="queryParams.product_name" placeholder="product_name"><br>
+    <input class="filter-input" type="text" v-model="queryParams.description" placeholder="description"><br>
+    <input class="filter-input" type="number" v-model="queryParams.price" placeholder="price"><br>
+    <input class="filter-input" type="number" v-model="queryParams.product_id" placeholder="product_id"><br>
+    <button @click="this.$emit('getServerData', queryParams)">getData!</button>
+  </label>
+</template>
+
+<script>
+export default {
+  data(){
+    return {
+      queryParams: {
+        product_name: null,
+        description: null,
+        price: null,
+        product_id: null
+      }
+    }
+  },
+  name: "Products"
+}
+</script>
+
+<style scoped>
+
+</style>

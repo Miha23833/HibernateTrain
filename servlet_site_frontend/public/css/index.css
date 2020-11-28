@@ -66,14 +66,14 @@ header button {
     width: 50em;
 }
 
-#header-left {
+#header-image {
     width: 15%;
     height: 100%;
     display: flex;
     justify-content: center;
 }
 
-#header-left img {
+#header-image img {
     padding: 1em;
     width: 70%;
     height: 70%;
