@@ -1,15 +1,15 @@
-export const ENTITIES = Object.freeze({
-        "Customers": {
+export const ENTITY = Object.freeze({
+        "Customer": {
             asNum: 1,
-            mapping: "/get-data/Customers"
+            mapping: "Customers/"
         },
-        "Products": {
+        "Product": {
             asNum: 2,
-            mapping: "/get-data/Products"
+            mapping: "Products/"
         },
-        "Deals": {
+        "Deal": {
             asNum: 3,
-            mapping: "/get-data/Deals"
+            mapping: "Deals/"
         }
     }
 );

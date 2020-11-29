@@ -1,32 +1,21 @@
 <template>
-  <main>
-    <HeaderButtons/>
-    <MainTable/>
-    <EntityFilter/>
-  </main>
+  <div>
+    <Header v-bind:current-user-action="currentUserAction"/>
+    <Main v-bind:current-user-action="currentUserAction"/>
+  </div>
+
 </template>
 
 <script>
-import EntityFilter from "@/components/EntityFilter";
-import HeaderButtons from "@/components/HeaderButtons";
-import MainTable from "@/components/MainTable";
-
+import Header from "@/components/Header";
+import {USER_ACTION} from "@/components/enums/USER_ACTIONS";
+import Main from "@/components/Main";
 export default {
   name: 'App',
-  data(){
+  components: {Main, Header},
+  data() {
     return {
-      entity: {}
-    }
-  },
-  components: {
-    EntityFilter,
-    HeaderButtons,
-    MainTable
-  },
-  // TODO: дописать методы, посмотреть на MainTable
-  methods: {
-    setCurrentEntity(entity){
-      this.entity = entity;
+      currentUserAction: USER_ACTION.SELECT
     }
   }
 }
