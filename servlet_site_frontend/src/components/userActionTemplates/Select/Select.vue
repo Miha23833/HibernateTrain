@@ -1,7 +1,11 @@
 <template>
-  <div>
+  <div id="main">
+    <div id="table">
     <Table v-bind:columns="columns" v-bind:data-rows="dataRows"></Table>
+    </div>
+    <div id="filter">
     <EntityFilter v-bind:current-entity="currentEntity"></EntityFilter>
+    </div>
   </div>
 </template>
 
@@ -35,5 +39,13 @@ export default {
 </script>
 
 <style scoped>
-
+#main{
+  display: flex;
+  justify-content: space-between;
+  padding-left: 20%;
+  padding-right: 20%;
+}
+#table{
+  width: 80%;
+}
 </style>

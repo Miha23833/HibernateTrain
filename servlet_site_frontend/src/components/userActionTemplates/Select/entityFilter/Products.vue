@@ -29,5 +29,7 @@ export default {
 </script>
 
 <style scoped>
-
+label input{
+  width: 80%;
+}
 </style>
