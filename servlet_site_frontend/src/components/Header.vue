@@ -73,14 +73,12 @@ header{
 #main-buttons button:hover{
   background:#53ea93;
 }
+
+/* TODO: сделать так, чтобы по нажатию на кнопку стиль ниже сохранялся */
 #main-buttons button:focus{
   background: #53ea93;
   outline:none;
   font-size: 1.5em;
-  /*border-style: outset;*/
-  /*border-color: black;*/
-  /*border-left-width: 5px;*/
-  /*border-right-width: 5px;*/
   box-shadow: 12px 0 15px 1px #53ea93, -12px 0 15px 1px #53ea93;
 
 }

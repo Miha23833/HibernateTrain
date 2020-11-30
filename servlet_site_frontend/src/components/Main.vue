@@ -4,13 +4,13 @@
       <Select/>
     </div>
     <div v-if="currentUserAction === USER_ACTION.UPDATE">
-<!--      <Up/>-->
+<!--      <Update/>-->
     </div>
     <div v-if="currentUserAction === USER_ACTION.INSERT">
-<!--      <Select/>-->
+<!--      <Insert/>-->
     </div>
     <div v-if="currentUserAction === USER_ACTION.DELETE">
-<!--      <Select/>-->
+<!--      <Delete/>-->
     </div>
   </main>
 </template>
