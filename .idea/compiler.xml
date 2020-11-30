@@ -18,6 +18,7 @@
     </annotationProcessing>
     <bytecodeTargetLevel target="14">
       <module name="HibernateCommon" target="8" />
+      <module name="Main" target="8" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">

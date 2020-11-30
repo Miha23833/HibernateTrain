@@ -1,16 +1,16 @@
 <template>
   <header>
-    <div id="header-image">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Amazon_logo.svg/1200px-Amazon_logo.svg.png"
+    <div id="logo">
+      <img src="https://aiconica.net/previews/amazon-logo-empty-square-icon-822.png"
            alt="normal"/>
     </div>
-    <div id="header-user-action-buttons">
+    <div id="main-buttons">
       <button @click="currentUserAction = USER_ACTION.SELECT">Select</button>
       <button @click="currentUserAction = USER_ACTION.INSERT">Insert</button>
       <button @click="currentUserAction = USER_ACTION.UPDATE">Update</button>
       <button @click="currentUserAction = USER_ACTION.DELETE">Delete</button>
     </div>
-    <div id="header-log">
+    <div id="header-login">
       <button>Log in</button>
     </div>
   </header>
@@ -31,5 +31,62 @@ export default {
 </script>
 
 <style scoped>
+header{
+  background-color: #f1f1f1;
+  height:4em;
+  display: flex;
+  width:100%;
+}
+
+#logo {
+  /*width: 4em;*/
+  height: 4em;
+  overflow: hidden;
+  min-width: 4em;
+  float: left;
+  margin-left: .4em;
+  width: 10%;
+}
+
+#logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+#main-buttons{
+  height: 100%;
+  width: 80%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#main-buttons button{
+  width: 20em;
+  height: 100%;
+  border: 0;
+  background-color: inherit;
+  transition: .5s;
+}
+
+#main-buttons button:hover{
+  background:#53ea93;
+}
+#main-buttons button:focus{
+  background: #53ea93;
+  outline:none;
+  font-size: 1.5em;
+  /*border-style: outset;*/
+  /*border-color: black;*/
+  /*border-left-width: 5px;*/
+  /*border-right-width: 5px;*/
+  box-shadow: 12px 0 15px 1px #53ea93, -12px 0 15px 1px #53ea93;
+
+}
+
+#header-login {
+  width: 10%;
+}
 
 </style>
