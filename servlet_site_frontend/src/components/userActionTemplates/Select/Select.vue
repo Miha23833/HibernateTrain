@@ -3,6 +3,7 @@
     <div id="table">
     <Table v-bind:columns="columns" v-bind:data-rows="dataRows"></Table>
     </div>
+    <div class="div-sep"></div>
     <div id="filter">
     <EntityFilter v-bind:current-entity="currentEntity"></EntityFilter>
     </div>
@@ -52,5 +53,11 @@ export default {
 }
 #filter{
   width: 20%;
+}
+
+.div-sep{
+  width: 1px;
+  background-image: radial-gradient(#bfc8e5, white);
+  height: inherit;
 }
 </style>
