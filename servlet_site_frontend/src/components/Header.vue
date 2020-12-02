@@ -39,7 +39,6 @@ header{
 }
 
 #logo {
-  /*width: 4em;*/
   height: 4em;
   overflow: hidden;
   min-width: 4em;
@@ -80,7 +79,6 @@ header{
   outline:none;
   font-size: 1.5em;
   box-shadow: 12px 0 15px 1px #53ea93, -12px 0 15px 1px #53ea93;
-
 }
 
 #header-login {

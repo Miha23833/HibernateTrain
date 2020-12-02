@@ -34,8 +34,4 @@ export default {
 </script>
 
 <style scoped>
-label {
-  width: 100%;
-  padding-inline: 5% 2%;
-}
 </style>

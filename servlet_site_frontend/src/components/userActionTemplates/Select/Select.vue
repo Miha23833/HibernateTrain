@@ -47,7 +47,7 @@ export default {
   padding-right: 20%;
 }
 #table{
-  width: 80%;
+  width: 75%;
   overflow: auto;
 }
 #filter{

@@ -37,4 +37,21 @@ export default {
 </script>
 
 <style scoped>
+>>> input {
+  font-size: 1em;
+  padding: .5em;
+  margin-bottom: .4em;
+  font-family: Helvetica, sans-serif;
+  transition: .3s;
+  border: none;
+  width: 100%;
+}
+
+
+>>> input:focus {
+  outline: none;
+  box-shadow: 0 2px #53ea93;
+}
+
+
 </style>
