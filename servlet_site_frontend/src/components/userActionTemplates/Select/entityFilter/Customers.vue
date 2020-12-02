@@ -34,7 +34,8 @@ export default {
 </script>
 
 <style scoped>
-label input{
-  width: 80%;
+label {
+  width: 100%;
+  padding-inline: 5% 2%;
 }
 </style>

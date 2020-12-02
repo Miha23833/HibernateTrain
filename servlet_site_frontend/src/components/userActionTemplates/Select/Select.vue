@@ -41,11 +41,16 @@ export default {
 <style scoped>
 #main{
   display: flex;
+  flex-direction: row;
   justify-content: space-between;
   padding-left: 20%;
   padding-right: 20%;
 }
 #table{
   width: 80%;
+  overflow: auto;
+}
+#filter{
+  width: 20%;
 }
 </style>

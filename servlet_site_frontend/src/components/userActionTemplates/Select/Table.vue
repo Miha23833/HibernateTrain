@@ -1,25 +1,67 @@
 <template>
   <table id="select-table">
+    <thead>
     <tr>
-      <th v-for="column in columns" v-bind:key="column">
+      <th scope="col" v-for="column in columns" v-bind:key="column">
         {{ column }}
       </th>
     </tr>
+    </thead>
+    <tbody>
     <tr v-for="data in dataRows" v-bind:key="data">
       <td v-for="item in columns" v-bind:key="item">
         {{ data[item] }}
       </td>
     </tr>
+    </tbody>
   </table>
 </template>
 
 <script>
 export default {
   props: ['columns', 'dataRows'],
-  name: "Table"
+  name: "Table",
+  created() {
+    if (this.columns !== []) {
+      this.columns = [];
+    }
+    if (this.dataRows !== []) {
+      this.dataRows = [];
+    }
+    for (let i = 0; i < 10; i++) {
+      let row = {};
+      for (let j = 0; j < 5; j++) {
+        let key = "abc " + j;
+        if (i === 0) {
+          this.columns.push(key);
+        }
+        row[key] = j;
+      }
+      this.dataRows.push(row)
+    }
+  }
 }
 </script>
 
 <style scoped>
+table {
+  border-spacing: 0;
+  width: 100%;
+  text-align: center;
+  vertical-align: middle;
+}
+
+td {
+  padding: .5em 0;
+  border-width: 1px 0;
+  border-style: solid;
+  border-image: radial-gradient(#84d6ea, #ffffff) 5;
+}
+
+th {
+  padding: 1em 2em;
+  text-align: center;
+  vertical-align: middle;
+}
 
 </style>
