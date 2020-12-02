@@ -53,5 +53,30 @@ export default {
   box-shadow: 0 2px #53ea93;
 }
 
+>>> button {
+  background-color: #f1f1f1;
+  border: none;
+  width: 100%;
+  height: 2em;
+  font-family: Helvetica, sans-serif;
+  font-size: 1em;
+  transition: .5s;
+  margin-top: .5em;
+}
+
+>>> button:hover {
+  background-color: #dff6df;
+}
+
+>>> button:focus{
+  outline:none;
+}
+
+>>> button:active{
+  background-color: #d0e5d0;
+  /*box-shadow: 0 1px #d0e5d0;*/
+  /*transform: translateY(1px);*/
+  transition: 0s ease-in-out;
+}
 
 </style>
