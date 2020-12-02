@@ -1,15 +1,21 @@
 <template>
-  <div v-if="currentEntity === ENTITY.Customer">
-    <Customers/>
-  </div>
-  <div v-else-if="currentEntity === ENTITY.Product">
-    <Products/>
-  </div>
-  <div v-else-if="currentEntity === ENTITY.Deal">
-    <Deals/>
-  </div>
-  <div v-else>
-    pls pick entity!
+  <div>
+    <EntitySelector/>
+    <div v-if="currentEntity === ENTITY.Customer">
+      <Customers/>
+      <button @click="getData()">getData!</button>
+    </div>
+    <div v-else-if="currentEntity === ENTITY.Product">
+      <Products/>
+      <button @click="getData()">getData!</button>
+    </div>
+    <div v-else-if="currentEntity === ENTITY.Deal">
+      <Deals/>
+      <button @click="getData()">getData!</button>
+    </div>
+    <div v-else>
+      pls pick entity!
+    </div>
   </div>
 </template>
 
@@ -18,10 +24,14 @@ import Customers from "@/components/userActionTemplates/Select/entityFilter/Cust
 import Products from "@/components/userActionTemplates/Select/entityFilter/Products";
 import Deals from "@/components/userActionTemplates/Select/entityFilter/Deals";
 import {ENTITY} from "@/components/enums/ENTITIES";
+import {USER_ACTION} from "@/components/enums/USER_ACTIONS";
+import axios from 'axios';
+import EntitySelector from "@/components/userActionTemplates/Select/entityFilter/EntitySelector";
 
 export default {
   props: ['currentEntity'],
-  components:{
+  components: {
+    EntitySelector,
     Customers,
     Products,
     Deals
@@ -31,6 +41,16 @@ export default {
       ENTITY,
       entityFilter: {},
       queryParams: {}
+    }
+  },
+  methods: {
+    getData() {
+      axios.get(USER_ACTION.SELECT.mapping + this.currentEntity.mapping, this.queryParams).then(
+          resp => {
+            this.$parent.setTableData(resp.response);
+            this.$parent.setColumns(resp.columns);
+          }
+      )
     }
   }
 }
@@ -56,7 +76,7 @@ export default {
 >>> button {
   background-color: #f1f1f1;
   border: none;
-  width: 100%;
+  width: 80%;
   height: 2em;
   font-family: Helvetica, sans-serif;
   font-size: 1em;
@@ -68,14 +88,12 @@ export default {
   background-color: #dff6df;
 }
 
->>> button:focus{
-  outline:none;
+>>> button:focus {
+  outline: none;
 }
 
->>> button:active{
+>>> button:active {
   background-color: #d0e5d0;
-  /*box-shadow: 0 1px #d0e5d0;*/
-  /*transform: translateY(1px);*/
   transition: 0s ease-in-out;
 }
 

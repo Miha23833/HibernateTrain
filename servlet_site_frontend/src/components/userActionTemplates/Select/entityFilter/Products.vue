@@ -4,7 +4,6 @@
     <input class="filter-input" type="text" v-model="queryParams.description" placeholder="description"><br>
     <input class="filter-input" type="number" v-model="queryParams.price" placeholder="price"><br>
     <input class="filter-input" type="number" v-model="queryParams.product_id" placeholder="product_id"><br>
-    <GetDataButton v-bind:filter="queryParams" v-bind:mapping="mapping"/>
   </label>
 </template>
 

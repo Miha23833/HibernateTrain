@@ -9,17 +9,14 @@
     <input class="filter-input" type="number" v-model="queryParams.product_id" placeholder="product_id"><br>
     <input class="filter-input" type="number" v-model="queryParams.min_price" placeholder="min_price"><br>
     <input class="filter-input" type="number" v-model="queryParams.deal_id" placeholder="deal_id"><br>
-    <GetDataButton v-bind:filter="queryParams" v-bind:mapping="mapping"/>
   </label>
 </template>
 
 <script>
 import {USER_ACTION} from "@/components/enums/USER_ACTIONS";
 import {ENTITY} from "@/components/enums/ENTITIES";
-import GetDataButton from "@/components/userActionTemplates/Select/entityFilter/GetDataButton";
 
 export default {
-  components: {GetDataButton},
   data() {
     return {
       queryParams: {
