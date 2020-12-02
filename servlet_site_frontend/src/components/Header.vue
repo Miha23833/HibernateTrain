@@ -5,10 +5,10 @@
            alt="normal"/>
     </div>
     <div id="main-buttons">
-      <button @click="currentUserAction = USER_ACTION.SELECT">Select</button>
-      <button @click="currentUserAction = USER_ACTION.INSERT">Insert</button>
-      <button @click="currentUserAction = USER_ACTION.UPDATE">Update</button>
-      <button @click="currentUserAction = USER_ACTION.DELETE">Delete</button>
+      <button @click="currentUserActionChanged(USER_ACTION.SELECT)">Select</button>
+      <button @click="currentUserActionChanged(USER_ACTION.INSERT)">Insert</button>
+      <button @click="currentUserActionChanged(USER_ACTION.UPDATE)">Update</button>
+      <button @click="currentUserActionChanged(USER_ACTION.DELETE)">Delete</button>
     </div>
     <div id="header-login">
       <button>Log in</button>
@@ -26,6 +26,11 @@ export default {
     return {
       USER_ACTION
     };
+  },
+  methods: {
+    currentUserActionChanged(newValue){
+      this.$parent.setUserAction(newValue)
+    }
   }
 }
 </script>

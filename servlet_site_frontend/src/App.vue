@@ -1,7 +1,7 @@
 <template>
   <div>
-    <Header v-bind:current-user-action="currentUserAction"/>
-    <Main v-bind:current-user-action="currentUserAction"/>
+    <Header v-bind:current-user-action="userAction"/>
+    <Main v-bind:current-user-action="userAction"/>
   </div>
 
 </template>
@@ -15,7 +15,12 @@ export default {
   components: {Main, Header},
   data() {
     return {
-      currentUserAction: USER_ACTION.SELECT
+      userAction: USER_ACTION.SELECT
+    }
+  },
+  methods:{
+    setUserAction(newValue){
+      this.userAction = newValue;
     }
   }
 }
