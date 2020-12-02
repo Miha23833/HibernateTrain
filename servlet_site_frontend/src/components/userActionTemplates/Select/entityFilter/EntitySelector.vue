@@ -14,17 +14,6 @@ export default {
 </script>
 
 <style scoped>
-input[type=radio] {
-  padding: 0;
-  font-family: Helvetica, sans-serif;
-  margin: 0;
-}
-
-input[type=radio]:focus {
-  outline: none;
-  box-shadow: 0 2px #53ea93;
-}
-
 #wrapper{
   margin-top: 1em;
   margin-bottom: 2em;

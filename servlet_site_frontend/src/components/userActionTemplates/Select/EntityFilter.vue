@@ -3,18 +3,20 @@
     <EntitySelector/>
     <div v-if="currentEntity === ENTITY.Customer">
       <Customers/>
-      <button @click="getData()">getData!</button>
     </div>
     <div v-else-if="currentEntity === ENTITY.Product">
       <Products/>
-      <button @click="getData()">getData!</button>
     </div>
     <div v-else-if="currentEntity === ENTITY.Deal">
       <Deals/>
-      <button @click="getData()">getData!</button>
     </div>
     <div v-else>
       pls pick entity!
+    </div>
+    <div id="get-data-button" v-if="currentEntity === ENTITY.Customer ||
+              currentEntity === ENTITY.Product ||
+              currentEntity === ENTITY.Deal" @click="getData()">
+      <button @click="getData()">get data!</button>
     </div>
   </div>
 </template>
@@ -64,7 +66,8 @@ export default {
   font-family: Helvetica, sans-serif;
   transition: .3s;
   border: none;
-  width: 100%;
+  width: 80%;
+  box-shadow: 0 1px #9f9f9f;
 }
 
 
@@ -97,4 +100,17 @@ export default {
   transition: 0s ease-in-out;
 }
 
+#get-data-button{
+  text-align: center;
+}
+#get-data-button button{
+  border-radius: 10px;
+}
+#get-data-button button:hover{
+  background-color: #d0ea99;
+}
+#get-data-button button:active{
+  transition: .1s;
+  background-color: #b4cd85;
+}
 </style>
