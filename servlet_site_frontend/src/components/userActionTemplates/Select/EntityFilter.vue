@@ -25,8 +25,8 @@
 import Customers from "@/components/userActionTemplates/Select/entityFilter/Customers";
 import Products from "@/components/userActionTemplates/Select/entityFilter/Products";
 import Deals from "@/components/userActionTemplates/Select/entityFilter/Deals";
-import {ENTITY} from "@/components/enums/ENTITIES";
-import {USER_ACTION} from "@/components/enums/USER_ACTIONS";
+import {ENTITY} from "@/enums/ENTITIES";
+import {USER_ACTION} from "@/enums/USER_ACTIONS";
 import axios from 'axios';
 import EntitySelector from "@/components/userActionTemplates/Select/entityFilter/EntitySelector";
 

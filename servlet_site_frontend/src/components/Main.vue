@@ -16,10 +16,10 @@
 </template>
 
 <script>
-import {USER_ACTION} from "@/components/enums/USER_ACTIONS";
+import {USER_ACTION} from "@/enums/USER_ACTIONS";
 import Select from "@/components/userActionTemplates/Select/Select";
 import Insert from "@/components/userActionTemplates/Insert/Insert";
-import {ENTITY} from "@/components/enums/ENTITIES";
+import {ENTITY} from "@/enums/ENTITIES";
 
 export default {
   name: "Main",

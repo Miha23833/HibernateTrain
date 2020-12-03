@@ -19,13 +19,15 @@
       </button>
     </div>
     <div id="header-login">
-      <button>Log in</button>
+      <button v-on:click="incrementCounter">Log in</button>
+      {{getMsg}}
     </div>
   </header>
 </template>
 
 <script>
-import {USER_ACTION} from '@/components/enums/USER_ACTIONS'
+import {USER_ACTION} from '@/enums/USER_ACTIONS'
+import {store} from '@/main'
 
 export default {
   name: 'Header',
@@ -39,12 +41,19 @@ export default {
         fontSize: '1.2em',
         boxShadow: '12px 0 15px 1px #53ea93, -12px 0 15px 1px #53ea93'
       }
-
     };
+  },
+  computed: {
+    getMsg(){
+      return store.state.count;
+    }
   },
   methods: {
     currentUserActionChanged(newValue) {
       this.$parent.setUserAction(newValue)
+    },
+    incrementCounter(){
+      store.state.count = 500;
     }
   }
 }

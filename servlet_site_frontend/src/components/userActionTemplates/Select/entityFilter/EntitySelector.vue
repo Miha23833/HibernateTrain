@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import {ENTITY} from '@/components/enums/ENTITIES';
+import {ENTITY} from '@/enums/ENTITIES';
 export default {
   name: "EntitySelector",
   data(){

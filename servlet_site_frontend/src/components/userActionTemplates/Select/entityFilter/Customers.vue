@@ -13,8 +13,8 @@
 </template>
 
 <script>
-import {ENTITY} from "@/components/enums/ENTITIES";
-import {USER_ACTION} from "@/components/enums/USER_ACTIONS";
+import {ENTITY} from "@/enums/ENTITIES";
+import {USER_ACTION} from "@/enums/USER_ACTIONS";
 
 export default {
   data() {

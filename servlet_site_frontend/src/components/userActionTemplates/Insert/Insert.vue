@@ -14,7 +14,7 @@
 </template>
 
 <script>
-import {ENTITY} from "@/components/enums/ENTITIES";
+import {ENTITY} from "@/enums/ENTITIES";
 import EntitySelector from "@/components/userActionTemplates/Select/entityFilter/EntitySelector";
 import Customer from "@/components/userActionTemplates/Insert/InsertEntityForms/Customer";
 

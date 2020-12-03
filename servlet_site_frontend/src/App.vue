@@ -9,7 +9,7 @@
 
 <script>
 import Header from "@/components/Header";
-import {USER_ACTION} from "@/components/enums/USER_ACTIONS";
+import {USER_ACTION} from "@/enums/USER_ACTIONS";
 import Main from "@/components/Main";
 import ErrorMessage from "@/components/ErrorMessage";
 export default {
