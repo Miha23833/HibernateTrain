@@ -1,6 +1,5 @@
 <template>
-  <div class="filter-input-wrapper">
-  <label class="abc">
+  <label>
     <input class="filter-input" type="number" v-model="queryParams.customer_id" placeholder="customer id"><br>
     <input class="filter-input" type="text" v-model="queryParams.name" placeholder="name"><br>
     <input class="filter-input" type="text" v-model="queryParams.surname" placeholder="surname"><br>
@@ -8,8 +7,6 @@
     <input class="filter-input" type="number" v-model="queryParams.favourite_product"
            placeholder="favourite product"><br>
   </label>
-
-  </div>
 </template>
 
 <script>
@@ -33,11 +30,4 @@ export default {
 }
 </script>
 <style scoped>
-.filter-input-wrapper {
-  border-color: #c6c6c6;
-  border-radius: .5em;
-  border-style: solid;
-  border-width: 1px;
-  text-align: center;
-}
 </style>

@@ -21,18 +21,14 @@ import Customer from "@/components/userActionTemplates/Insert/InsertEntityForms/
 export default {
   name: "Insert",
   components: {Customer, EntitySelector},
-  props: ['currentEntity'],
   data() {
     return {
       LOCAL_ENTITY: ENTITY
     };
   },
-  methods:{
-    setCurrentEntity(newValue){
-      this.$parent.setCurrentEntity(newValue);
-    },
-    showErrorMessage(message) {
-      this.$parent.showErrorMessage(message)
+  computed:{
+    currentEntity(){
+      return this.$store.getters.getCurrentEntity;
     }
   }
 }

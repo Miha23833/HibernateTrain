@@ -5,7 +5,7 @@
     </div>
     <div class="div-sep"></div>
     <div id="filter">
-      <EntityFilter></EntityFilter>
+      <EntityFilter @data-received="setTableData($event)"></EntityFilter>
     </div>
   </div>
 </template>
@@ -24,11 +24,9 @@ export default {
     }
   },
   methods: {
-    setColumns(columns) {
-      this.columns = columns;
-    },
-    setTableData(data) {
-      this.dataRows = data;
+    setTableData(data){
+      this.columns = data.columns;
+      this.dataRows = data.response;
     },
     addRow(row) {
       this.dataRows.push(row);

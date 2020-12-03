@@ -14,6 +14,7 @@ export default {
     return {localFilter: this.filter};
   },
   name: "GetDataButton",
+  emits: ['data-received'],
   methods: {
     askForData(){
       axios.get(this.mapping, this.localFilter).then(response => {

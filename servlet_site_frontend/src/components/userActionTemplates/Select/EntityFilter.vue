@@ -2,21 +2,31 @@
   <div>
     <EntitySelector/>
     <div v-if="currentEntity === ENTITY.Customer">
-      <Customers/>
-      <div class="get-data-button">
-        <GetDataButton v-bind:filter="this.entityFilter" v-bind:button-text="'Get data'" v-bind:mapping="this.USER_ACTION.SELECT.mapping + currentEntity.mapping"></GetDataButton>
+      <div class="filter-wrapper">
+        <Customers/>
+        <div class="get-data-button">
+          <GetDataButton v-bind:filter="this.entityFilter" v-bind:button-text="'Get data'"
+                         v-bind:mapping="this.USER_ACTION.SELECT.mapping + currentEntity.mapping"></GetDataButton>
+        </div>
       </div>
     </div>
     <div v-else-if="currentEntity === ENTITY.Product">
-      <Products/>
-      <div class="get-data-button">
-        <GetDataButton v-bind:filter="this.entityFilter" v-bind:button-text="'Get data'" v-bind:mapping="this.USER_ACTION.SELECT.mapping + currentEntity.mapping"></GetDataButton>
+      <div class="filter-wrapper">
+        <Products/>
+        <div class="get-data-button">
+          <GetDataButton v-bind:filter="this.entityFilter" v-bind:button-text="'Get data'"
+                         v-bind:mapping="this.USER_ACTION.SELECT.mapping + currentEntity.mapping"></GetDataButton>
+        </div>
       </div>
     </div>
     <div v-else-if="currentEntity === ENTITY.Deal">
-      <Deals/>
-      <div class="get-data-button">
-        <GetDataButton v-bind:filter="this.entityFilter" v-bind:button-text="'Get data'" v-bind:mapping="this.USER_ACTION.SELECT.mapping + currentEntity.mapping"></GetDataButton>
+      <div class="filter-wrapper">
+        <Deals/>
+        <div class="get-data-button">
+          <GetDataButton @data-received="this.$emit('data-received', $event)" v-bind:filter="this.entityFilter"
+                         v-bind:button-text="'Get data'"
+                         v-bind:mapping="this.USER_ACTION.SELECT.mapping + currentEntity.mapping"></GetDataButton>
+        </div>
       </div>
     </div>
     <div v-else>
@@ -42,8 +52,9 @@ export default {
     Products,
     Deals
   },
+  emits: ['data-received'],
   computed: {
-    currentEntity(){
+    currentEntity() {
       this.$emit('entity-changed');
       return this.$store.getters.getCurrentEntity;
     }
@@ -61,17 +72,30 @@ export default {
 
 <style scoped>
 
-.get-data-button{
+.get-data-button {
   text-align: center;
 }
-.get-data-button button{
+
+.get-data-button button {
   border-radius: 10px;
 }
-.get-data-button button:hover{
+
+.get-data-button button:hover {
   background-color: #d0ea99;
 }
-.get-data-button button:active{
+
+.get-data-button button:active {
   transition: .1s;
   background-color: #b4cd85;
+}
+
+.filter-wrapper {
+  border-color: #c6c6c6;
+  border-radius: .5em;
+  border-style: solid;
+  border-width: 1px;
+  text-align: center;
+  padding-top: .5em;
+  padding-bottom: 1em;
 }
 </style>

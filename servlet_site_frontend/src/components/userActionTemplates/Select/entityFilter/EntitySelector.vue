@@ -18,7 +18,7 @@ export default {
   },
   methods:{
     setCurrentEntity(newValue){
-      this.$parent.setCurrentEntity(newValue);
+      this.$store.commit("setCurrentEntity", newValue);
     }
   }
 }
