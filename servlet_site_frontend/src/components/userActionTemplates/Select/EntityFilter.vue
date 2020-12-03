@@ -53,6 +53,9 @@ export default {
             this.$parent.setColumns(resp.columns);
           }
       )
+    },
+    setCurrentEntity(newValue){
+      this.$parent.setCurrentEntity(newValue);
     }
   }
 }

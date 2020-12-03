@@ -1,16 +1,16 @@
 <template>
   <main>
     <div v-if="currentUserAction === USER_ACTION.SELECT">
-      <Select/>
+      <Select v-bind:current-entity="this.currentEntity"/>
     </div>
-    <div v-if="currentUserAction === USER_ACTION.UPDATE">
-<!--      <Update/>-->
+    <div v-else-if="currentUserAction === USER_ACTION.INSERT">
+      <!--      <Insert/>-->
     </div>
-    <div v-if="currentUserAction === USER_ACTION.INSERT">
-<!--      <Insert/>-->
+    <div v-else-if="currentUserAction === USER_ACTION.UPDATE">
+      <!-- <Update/>-->
     </div>
-    <div v-if="currentUserAction === USER_ACTION.DELETE">
-<!--      <Delete/>-->
+    <div v-else-if="currentUserAction === USER_ACTION.DELETE">
+      <!--      <Delete/>-->
     </div>
   </main>
 </template>
@@ -18,14 +18,21 @@
 <script>
 import {USER_ACTION} from "@/components/enums/USER_ACTIONS";
 import Select from "@/components/userActionTemplates/Select/Select";
+import {ENTITY} from "@/components/enums/ENTITIES";
 
 export default {
   name: "Main",
   components: {Select},
   props: ['currentUserAction'],
-  data(){
+  data() {
     return {
-      USER_ACTION
+      USER_ACTION,
+      currentEntity: ENTITY.Customer
+    }
+  },
+  methods:{
+    setCurrentEntity(newValue){
+      this.currentEntity = newValue;
     }
   }
 }

@@ -5,7 +5,7 @@
     </div>
     <div class="div-sep"></div>
     <div id="filter">
-    <EntityFilter v-bind:current-entity="currentEntity"></EntityFilter>
+    <EntityFilter v-bind:current-entity="this.currentEntity"></EntityFilter>
     </div>
   </div>
 </template>
@@ -13,16 +13,15 @@
 <script>
 import EntityFilter from "@/components/userActionTemplates/Select/EntityFilter";
 import Table from "@/components/userActionTemplates/Select/Table";
-import {ENTITY} from "@/components/enums/ENTITIES"
 
 export default {
   name: "Select",
+  props:['currentEntity'],
   components: {Table, EntityFilter},
   data(){
     return {
       columns: [],
-      dataRows: [],
-      currentEntity: ENTITY.Customer
+      dataRows: []
     }
   },
   methods: {
@@ -34,6 +33,9 @@ export default {
     },
     addRow(row) {
       this.dataRows.push(row);
+    },
+    setCurrentEntity(newValue){
+      this.$parent.setCurrentEntity(newValue);
     }
   }
 }

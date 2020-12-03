@@ -1,15 +1,26 @@
 <template>
   <div id="wrapper">
     <div id="header">Entity: </div>
-    <button>Customers</button>
-    <button>Products</button>
-    <button>Deals</button>
+    <button v-on:click="setCurrentEntity(LOCAL_ENTITY.Customer)">Customers</button>
+    <button v-on:click="setCurrentEntity(LOCAL_ENTITY.Product)">Products</button>
+    <button v-on:click="setCurrentEntity(LOCAL_ENTITY.Deal)">Deals</button>
   </div>
 </template>
 
 <script>
+import {ENTITY} from '@/components/enums/ENTITIES';
 export default {
-  name: "EntitySelector"
+  name: "EntitySelector",
+  data(){
+    return {
+      LOCAL_ENTITY: ENTITY,
+    }
+  },
+  methods:{
+    setCurrentEntity(newValue){
+      this.$parent.setCurrentEntity(newValue);
+    }
+  }
 }
 </script>
 
