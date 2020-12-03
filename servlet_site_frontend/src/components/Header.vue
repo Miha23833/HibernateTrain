@@ -5,33 +5,30 @@
            alt="normal"/>
     </div>
     <div id="main-buttons">
-      <button @click="currentUserActionChanged(USER_ACTION.SELECT)"
-              :style="this.currentUserAction===USER_ACTION.SELECT? this.buttonPressedStyle : null ">Select
+      <button @click="setCurrentUserAction(USER_ACTION.SELECT)"
+              :style="currentUserAction===USER_ACTION.SELECT? this.buttonPressedStyle : null ">Select
       </button>
-      <button @click="currentUserActionChanged(USER_ACTION.INSERT)"
-              :style="this.currentUserAction===USER_ACTION.INSERT? this.buttonPressedStyle : null ">Insert
+      <button @click="setCurrentUserAction(USER_ACTION.INSERT)"
+              :style="currentUserAction===USER_ACTION.INSERT? this.buttonPressedStyle : null ">Insert
       </button>
-      <button @click="currentUserActionChanged(USER_ACTION.UPDATE)"
-              :style="this.currentUserAction===USER_ACTION.UPDATE? this.buttonPressedStyle : null ">Update
+      <button @click="setCurrentUserAction(USER_ACTION.UPDATE)"
+              :style="currentUserAction===USER_ACTION.UPDATE? this.buttonPressedStyle : null ">Update
       </button>
-      <button @click="currentUserActionChanged(USER_ACTION.DELETE)"
-              :style="this.currentUserAction===USER_ACTION.DELETE? this.buttonPressedStyle : null ">Delete
+      <button @click="setCurrentUserAction(USER_ACTION.DELETE)"
+              :style="currentUserAction===USER_ACTION.DELETE? this.buttonPressedStyle : null ">Delete
       </button>
     </div>
     <div id="header-login">
-      <button v-on:click="incrementCounter">Log in</button>
-      {{getMsg}}
+      <button>Log in</button>
     </div>
   </header>
 </template>
 
 <script>
 import {USER_ACTION} from '@/enums/USER_ACTIONS'
-import {store} from '@/main'
 
 export default {
   name: 'Header',
-  props: ['currentUserAction'],
   data() {
     return {
       USER_ACTION,
@@ -43,17 +40,14 @@ export default {
       }
     };
   },
-  computed: {
-    getMsg(){
-      return store.state.count;
+  computed:{
+    currentUserAction(){
+      return this.$store.getters.getCurrentUserAction;
     }
   },
   methods: {
-    currentUserActionChanged(newValue) {
-      this.$parent.setUserAction(newValue)
-    },
-    incrementCounter(){
-      store.state.count = 500;
+    setCurrentUserAction(newValue){
+      this.$store.commit('setCurrentUserAction', newValue);
     }
   }
 }
@@ -103,7 +97,6 @@ header {
   background: #53ea93;
 }
 
-/* TODO: сделать так, чтобы по нажатию на кнопку стиль ниже сохранялся */
 #main-buttons button:focus {
   background: #53ea93;
   outline: none;
@@ -112,7 +105,9 @@ header {
 }
 
 #header-login {
-  width: 10%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 </style>

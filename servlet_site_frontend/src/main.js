@@ -13,17 +13,24 @@ export const store = new Vuex.Store({
     currentUserAction: USER_ACTION.SELECT,
     errorMessage: '',
   },
+  getters: {
+    getCurrentEntity(state){
+      return state.currentEntity;
+    },
+    getCurrentUserAction(state){
+      return state.currentUserAction;
+    },
+    getErrorMessage(state){
+      return state.errorMessage;
+    },
+  },
   mutations: {
     setCurrentEntity(state, payload){
-      if (payload in ENTITY) {
         state.currentEntity = payload;
-      }
     },
 
     setCurrentUserAction(state, payload){
-      if (payload in USER_ACTION){
         state.currentUserAction = payload;
-      }
     },
 
     setErrorMessage(state, payload){
@@ -37,4 +44,5 @@ export const store = new Vuex.Store({
 
 new Vue({
   render: h => h(App),
+  store,
 }).$mount('#app')

@@ -3,20 +3,24 @@
     <EntitySelector/>
     <div v-if="currentEntity === ENTITY.Customer">
       <Customers/>
+      <div class="get-data-button">
+        <GetDataButton v-bind:filter="this.entityFilter" v-bind:button-text="'Get data'" v-bind:mapping="this.USER_ACTION.SELECT.mapping + currentEntity.mapping"></GetDataButton>
+      </div>
     </div>
     <div v-else-if="currentEntity === ENTITY.Product">
       <Products/>
+      <div class="get-data-button">
+        <GetDataButton v-bind:filter="this.entityFilter" v-bind:button-text="'Get data'" v-bind:mapping="this.USER_ACTION.SELECT.mapping + currentEntity.mapping"></GetDataButton>
+      </div>
     </div>
     <div v-else-if="currentEntity === ENTITY.Deal">
       <Deals/>
+      <div class="get-data-button">
+        <GetDataButton v-bind:filter="this.entityFilter" v-bind:button-text="'Get data'" v-bind:mapping="this.USER_ACTION.SELECT.mapping + currentEntity.mapping"></GetDataButton>
+      </div>
     </div>
     <div v-else>
       pls pick entity!
-    </div>
-    <div id="get-data-button" v-if="currentEntity === ENTITY.Customer ||
-              currentEntity === ENTITY.Product ||
-              currentEntity === ENTITY.Deal" @click="getData()">
-      <button @click="getData()">get data!</button>
     </div>
   </div>
 </template>
@@ -27,35 +31,29 @@ import Products from "@/components/userActionTemplates/Select/entityFilter/Produ
 import Deals from "@/components/userActionTemplates/Select/entityFilter/Deals";
 import {ENTITY} from "@/enums/ENTITIES";
 import {USER_ACTION} from "@/enums/USER_ACTIONS";
-import axios from 'axios';
 import EntitySelector from "@/components/userActionTemplates/Select/entityFilter/EntitySelector";
+import GetDataButton from "@/components/userActionTemplates/buttons/GetDataButton";
 
 export default {
-  props: ['currentEntity'],
   components: {
+    GetDataButton,
     EntitySelector,
     Customers,
     Products,
     Deals
   },
+  computed: {
+    currentEntity(){
+      this.$emit('entity-changed');
+      return this.$store.getters.getCurrentEntity;
+    }
+  },
   data() {
     return {
       ENTITY,
+      USER_ACTION,
       entityFilter: {},
       queryParams: {}
-    }
-  },
-  methods: {
-    getData() {
-      axios.get(USER_ACTION.SELECT.mapping + this.currentEntity.mapping, this.queryParams).then(
-          resp => {
-            this.$parent.setTableData(resp.response);
-            this.$parent.setColumns(resp.columns);
-          }
-      )
-    },
-    setCurrentEntity(newValue){
-      this.$parent.setCurrentEntity(newValue);
     }
   }
 }
@@ -63,16 +61,16 @@ export default {
 
 <style scoped>
 
-#get-data-button{
+.get-data-button{
   text-align: center;
 }
-#get-data-button button{
+.get-data-button button{
   border-radius: 10px;
 }
-#get-data-button button:hover{
+.get-data-button button:hover{
   background-color: #d0ea99;
 }
-#get-data-button button:active{
+.get-data-button button:active{
   transition: .1s;
   background-color: #b4cd85;
 }

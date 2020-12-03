@@ -1,10 +1,10 @@
 <template>
   <main>
     <div v-if="currentUserAction === USER_ACTION.SELECT">
-      <Select v-bind:current-entity="this.currentEntity"/>
+      <Select/>
     </div>
     <div v-else-if="currentUserAction === USER_ACTION.INSERT">
-          <Insert v-bind:current-entity="this.currentEntity"/>
+          <Insert/>
     </div>
     <div v-else-if="currentUserAction === USER_ACTION.UPDATE">
       <!-- <Update/>-->
@@ -19,24 +19,23 @@
 import {USER_ACTION} from "@/enums/USER_ACTIONS";
 import Select from "@/components/userActionTemplates/Select/Select";
 import Insert from "@/components/userActionTemplates/Insert/Insert";
-import {ENTITY} from "@/enums/ENTITIES";
 
 export default {
   name: "Main",
   components: {Select, Insert},
-  props: ['currentUserAction'],
   data() {
     return {
-      USER_ACTION,
-      currentEntity: ENTITY.Customer
+      USER_ACTION
+    }
+  },
+  computed:{
+    currentUserAction(){
+      return this.$store.getters.getCurrentUserAction;
     }
   },
   methods:{
     setCurrentEntity(newValue){
-      this.currentEntity = newValue;
-    },
-    showErrorMessage(message) {
-      this.$parent.showErrorMessage(message)
+      this.$store.commit('setCurrentEntity', newValue)
     }
   }
 }

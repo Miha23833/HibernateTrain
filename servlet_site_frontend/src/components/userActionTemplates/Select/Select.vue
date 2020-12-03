@@ -1,11 +1,11 @@
 <template>
   <div id="main">
     <div id="table">
-    <Table v-bind:columns="columns" v-bind:data-rows="dataRows"></Table>
+      <Table v-bind:columns="columns" v-bind:data-rows="dataRows"></Table>
     </div>
     <div class="div-sep"></div>
     <div id="filter">
-    <EntityFilter v-bind:current-entity="this.currentEntity"></EntityFilter>
+      <EntityFilter></EntityFilter>
     </div>
   </div>
 </template>
@@ -16,9 +16,8 @@ import Table from "@/components/userActionTemplates/Select/Table";
 
 export default {
   name: "Select",
-  props:['currentEntity'],
   components: {Table, EntityFilter},
-  data(){
+  data() {
     return {
       columns: [],
       dataRows: []
@@ -33,33 +32,30 @@ export default {
     },
     addRow(row) {
       this.dataRows.push(row);
-    },
-    setCurrentEntity(newValue){
-      this.columns = [];
-      this.dataRows = [];
-      this.$parent.setCurrentEntity(newValue);
     }
   }
 }
 </script>
 
 <style scoped>
-#main{
+#main {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   padding-left: 20%;
   padding-right: 20%;
 }
-#table{
+
+#table {
   width: 75%;
   overflow: auto;
 }
-#filter{
+
+#filter {
   width: 20%;
 }
 
-.div-sep{
+.div-sep {
   width: 1px;
   background-image: radial-gradient(#bfc8e5, white);
   height: inherit;
