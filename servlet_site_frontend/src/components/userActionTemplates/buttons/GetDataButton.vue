@@ -17,7 +17,7 @@ export default {
   methods: {
     askForData(){
       axios.get(this.mapping, this.localFilter).then(response => {
-        this.$emit('data-received', response.data)
+        this.$emit('data-received', response)
       })
     }
   }
