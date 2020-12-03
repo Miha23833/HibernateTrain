@@ -35,6 +35,8 @@ export default {
       this.dataRows.push(row);
     },
     setCurrentEntity(newValue){
+      this.columns = [];
+      this.dataRows = [];
       this.$parent.setCurrentEntity(newValue);
     }
   }
