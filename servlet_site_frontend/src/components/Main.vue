@@ -4,7 +4,7 @@
       <Select v-bind:current-entity="this.currentEntity"/>
     </div>
     <div v-else-if="currentUserAction === USER_ACTION.INSERT">
-      <!--      <Insert/>-->
+          <Insert v-bind:current-entity="this.currentEntity"/>
     </div>
     <div v-else-if="currentUserAction === USER_ACTION.UPDATE">
       <!-- <Update/>-->
@@ -18,11 +18,12 @@
 <script>
 import {USER_ACTION} from "@/components/enums/USER_ACTIONS";
 import Select from "@/components/userActionTemplates/Select/Select";
+import Insert from "@/components/userActionTemplates/Insert/Insert";
 import {ENTITY} from "@/components/enums/ENTITIES";
 
 export default {
   name: "Main",
-  components: {Select},
+  components: {Select, Insert},
   props: ['currentUserAction'],
   data() {
     return {
@@ -33,11 +34,54 @@ export default {
   methods:{
     setCurrentEntity(newValue){
       this.currentEntity = newValue;
+    },
+    showErrorMessage(message) {
+      this.$parent.showErrorMessage(message)
     }
   }
 }
 </script>
 
 <style scoped>
+>>> input {
+  font-size: 1em;
+  padding: .5em;
+  margin-bottom: .4em;
+  font-family: Helvetica, sans-serif;
+  transition: .3s;
+  border: none;
+  width: 80%;
+  box-shadow: 0 1px #9f9f9f;
+}
+
+
+>>> input:focus {
+  outline: none;
+  box-shadow: 0 2px #53ea93;
+}
+
+>>> button {
+  background-color: #f1f1f1;
+  border: none;
+  width: 80%;
+  height: 2em;
+  font-family: Helvetica, sans-serif;
+  font-size: 1em;
+  transition: .5s;
+  margin-top: .5em;
+}
+
+>>> button:hover {
+  background-color: #dff6df;
+}
+
+>>> button:focus {
+  outline: none;
+}
+
+>>> button:active {
+  background-color: #d0e5d0;
+  transition: 0s ease-in-out;
+}
 
 </style>

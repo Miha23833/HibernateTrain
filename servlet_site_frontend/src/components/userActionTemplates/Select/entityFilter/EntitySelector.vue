@@ -29,7 +29,6 @@ export default {
   margin-top: 1em;
   margin-bottom: 2em;
   width: 100%;
-  height: 100%;
   text-align: center;
   border-color: #c6c6c6;
   border-radius: .5em;

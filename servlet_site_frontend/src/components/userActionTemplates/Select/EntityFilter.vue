@@ -62,46 +62,6 @@ export default {
 </script>
 
 <style scoped>
->>> input {
-  font-size: 1em;
-  padding: .5em;
-  margin-bottom: .4em;
-  font-family: Helvetica, sans-serif;
-  transition: .3s;
-  border: none;
-  width: 80%;
-  box-shadow: 0 1px #9f9f9f;
-}
-
-
->>> input:focus {
-  outline: none;
-  box-shadow: 0 2px #53ea93;
-}
-
->>> button {
-  background-color: #f1f1f1;
-  border: none;
-  width: 80%;
-  height: 2em;
-  font-family: Helvetica, sans-serif;
-  font-size: 1em;
-  transition: .5s;
-  margin-top: .5em;
-}
-
->>> button:hover {
-  background-color: #dff6df;
-}
-
->>> button:focus {
-  outline: none;
-}
-
->>> button:active {
-  background-color: #d0e5d0;
-  transition: 0s ease-in-out;
-}
 
 #get-data-button{
   text-align: center;
