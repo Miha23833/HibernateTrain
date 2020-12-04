@@ -42,7 +42,7 @@ export default {
   -webkit-animation: slide 0.5s forwards;
   -webkit-animation-delay: 2s;
   animation: slide 0.5s forwards;
-  background-color: #8eb570;
+  background-color: #99de7c;
   margin-top: .5em;
   -moz-border-radius-bottomleft: 1em;
   -webkit-border-bottom-left-radius: 1em;
@@ -106,6 +106,9 @@ export default {
   padding-right: 1em;
   word-wrap: break-word;
   overflow: auto;
+  font-family: Comic Sans MS, Comic Sans, cursive;
+  text-shadow: 0 0 1px #376632;
+  color: #0e6f9f;
 }
 
 </style>
