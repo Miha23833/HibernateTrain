@@ -11,12 +11,13 @@
 import Header from "@/components/Header";
 import Main from "@/components/Main";
 import ErrorMessage from "@/components/ErrorMessage";
+
 export default {
   name: 'App',
   components: {ErrorMessage, Main, Header},
-  methods:{
-    showErrorMessage(message){
-      this.$refs.errorMessage.showErrorMessage(message);
+  methods: {
+    showErrorMessage() {
+
     }
   }
 }

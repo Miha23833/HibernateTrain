@@ -8,41 +8,38 @@ Vue.config.productionTip = false
 Vue.use(Vuex)
 
 export const store = new Vuex.Store({
-  state: {
-    currentEntity: ENTITY.Customer,
-    currentUserAction: USER_ACTION.SELECT,
-    errorMessage: '',
-  },
-  getters: {
-    getCurrentEntity(state){
-      return state.currentEntity;
+    state: {
+        currentEntity: ENTITY.Customer,
+        currentUserAction: USER_ACTION.SELECT,
+        errorMessage: '',
     },
-    getCurrentUserAction(state){
-      return state.currentUserAction;
+    getters: {
+        getCurrentEntity(state) {
+            return state.currentEntity;
+        },
+        getCurrentUserAction(state) {
+            return state.currentUserAction;
+        },
+        getErrorMessage(state) {
+            return state.errorMessage;
+        },
     },
-    getErrorMessage(state){
-      return state.errorMessage;
-    },
-  },
-  mutations: {
-    setCurrentEntity(state, payload){
-        state.currentEntity = payload;
-    },
+    mutations: {
+        setCurrentEntity(state, payload) {
+            state.currentEntity = payload;
+        },
 
-    setCurrentUserAction(state, payload){
-        state.currentUserAction = payload;
-    },
+        setCurrentUserAction(state, payload) {
+            state.currentUserAction = payload;
+        },
 
-    setErrorMessage(state, payload){
-      if (payload instanceof String){
-        state.errorMessage = payload;
-      }
+        setErrorMessage(state, payload) {
+            state.errorMessage = payload;
+        }
     }
-  }
-
-}  )
+})
 
 new Vue({
-  render: h => h(App),
-  store,
+    render: h => h(App),
+    store
 }).$mount('#app')
