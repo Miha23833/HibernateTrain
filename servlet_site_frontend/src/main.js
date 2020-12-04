@@ -11,7 +11,7 @@ export const store = new Vuex.Store({
     state: {
         currentEntity: ENTITY.Customer,
         currentUserAction: USER_ACTION.SELECT,
-        errorMessage: '',
+        errorMessages: {},
     },
     getters: {
         getCurrentEntity(state) {
@@ -20,8 +20,8 @@ export const store = new Vuex.Store({
         getCurrentUserAction(state) {
             return state.currentUserAction;
         },
-        getErrorMessage(state) {
-            return state.errorMessage;
+        getErrorMessages(state) {
+            return state.errorMessages;
         },
     },
     mutations: {
@@ -33,8 +33,15 @@ export const store = new Vuex.Store({
             state.currentUserAction = payload;
         },
 
-        setErrorMessage(state, payload) {
-            state.errorMessage = payload;
+        addErrorMessage(state, payload) {
+            let key = new Date().getTime()
+            payload['key'] = key;
+            Vue.set(state.errorMessages, key, payload);
+        },
+
+        removeErrorMessageByKey(state, payload) {
+            // delete state.errorMessages[payload];
+            Vue.delete(state.errorMessages, payload)
         }
     }
 })

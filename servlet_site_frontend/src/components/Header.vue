@@ -19,7 +19,7 @@
       </button>
     </div>
     <div id="header-login">
-      <button @click="setErrorMessage(errorMessage + 'a')">Log in</button>
+      <button @click="addErrorMessage({errorText: 'abd'})">Log in</button>
     </div>
   </header>
 </template>
@@ -43,17 +43,14 @@ export default {
   computed:{
     currentUserAction(){
       return this.$store.getters.getCurrentUserAction;
-    },
-    errorMessage(){
-      return this.$store.getters.getErrorMessage;
     }
   },
   methods: {
     setCurrentUserAction(newValue){
       this.$store.commit('setCurrentUserAction', newValue);
     },
-    setErrorMessage(newValue){
-      this.$store.commit('setErrorMessage', newValue);
+    addErrorMessage(newValue){
+      this.$store.commit('addErrorMessage', newValue);
     }
   }
 }

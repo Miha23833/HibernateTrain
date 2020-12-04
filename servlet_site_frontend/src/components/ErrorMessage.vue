@@ -1,10 +1,10 @@
 <template>
-  <div id="main" v-if="showing" ref="errorMessage">
+  <div id="wrapper">
     <div id="error-message-header">
-      <button @click="this.showing=false"></button>
+      <button @click="destroy"></button>
     </div>
     <div id="error-message-body">
-      {{ errorMessage }}
+      {{ data.errorText }}
     </div>
     <div id="time-line"></div>
   </div>
@@ -13,44 +13,29 @@
 <script>
 export default {
   name: "ErrorMessage",
-  data() {
-    return {
-      showing: false
-    }
+  props: ['data', 'timeout'],
+  mounted() {
+    setTimeout(this.destroy, 2000)
   },
-  methods: {
-    showErrorMessage(message) {
-      this.showing = false;
-      this.showing = true;
-      this.errorMessage = message;
-      setTimeout(() => this.showing = false, 2000)
-    }
-  },
-  computed: {
-    errorMessage() {
-      return this.$store.getters.getErrorMessage;
-    }
-  },
-  watch: {
-    errorMessage() {
-      this.showErrorMessage()
+  methods:{
+    destroy(){
+      this.$store.commit('removeErrorMessageByKey', this.data.key);
     }
   }
 }
 </script>
 
 <style scoped>
-#main {
+#wrapper {
   background-color: inherit;
-  position: fixed;
-  bottom: 1em;
   width: 25em;
-  right: -25em;
   height: 7em;
+  right: 50em;
   -webkit-animation: slide 0.5s forwards;
   -webkit-animation-delay: 2s;
   animation: slide 0.5s forwards;
   border: #53ea93 solid 1px;
+  margin-top: .5em;
 }
 
 @-webkit-keyframes slide {
