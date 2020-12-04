@@ -13,9 +13,15 @@
 <script>
 export default {
   name: "ErrorMessage",
-  props: ['data', 'timeout'],
+  props: {
+    data: Object,
+    timeout: {
+      type: Number,
+      default: 2000
+    }
+  },
   mounted() {
-    setTimeout(this.destroy, 2000)
+    setTimeout(this.destroy, this.timeout)
   },
   methods:{
     destroy(){

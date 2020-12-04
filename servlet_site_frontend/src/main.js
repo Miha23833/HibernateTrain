@@ -40,7 +40,6 @@ export const store = new Vuex.Store({
         },
 
         removeErrorMessageByKey(state, payload) {
-            // delete state.errorMessages[payload];
             Vue.delete(state.errorMessages, payload)
         }
     }
