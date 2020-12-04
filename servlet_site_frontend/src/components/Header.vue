@@ -19,7 +19,7 @@
       </button>
     </div>
     <div id="header-login">
-      <button @click="addErrorMessage({errorText: 'abd'})">Log in</button>
+      <button @click="addErrorMessage({errorText: ++clickedCount})">Log in</button>
     </div>
   </header>
 </template>
@@ -37,7 +37,8 @@ export default {
         outline: 'none',
         fontSize: '1.2em',
         boxShadow: '12px 0 15px 1px #53ea93, -12px 0 15px 1px #53ea93'
-      }
+      },
+      clickedCount: 0
     };
   },
   computed:{

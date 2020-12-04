@@ -18,12 +18,14 @@ export default {
     data: Object,
     timeout: {
       type: Number,
-      default: 2000
+      default: 0
     }
   },
   mounted() {
     this.$emit('message-added');
-    setTimeout(this.destroy, this.timeout)
+    if (this.timeout > 0) {
+      setTimeout(this.destroy, this.timeout)
+    }
   },
   methods:{
     destroy(){
@@ -35,15 +37,15 @@ export default {
 
 <style scoped>
 #wrapper {
-  background-color: inherit;
   width: 25em;
   height: 7em;
-  right: 50em;
   -webkit-animation: slide 0.5s forwards;
   -webkit-animation-delay: 2s;
   animation: slide 0.5s forwards;
-  border: #53ea93 solid 1px;
+  background-color: #8eb570;
   margin-top: .5em;
+  -moz-border-radius-bottomleft: 1em;
+  -webkit-border-bottom-left-radius: 1em;
 }
 
 @-webkit-keyframes slide {
