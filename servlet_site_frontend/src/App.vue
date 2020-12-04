@@ -6,7 +6,7 @@
     <div id="error-message-wrapper-wrapper" v-if="Object.keys(errorMessages).length > 0">
       <div id="error-message-wrapper">
         <div v-for="value in errorMessages" :key="value.key">
-          <ErrorMessage :data="value"></ErrorMessage>
+          <ErrorMessage :data="value" :timeout="5000" @message-added="setScrollbarDown()"></ErrorMessage>
         </div>
       </div>
     </div>
@@ -25,6 +25,12 @@ export default {
   computed: {
     errorMessages() {
       return this.$store.getters.getErrorMessages;
+    }
+  },
+  methods: {
+    setScrollbarDown(){
+      let objDiv = document.getElementById("error-message-wrapper");
+      objDiv.scrollTop = objDiv.scrollHeight;
     }
   }
 }

@@ -13,6 +13,7 @@
 <script>
 export default {
   name: "ErrorMessage",
+  emits: ['messageAdded'],
   props: {
     data: Object,
     timeout: {
@@ -21,6 +22,7 @@ export default {
     }
   },
   mounted() {
+    this.$emit('message-added');
     setTimeout(this.destroy, this.timeout)
   },
   methods:{
