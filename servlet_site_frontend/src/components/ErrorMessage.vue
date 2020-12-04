@@ -1,12 +1,11 @@
 <template>
   <div id="wrapper">
     <div id="error-message-header">
-      <button @click="destroy"></button>
+      <button id="close-button" @click="destroy"></button>
     </div>
     <div id="error-message-body">
       {{ data.errorText }}
     </div>
-    <div id="time-line"></div>
   </div>
 </template>
 
@@ -27,8 +26,8 @@ export default {
       setTimeout(this.destroy, this.timeout)
     }
   },
-  methods:{
-    destroy(){
+  methods: {
+    destroy() {
       this.$store.commit('removeErrorMessageByKey', this.data.key);
     }
   }
@@ -37,7 +36,8 @@ export default {
 
 <style scoped>
 #wrapper {
-  width: 25em;
+  margin-left: 100%;
+  width: 100%;
   height: 7em;
   -webkit-animation: slide 0.5s forwards;
   -webkit-animation-delay: 2s;
@@ -49,31 +49,63 @@ export default {
 }
 
 @-webkit-keyframes slide {
-  100% { right: 1em; }
+  100% {
+    margin-left: 0;
+  }
 }
 
 @keyframes slide {
-  100% { right: 1em; }
+  100% {
+    margin-left: 0;
+  }
 }
 
-#error-message-header{
+#error-message-header {
   width: 100%;
-  height: 1.5em;
+  height: 20%;
   background-color: #eaeaea;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-#error-message-header button{
+#error-message-header button {
   margin-left: auto;
+  margin-right: .45em;
   width: 1.5em;
   height: 1.5em;
 }
 
-#time-line {
-  width: 100%;
-  height: .5em;
+#close-button {
+  opacity: 0.3;
+  transition: .5s;
+  border: none;
+  background-image: url("https://image.flaticon.com/icons/png/512/61/61155.png");
+  background-size: 100%;
+}
+
+#close-button:hover {
+  opacity: 1;
+  border: none;
+}
+
+#close-button:active{
+  outline: none;
+  transition: .2s;
+  background-color: #d2d2d2;
+}
+
+#close-button:focus{
+  outline: none;
+}
+
+#error-message-body{
+  height: 60%;
+  padding-top: .5em;
+  padding-left: 1em;
+  padding-right: 1em;
+  word-wrap: break-word;
+  overflow: auto;
 }
 
 </style>
