@@ -16,10 +16,7 @@
         <module name="HibernateCommon" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel target="14">
-      <module name="HibernateCommon" target="8" />
-      <module name="Main" target="8" />
-    </bytecodeTargetLevel>
+    <bytecodeTargetLevel target="14" />
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">

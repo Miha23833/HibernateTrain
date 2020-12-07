@@ -16,7 +16,7 @@ import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-@WebServlet(urlPatterns = "get-data/Customers")
+@WebServlet(urlPatterns = "select-data/Customers")
 public class Customer extends HttpServlet implements Mapping {
     @Override
     public void init(ServletConfig config) throws ServletException {
@@ -38,16 +38,18 @@ public class Customer extends HttpServlet implements Mapping {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         JSONObject reqJSON = requestToJSON(req);
-        JSONObject queryParams = reqJSON.getJSONObject("queryParams");
+        if (reqJSON.keySet().contains("queryParams")) {
+            JSONObject queryParams = reqJSON.getJSONObject("queryParams");
 
-        SQLQuery query = new SQLQuery(QueryManager.customersSQL, queryParams);
+            SQLQuery query = new SQLQuery(QueryManager.customersSQL, queryParams);
 
-        try {
-            ResultSet respData = DBConnection.executeWithResult(query.getParametrizedQuery());
-            resp.setCharacterEncoding("utf-8");
-            resp.getWriter().write(JSONConvertor.toJSON(respData).toString());
-        } catch (ClassNotFoundException | SQLException e) {
-            e.printStackTrace();
+            try {
+                ResultSet respData = DBConnection.executeWithResult(query.getParametrizedQuery());
+                resp.setCharacterEncoding("utf-8");
+                resp.getWriter().write(JSONConvertor.toJSON(respData).toString());
+            } catch (ClassNotFoundException | SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 

@@ -16,7 +16,7 @@ import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-@WebServlet(urlPatterns = "get-data/Products")
+@WebServlet(urlPatterns = "select-data/Products")
 public class Product extends HttpServlet implements Mapping {
     @Override
     public void init(ServletConfig config) throws ServletException {

@@ -11,15 +11,31 @@ export default {
     filter: Object
   },
   data(){
-    return {localFilter: this.filter};
+    let lastMappingIndex = this.mapping.length;
+    for (let i = this.mapping.length-1; i > 0; i--) {
+      if (['/', '\\'].some( x => x === this.mapping[i])){
+        lastMappingIndex = i;
+      }
+      else{
+        break;
+      }
+    }
+    return {
+      localFilter: this.filter,
+      localMapping: this.mapping.slice(0, lastMappingIndex)
+    };
   },
   name: "GetDataButton",
   emits: ['data-received'],
   methods: {
     askForData(){
-      axios.get(this.mapping, this.localFilter).then(response => {
+      let postData = {
+        queryParams: this.localFilter
+      }
+
+      axios.post(this.localMapping, postData).then(response => {
         this.$emit('data-received', response)
-      })
+      });
     }
   }
 }

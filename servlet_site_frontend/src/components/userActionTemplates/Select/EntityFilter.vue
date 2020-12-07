@@ -25,7 +25,7 @@
         <div class="get-data-button">
           <GetDataButton @data-received="this.$emit('data-received', $event)" v-bind:filter="this.entityFilter"
                          v-bind:button-text="'Get data'"
-                         v-bind:mapping="this.USER_ACTION.SELECT.mapping + currentEntity.mapping"></GetDataButton>
+                         v-bind:mapping="this.USER_ACTION.SELECT.mapping + this.currentEntity.mapping"></GetDataButton>
         </div>
       </div>
     </div>
