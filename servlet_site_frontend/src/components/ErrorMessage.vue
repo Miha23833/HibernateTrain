@@ -4,7 +4,7 @@
       <button id="close-button" @click="destroy"></button>
     </div>
     <div id="error-message-body">
-      {{ data.errorText }}
+      {{ data.message }}
     </div>
   </div>
 </template>

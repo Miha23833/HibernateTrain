@@ -1,22 +1,25 @@
 <template>
   <label>
-    <input type="text" placeholder="User name" v-model="insertingValue.Name">
-    <input type="text" placeholder="User surname" v-model="insertingValue.Surname">
-    <input type="number" max="120" min="0" placeholder="age" v-model="insertingValue.Age">
+    <input type="datetime-local" placeholder="Deal date">
+    <input type="number" placeholder="Customer ID">
+    <input type="number" placeholder="Product ID">
+    <input type="number" placeholder="Discount" min="0" max="100">
+    <input type="number" placeholder="Price">
     <button v-on:click="insertData()">Insert data!</button>
   </label>
 </template>
 
 <script>
-
 export default {
-  name: "Customer",
+  name: "Deals",
   data(){
     return{
       insertingValue: {
-        Name: null,
-        Surname: null,
-        Age: null
+        DealDate: null,
+        CustomerID: null,
+        Discount: null,
+        ProductID: null,
+        Price: null
       }
     }
   },

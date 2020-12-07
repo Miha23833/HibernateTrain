@@ -19,7 +19,7 @@
       </button>
     </div>
     <div id="header-login">
-      <button @click="addErrorMessage({errorText: ++clickedCount})">Log in</button>
+      <button @click="addErrorMessage({message: ++clickedCount})">Log in</button>
     </div>
   </header>
 </template>

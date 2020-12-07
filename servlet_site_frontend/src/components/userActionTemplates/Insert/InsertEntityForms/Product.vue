@@ -1,22 +1,21 @@
 <template>
   <label>
-    <input type="text" placeholder="User name" v-model="insertingValue.Name">
-    <input type="text" placeholder="User surname" v-model="insertingValue.Surname">
-    <input type="number" max="120" min="0" placeholder="age" v-model="insertingValue.Age">
+    <input type="text" placeholder="Name" v-model="insertingValue.Name">
+    <input type="text" placeholder="Description" v-model="insertingValue.Description">
+    <input type="number" max="120" min="0" placeholder="Price" v-model="insertingValue.Price">
     <button v-on:click="insertData()">Insert data!</button>
   </label>
 </template>
 
 <script>
-
 export default {
-  name: "Customer",
+  name: "Products",
   data(){
     return{
       insertingValue: {
         Name: null,
-        Surname: null,
-        Age: null
+        Description: null,
+        Price: null
       }
     }
   },

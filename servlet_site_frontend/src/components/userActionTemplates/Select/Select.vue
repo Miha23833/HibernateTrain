@@ -42,6 +42,7 @@ export default {
   justify-content: space-between;
   padding-left: 20%;
   padding-right: 20%;
+  margin-top: 2em;
 }
 
 #table {

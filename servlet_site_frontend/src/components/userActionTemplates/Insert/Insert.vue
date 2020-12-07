@@ -4,8 +4,12 @@
       <div v-if="currentEntity===LOCAL_ENTITY.Customer">
         <Customer></Customer>
       </div>
-      <div v-else-if="currentEntity===LOCAL_ENTITY.Product"></div>
-      <div v-else-if="currentEntity===LOCAL_ENTITY.Deal"></div>
+      <div v-else-if="currentEntity===LOCAL_ENTITY.Product">
+        <Products></Products>
+      </div>
+      <div v-else-if="currentEntity===LOCAL_ENTITY.Deal">
+        <Deals></Deals>
+      </div>
     </div>
     <div id="entity-selector">
       <EntitySelector></EntitySelector>
@@ -17,10 +21,12 @@
 import {ENTITY} from "@/enums/ENTITIES";
 import EntitySelector from "@/components/userActionTemplates/Select/entityFilter/EntitySelector";
 import Customer from "@/components/userActionTemplates/Insert/InsertEntityForms/Customer";
+import Products from "@/components/userActionTemplates/Insert/InsertEntityForms/Product";
+import Deals from "@/components/userActionTemplates/Insert/InsertEntityForms/Deal";
 
 export default {
   name: "Insert",
-  components: {Customer, EntitySelector},
+  components: {Deals, Products, Customer, EntitySelector},
   data() {
     return {
       LOCAL_ENTITY: ENTITY
@@ -44,8 +50,8 @@ export default {
 }
 
 #insert-template{
+  margin-top: 2em;
   width: 80%;
-  background-color: red;
 }
 
 
