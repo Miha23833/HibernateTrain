@@ -41,16 +41,16 @@ export default {
       clickedCount: 0
     };
   },
-  computed:{
-    currentUserAction(){
+  computed: {
+    currentUserAction() {
       return this.$store.getters.getCurrentUserAction;
     }
   },
   methods: {
-    setCurrentUserAction(newValue){
+    setCurrentUserAction(newValue) {
       this.$store.commit('setCurrentUserAction', newValue);
     },
-    addErrorMessage(newValue){
+    addErrorMessage(newValue) {
       this.$store.commit('addErrorMessage', newValue);
     }
   }

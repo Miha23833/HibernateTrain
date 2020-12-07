@@ -24,7 +24,7 @@ export default {
     }
   },
   methods: {
-    setTableData(data){
+    setTableData(data) {
       this.columns = data.columns;
       this.dataRows = data.response;
     },

@@ -36,7 +36,7 @@ export default {
 </script>
 
 <style scoped>
-label input{
+label input {
   width: 80%;
 }
 </style>

@@ -12,8 +12,8 @@
 <script>
 export default {
   name: "Deals",
-  data(){
-    return{
+  data() {
+    return {
       insertingValue: {
         DealDate: null,
         CustomerID: null,
@@ -23,12 +23,12 @@ export default {
       }
     }
   },
-  methods:{
-    insertData(){
-      let condition = [this.insertingValue.DealDate,this.insertingValue.CustomerID,this.insertingValue.Discount, this.insertingValue.ProductID,this.insertingValue.Price].some(
+  methods: {
+    insertData() {
+      let condition = [this.insertingValue.DealDate, this.insertingValue.CustomerID, this.insertingValue.Discount, this.insertingValue.ProductID, this.insertingValue.Price].some(
           x => [null, undefined, NaN, ''].includes(x))
-      if(condition){
-        this.$store.commit("addErrorMessage", {message:'Please fill every field!'});
+      if (condition) {
+        this.$store.commit("addErrorMessage", {message: 'Please fill every field!'});
       }
     }
   }

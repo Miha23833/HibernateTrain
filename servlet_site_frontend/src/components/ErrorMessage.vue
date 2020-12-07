@@ -89,17 +89,17 @@ export default {
   border: none;
 }
 
-#close-button:active{
+#close-button:active {
   outline: none;
   transition: .2s;
   background-color: #d2d2d2;
 }
 
-#close-button:focus{
+#close-button:focus {
   outline: none;
 }
 
-#error-message-body{
+#error-message-body {
   height: 60%;
   padding-top: .5em;
   padding-left: 1em;

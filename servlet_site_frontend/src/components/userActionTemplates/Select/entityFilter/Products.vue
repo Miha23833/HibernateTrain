@@ -12,7 +12,7 @@ import {USER_ACTION} from "@/enums/USER_ACTIONS";
 import {ENTITY} from "@/enums/ENTITIES";
 
 export default {
-  data(){
+  data() {
     return {
       queryParams: {
         product_name: null,
@@ -28,7 +28,7 @@ export default {
 </script>
 
 <style scoped>
-label input{
+label input {
   width: 80%;
 }
 </style>

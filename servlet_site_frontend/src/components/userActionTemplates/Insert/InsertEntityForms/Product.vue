@@ -10,8 +10,8 @@
 <script>
 export default {
   name: "Products",
-  data(){
-    return{
+  data() {
+    return {
       insertingValue: {
         Name: null,
         Description: null,
@@ -19,12 +19,12 @@ export default {
       }
     }
   },
-  methods:{
-    insertData(){
-      let condition = [this.insertingValue.Name,this.insertingValue.Description,this.insertingValue.Price].some(
+  methods: {
+    insertData() {
+      let condition = [this.insertingValue.Name, this.insertingValue.Description, this.insertingValue.Price].some(
           x => [null, undefined, NaN, ''].includes(x))
-      if(condition){
-        this.$store.commit("addErrorMessage", {message:'Please fill every field!'});
+      if (condition) {
+        this.$store.commit("addErrorMessage", {message: 'Please fill every field!'});
       }
     }
   }

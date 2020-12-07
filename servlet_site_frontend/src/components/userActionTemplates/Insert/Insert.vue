@@ -32,8 +32,8 @@ export default {
       LOCAL_ENTITY: ENTITY
     };
   },
-  computed:{
-    currentEntity(){
+  computed: {
+    currentEntity() {
       return this.$store.getters.getCurrentEntity;
     }
   }
@@ -41,7 +41,7 @@ export default {
 </script>
 
 <style scoped>
-#main{
+#main {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -49,7 +49,7 @@ export default {
   padding-right: 20%;
 }
 
-#insert-template{
+#insert-template {
   margin-top: 2em;
   width: 80%;
 }

@@ -4,7 +4,7 @@
       <Select/>
     </div>
     <div v-else-if="currentUserAction === USER_ACTION.INSERT">
-          <Insert/>
+      <Insert/>
     </div>
     <div v-else-if="currentUserAction === USER_ACTION.UPDATE">
       <!-- <Update/>-->
@@ -28,13 +28,13 @@ export default {
       USER_ACTION
     }
   },
-  computed:{
-    currentUserAction(){
+  computed: {
+    currentUserAction() {
       return this.$store.getters.getCurrentUserAction;
     }
   },
-  methods:{
-    setCurrentEntity(newValue){
+  methods: {
+    setCurrentEntity(newValue) {
       this.$store.commit('setCurrentEntity', newValue)
     }
   }
