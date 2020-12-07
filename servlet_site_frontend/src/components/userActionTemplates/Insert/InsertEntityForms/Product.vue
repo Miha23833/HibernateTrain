@@ -21,7 +21,7 @@ export default {
   },
   methods:{
     insertData(){
-      let condition = [this.insertingValue.Name,this.insertingValue.Surname,this.insertingValue.Age].some(
+      let condition = [this.insertingValue.Name,this.insertingValue.Description,this.insertingValue.Price].some(
           x => [null, undefined, NaN, ''].includes(x))
       if(condition){
         this.$store.commit("addErrorMessage", {message:'Please fill every field!'});
