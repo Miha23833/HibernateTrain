@@ -11,12 +11,12 @@
       <button @click="setCurrentUserAction(USER_ACTION.INSERT)"
               :style="currentUserAction===USER_ACTION.INSERT? this.buttonPressedStyle : null ">Insert
       </button>
-      <button @click="setCurrentUserAction(USER_ACTION.UPDATE)"
-              :style="currentUserAction===USER_ACTION.UPDATE? this.buttonPressedStyle : null ">Update
-      </button>
-      <button @click="setCurrentUserAction(USER_ACTION.DELETE)"
-              :style="currentUserAction===USER_ACTION.DELETE? this.buttonPressedStyle : null ">Delete
-      </button>
+<!--      <button @click="setCurrentUserAction(USER_ACTION.UPDATE)"-->
+<!--              :style="currentUserAction===USER_ACTION.UPDATE? this.buttonPressedStyle : null ">Update-->
+<!--      </button>-->
+<!--      <button @click="setCurrentUserAction(USER_ACTION.DELETE)"-->
+<!--              :style="currentUserAction===USER_ACTION.DELETE? this.buttonPressedStyle : null ">Delete-->
+<!--      </button>-->
     </div>
     <div id="header-login">
       <button @click="addErrorMessage({message: ++clickedCount})">Log in</button>
