@@ -11,13 +11,37 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class QueryManager {
+    public static class SelectQueries{
+        public final String customers;
+        public final String deals;
+        public final String products;
+
+        public SelectQueries(){
+            customers = readFile(Paths.get(queryPath + "select/entities/Customers.sql"));
+            deals = readFile(Paths.get(queryPath + "select/entities/Deals.sql"));
+            products = readFile(Paths.get(queryPath + "select/entities/Products.sql"));
+        }
+    }
+
+    public static class InsertQueries{
+        public final String customers;
+        public final String deals;
+        public final String products;
+
+        public InsertQueries(){
+            customers = readFile(Paths.get(queryPath + "insert/entities/Customers.sql"));
+            deals = readFile(Paths.get(queryPath + "insert/entities/Deals.sql"));
+            products = readFile(Paths.get(queryPath + "insert/entities/Products.sql"));
+        }
+    }
+
     static private final Logger warnLogger = StaticLogger.warnLogger;
 
     private static final String queryPath = "src/main/java/com/exactpro/site/querymanager/queries/";
 
-    public static final String customersSQL;
-    public static final String dealsSQL;
-    public static final String productsSQL;
+    public static final SelectQueries SELECT_QUERIES = new SelectQueries();
+
+    public static final InsertQueries INSERT_QUERIES = new InsertQueries();
 
     private static String readFile(Path path){
         String data = "";
@@ -27,11 +51,5 @@ public class QueryManager {
             warnLogger.error(e);
         }
         return data;
-    }
-
-    static {
-        customersSQL = readFile(Paths.get(queryPath + "Customers.sql"));
-        dealsSQL = readFile(Paths.get(queryPath + "Deals.sql"));
-        productsSQL = readFile(Paths.get(queryPath + "Products.sql"));
     }
 }

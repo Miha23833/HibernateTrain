@@ -1,9 +1,10 @@
-package com.exactpro.site.servlets.data;
+package com.exactpro.site.servlets.operations.select;
 
 import com.exactpro.connection.DBConnection;
 import com.exactpro.site.querymanager.JSONConvertor;
 import com.exactpro.site.querymanager.QueryManager;
 import com.exactpro.site.querymanager.SQLQuery;
+import com.exactpro.site.servlets.operations.Mapping;
 import org.json.JSONObject;
 
 import javax.servlet.ServletConfig;
@@ -16,8 +17,8 @@ import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-@WebServlet(urlPatterns = "select-data/Deals")
-public class Deal extends HttpServlet implements Mapping {
+@WebServlet(urlPatterns = "select-data/Customers")
+public class Customer extends HttpServlet implements Mapping {
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
@@ -29,23 +30,22 @@ public class Deal extends HttpServlet implements Mapping {
     }
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         JSONObject response = new JSONObject();
-        response.put("filterMapping", "/get-data/Deals");
+        response.put("filterMapping", "/get-data/Customers");
         resp.getWriter().write(response.toString());
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         JSONObject reqJSON = requestToJSON(req);
         if (reqJSON.keySet().contains("queryParams")) {
             JSONObject queryParams = reqJSON.getJSONObject("queryParams");
 
-            SQLQuery query = new SQLQuery(QueryManager.dealsSQL, queryParams);
+            SQLQuery query = new SQLQuery(QueryManager.SELECT_QUERIES.customers, queryParams);
 
             try {
                 ResultSet respData = DBConnection.executeWithResult(query.getParametrizedQuery());
-                resp.setCharacterEncoding("utf-8");
                 resp.getWriter().write(JSONConvertor.toJSON(respData).toString());
             } catch (ClassNotFoundException | SQLException e) {
                 e.printStackTrace();

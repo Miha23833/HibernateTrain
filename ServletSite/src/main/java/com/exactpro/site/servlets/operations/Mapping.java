@@ -1,4 +1,4 @@
-package com.exactpro.site.servlets.data;
+package com.exactpro.site.servlets.operations;
 
 import org.json.JSONObject;
 
