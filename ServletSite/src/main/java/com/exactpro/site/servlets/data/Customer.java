@@ -45,7 +45,6 @@ public class Customer extends HttpServlet implements Mapping {
 
             try {
                 ResultSet respData = DBConnection.executeWithResult(query.getParametrizedQuery());
-                resp.setCharacterEncoding("utf-8");
                 resp.getWriter().write(JSONConvertor.toJSON(respData).toString());
             } catch (ClassNotFoundException | SQLException e) {
                 e.printStackTrace();

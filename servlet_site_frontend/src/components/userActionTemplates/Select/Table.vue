@@ -20,26 +20,7 @@
 <script>
 export default {
   props: ['columns', 'dataRows'],
-  name: "Table",
-  created() {
-    if (this.columns !== []) {
-      this.columns = [];
-    }
-    if (this.dataRows !== []) {
-      this.dataRows = [];
-    }
-    for (let i = 0; i < 10; i++) {
-      let row = {};
-      for (let j = 0; j < 5; j++) {
-        let key = "abc " + j;
-        if (i === 0) {
-          this.columns.push(key);
-        }
-        row[key] = j;
-      }
-      this.dataRows.push(row)
-    }
-  }
+  name: "Table"
 }
 </script>
 

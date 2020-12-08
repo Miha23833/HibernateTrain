@@ -1,36 +1,21 @@
 <template>
   <div>
     <EntitySelector/>
-    <div v-if="currentEntity === ENTITY.Customer">
-      <div class="filter-wrapper">
-        <Customers/>
-        <div class="get-data-button">
-          <GetDataButton v-bind:filter="this.entityFilter" v-bind:button-text="'Get data'"
-                         v-bind:mapping="this.USER_ACTION.SELECT.mapping + currentEntity.mapping"></GetDataButton>
-        </div>
+    <div class="filter-wrapper">
+      <div v-if="currentEntity === ENTITY.Customer">
+          <Customers/>
       </div>
-    </div>
-    <div v-else-if="currentEntity === ENTITY.Product">
-      <div class="filter-wrapper">
-        <Products/>
-        <div class="get-data-button">
-          <GetDataButton v-bind:filter="this.entityFilter" v-bind:button-text="'Get data'"
-                         v-bind:mapping="this.USER_ACTION.SELECT.mapping + currentEntity.mapping"></GetDataButton>
-        </div>
+      <div v-else-if="currentEntity === ENTITY.Product">
+          <Products/>
       </div>
-    </div>
-    <div v-else-if="currentEntity === ENTITY.Deal">
-      <div class="filter-wrapper">
-        <Deals/>
-        <div class="get-data-button">
-          <GetDataButton @data-received="this.$emit('data-received', $event)" v-bind:filter="this.entityFilter"
-                         v-bind:button-text="'Get data'"
-                         v-bind:mapping="this.USER_ACTION.SELECT.mapping + this.currentEntity.mapping"></GetDataButton>
-        </div>
+      <div v-else-if="currentEntity === ENTITY.Deal">
+          <Deals/>
       </div>
-    </div>
-    <div v-else>
-      pls pick entity!
+      <div v-if="checkEntitiesContains(currentEntity)" class="get-data-button">
+        <GetDataButton @data-received="em" v-bind:filter="this.entityFilter"
+                       v-bind:button-text="'Get data'"
+                       v-bind:mapping="this.USER_ACTION.SELECT.mapping + this.currentEntity.mapping"></GetDataButton>
+      </div>
     </div>
   </div>
 </template>
@@ -65,6 +50,19 @@ export default {
       USER_ACTION,
       entityFilter: {},
       queryParams: {}
+    }
+  },
+  methods: {
+    checkEntitiesContains(value){
+      for (const key in ENTITY){
+        if (ENTITY[key] === value){
+          return true;
+        }
+      }
+      return false;
+    },
+    em(data) {
+      this.$emit('data-received', data)
     }
   }
 }

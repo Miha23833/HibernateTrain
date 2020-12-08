@@ -38,15 +38,18 @@ public class Deal extends HttpServlet implements Mapping {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         JSONObject reqJSON = requestToJSON(req);
-        JSONObject queryParams = reqJSON.getJSONObject("queryParams");
+        if (reqJSON.keySet().contains("queryParams")) {
+            JSONObject queryParams = reqJSON.getJSONObject("queryParams");
 
-        SQLQuery query = new SQLQuery(QueryManager.dealsSQL, queryParams);
+            SQLQuery query = new SQLQuery(QueryManager.dealsSQL, queryParams);
 
-        try {
-            ResultSet respData = DBConnection.executeWithResult(query.getParametrizedQuery());
-            resp.getWriter().write(JSONConvertor.toJSON(respData).toString());
-        } catch (ClassNotFoundException | SQLException e) {
-            e.printStackTrace();
+            try {
+                ResultSet respData = DBConnection.executeWithResult(query.getParametrizedQuery());
+                resp.setCharacterEncoding("utf-8");
+                resp.getWriter().write(JSONConvertor.toJSON(respData).toString());
+            } catch (ClassNotFoundException | SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
