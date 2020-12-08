@@ -12,7 +12,7 @@
           <Deals @filter-changed="setFilter"/>
       </div>
       <div v-if="checkEntitiesContains(currentEntity)" class="get-data-button">
-        <GetDataButton @data-received="em" v-bind:filter="this.entityFilter"
+        <GetDataButton @data-received="emmitUp" v-bind:queryParams="this.entityFilter"
                        v-bind:button-text="'Get data'"
                        v-bind:mapping="this.USER_ACTION.SELECT.mapping + this.currentEntity.mapping"></GetDataButton>
       </div>
@@ -27,7 +27,7 @@ import Deals from "@/components/userActionTemplates/Select/entityFilter/Deals";
 import {ENTITY} from "@/enums/ENTITIES";
 import {USER_ACTION} from "@/enums/USER_ACTIONS";
 import EntitySelector from "@/components/userActionTemplates/Select/entityFilter/EntitySelector";
-import GetDataButton from "@/components/userActionTemplates/buttons/GetDataButton";
+import GetDataButton from "@/components/userActionTemplates/buttons/PostDataButton";
 
 export default {
   components: {
@@ -61,7 +61,7 @@ export default {
       }
       return false;
     },
-    em(data) {
+    emmitUp(data) {
       this.$emit('data-received', data)
     },
     setFilter(filter){

@@ -1,9 +1,8 @@
 <template>
   <label>
-    <input type="text" placeholder="Name" v-model="insertingValue.Name">
-    <input type="text" placeholder="Description" v-model="insertingValue.Description">
-    <input type="number" max="120" min="0" placeholder="Price" v-model="insertingValue.Price">
-    <button v-on:click="insertData()">Insert data!</button>
+    <input type="text" placeholder="Name" v-model="insertingValue.product_name">
+    <input type="text" placeholder="Description" v-model="insertingValue.description">
+    <input type="number" max="120" min="0" placeholder="Price" v-model="insertingValue.price">
   </label>
 </template>
 
@@ -13,9 +12,9 @@ export default {
   data() {
     return {
       insertingValue: {
-        Name: null,
-        Description: null,
-        Price: null
+        product_name: null,
+        description: null,
+        price: null
       }
     }
   },

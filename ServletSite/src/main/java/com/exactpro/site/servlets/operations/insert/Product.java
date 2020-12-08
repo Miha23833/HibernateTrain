@@ -29,6 +29,7 @@ public class Product extends HttpServlet implements Mapping {
             } catch (ClassNotFoundException | SQLException e) {
                 response.put("response", false);
             }
+            resp.getWriter().write(response.toString());
         }
     }
 }

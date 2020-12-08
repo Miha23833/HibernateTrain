@@ -1,11 +1,10 @@
 <template>
   <label>
-    <input type="datetime-local" placeholder="Deal date" v-model="insertingValue.DealDate">
-    <input type="number" placeholder="Customer ID" v-model="insertingValue.CustomerID">
-    <input type="number" placeholder="Product ID" v-model="insertingValue.ProductID">
-    <input type="number" placeholder="Discount" min="0" max="100" v-model="insertingValue.Discount">
-    <input type="number" placeholder="Price" v-model="insertingValue.Price">
-    <button v-on:click="insertData()">Insert data!</button>
+    <input type="datetime-local" placeholder="Deal date" v-model="insertingValue.deal_date">
+    <input type="number" placeholder="Customer ID" v-model="insertingValue.customer_id">
+    <input type="number" placeholder="Product ID" v-model="insertingValue.discount">
+    <input type="number" placeholder="Discount" min="0" max="100" v-model="insertingValue.product_id">
+    <input type="number" placeholder="Price" v-model="insertingValue.price">
   </label>
 </template>
 
@@ -15,11 +14,11 @@ export default {
   data() {
     return {
       insertingValue: {
-        DealDate: null,
-        CustomerID: null,
-        Discount: null,
-        ProductID: null,
-        Price: null
+        deal_date: null,
+        customer_id: null,
+        discount: null,
+        product_id: null,
+        price: null
       }
     }
   },

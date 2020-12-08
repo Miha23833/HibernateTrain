@@ -1,9 +1,8 @@
 <template>
-  <label>
-    <input type="text" placeholder="User name" v-model="insertingValue.Name">
-    <input type="text" placeholder="User surname" v-model="insertingValue.Surname">
-    <input type="number" max="120" min="0" placeholder="age" v-model="insertingValue.Age">
-    <button v-on:click="insertData()">Insert data!</button>
+  <label v-on:input="emitUp">
+    <input type="text" placeholder="User name" v-model="insertingValue.name">
+    <input type="text" placeholder="User surname" v-model="insertingValue.surname">
+    <input type="number" max="120" min="0" placeholder="age" v-model="insertingValue.age">
   </label>
 </template>
 
@@ -14,19 +13,22 @@ export default {
   data() {
     return {
       insertingValue: {
-        Name: null,
-        Surname: null,
-        Age: null
+        name: null,
+        surname: null,
+        age: null
       }
     }
   },
   methods: {
     insertData() {
-      let condition = [this.insertingValue.Name, this.insertingValue.Surname, this.insertingValue.Age].some(
+      let condition = [this.insertingValue.name, this.insertingValue.surname, this.insertingValue.age].some(
           x => [null, undefined, NaN, ''].includes(x))
       if (condition) {
         this.$store.commit("addErrorMessage", {message: 'Please fill every field!'});
       }
+    },
+    emitUp() {
+      this.$emit('params-changed', this.insertingValue);
     }
   }
 }

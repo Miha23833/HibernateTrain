@@ -1,5 +1,5 @@
 <template>
-  <button @click="askForData"> {{ buttonText }}</button>
+  <button @click="postData"> {{ buttonText }}</button>
 </template>
 
 <script>
@@ -8,18 +8,20 @@ export default {
   props: {
     buttonText: String,
     mapping: String,
-    filter: Object
+    queryParams: Object
   },
   name: "GetDataButton",
   methods: {
-    askForData(){
+    postData(){
       let postData = {
-        queryParams: this.filter
+        queryParams: this.queryParams
       }
       let map = this.getFormattedMapping();
       axios.post(map, postData).then(response => {
         this.$emit('data-received', response.data)
-      });
+      }).catch((() => {
+        this.$emit('data-received', {response: false})
+      }));
     },
     getFormattedMapping(){
       let lastMappingIndex = this.mapping.length;
