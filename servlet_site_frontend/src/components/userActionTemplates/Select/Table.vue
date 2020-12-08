@@ -8,7 +8,7 @@
     </tr>
     </thead>
     <tbody>
-    <tr v-for="data in dataRows" v-bind:key="data">
+    <tr v-for="(data, index) in dataRows" v-bind:key="index">
       <td v-for="item in columns" v-bind:key="item">
         {{ data[item] }}
       </td>
