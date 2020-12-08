@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
 
-@WebServlet(urlPatterns = "insert-data/Customers")
+@WebServlet(urlPatterns = "insert-data/Deals")
 public class Deal extends HttpServlet implements Mapping {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
