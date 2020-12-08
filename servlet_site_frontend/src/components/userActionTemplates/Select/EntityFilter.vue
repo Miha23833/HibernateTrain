@@ -3,13 +3,13 @@
     <EntitySelector/>
     <div class="filter-wrapper">
       <div v-if="currentEntity === ENTITY.Customer">
-          <Customers/>
+          <Customers @filter-changed="setFilter"/>
       </div>
       <div v-else-if="currentEntity === ENTITY.Product">
-          <Products/>
+          <Products @filter-changed="setFilter"/>
       </div>
       <div v-else-if="currentEntity === ENTITY.Deal">
-          <Deals/>
+          <Deals @filter-changed="setFilter"/>
       </div>
       <div v-if="checkEntitiesContains(currentEntity)" class="get-data-button">
         <GetDataButton @data-received="em" v-bind:filter="this.entityFilter"
@@ -41,6 +41,7 @@ export default {
   computed: {
     currentEntity() {
       this.$emit('entity-changed');
+      this.setFilter({});
       return this.$store.getters.getCurrentEntity;
     }
   },
@@ -49,7 +50,6 @@ export default {
       ENTITY,
       USER_ACTION,
       entityFilter: {},
-      queryParams: {}
     }
   },
   methods: {
@@ -63,6 +63,9 @@ export default {
     },
     em(data) {
       this.$emit('data-received', data)
+    },
+    setFilter(filter){
+      this.entityFilter = filter;
     }
   }
 }

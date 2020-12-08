@@ -10,16 +10,11 @@ export default {
     mapping: String,
     filter: Object
   },
-  data(){
-    return {
-      localFilter: this.filter,
-    };
-  },
   name: "GetDataButton",
   methods: {
     askForData(){
       let postData = {
-        queryParams: this.localFilter
+        queryParams: this.filter
       }
       let map = this.getFormattedMapping();
       axios.post(map, postData).then(response => {

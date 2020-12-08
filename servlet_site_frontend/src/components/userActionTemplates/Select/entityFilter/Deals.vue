@@ -1,5 +1,5 @@
 <template>
-  <label>
+  <label v-on:input="filterChanged">
     Date before deal:<br>
     <input class="filter-input" type="date" v-model="queryParams.deal_date_before">
     Date after deal:<br>
@@ -17,6 +17,7 @@ import {USER_ACTION} from "@/enums/USER_ACTIONS";
 import {ENTITY} from "@/enums/ENTITIES";
 
 export default {
+  name: "Deals",
   data() {
     return {
       queryParams: {
@@ -31,7 +32,11 @@ export default {
       mapping: USER_ACTION.SELECT.mapping + ENTITY.Deal.mapping
     }
   },
-  name: "Deals"
+  methods: {
+    filterChanged(){
+      this.$emit('filter-changed', this.queryParams)
+    }
+  }
 }
 </script>
 
