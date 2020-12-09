@@ -9,11 +9,11 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="Main" />
+        <module name="HibernateCommon" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel target="14">
-      <module name="HibernateCommon" target="8" />
-      <module name="Main" target="8" />
       <module name="Scheduler" target="9" />
       <module name="ServletSite" target="8" />
       <module name="Site" target="11" />

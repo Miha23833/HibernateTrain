@@ -22,11 +22,8 @@
         </plugins>
     </build>
     <modules>
-        <module>Main</module>
-        <module>Scheduler</module>
         <module>HibernateCommon</module>
-        <module>Site</module>
-        <module>ServletSite</module>
+        <module>Main</module>
     </modules>
 
     <dependencies>
