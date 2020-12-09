@@ -9,6 +9,7 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="ServletSite" />
         <module name="Main" />
         <module name="Scheluler" />
         <module name="HibernateCommon" />
@@ -16,7 +17,6 @@
     </annotationProcessing>
     <bytecodeTargetLevel target="14">
       <module name="Scheduler" target="9" />
-      <module name="ServletSite" target="8" />
       <module name="Site" target="11" />
     </bytecodeTargetLevel>
   </component>

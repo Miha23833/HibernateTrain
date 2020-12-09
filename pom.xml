@@ -25,6 +25,7 @@
         <module>HibernateCommon</module>
         <module>Main</module>
         <module>Scheluler</module>
+        <module>ServletSite</module>
     </modules>
 
     <dependencies>
