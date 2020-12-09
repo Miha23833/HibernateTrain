@@ -1,9 +1,9 @@
 <template>
-  <label>
+  <label v-on:input="emitUp">
     <input type="datetime-local" placeholder="Deal date" v-model="insertingValue.deal_date">
     <input type="number" placeholder="Customer ID" v-model="insertingValue.customer_id">
-    <input type="number" placeholder="Product ID" v-model="insertingValue.discount">
-    <input type="number" placeholder="Discount" min="0" max="100" v-model="insertingValue.product_id">
+    <input type="number" placeholder="Product ID" v-model="insertingValue.product_id">
+    <input type="number" placeholder="Discount" min="0" max="100" v-model="insertingValue.discount">
     <input type="number" placeholder="Price" v-model="insertingValue.price">
   </label>
 </template>
@@ -29,6 +29,9 @@ export default {
       if (condition) {
         this.$store.commit("addErrorMessage", {message: 'Please fill every field!'});
       }
+    },
+    emitUp() {
+      this.$emit('params-changed', this.insertingValue);
     }
   }
 }

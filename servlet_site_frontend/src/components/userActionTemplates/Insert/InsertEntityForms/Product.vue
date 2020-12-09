@@ -1,5 +1,5 @@
 <template>
-  <label>
+  <label v-on:input="emitUp">
     <input type="text" placeholder="Name" v-model="insertingValue.product_name">
     <input type="text" placeholder="Description" v-model="insertingValue.description">
     <input type="number" max="120" min="0" placeholder="Price" v-model="insertingValue.price">
@@ -25,6 +25,9 @@ export default {
       if (condition) {
         this.$store.commit("addErrorMessage", {message: 'Please fill every field!'});
       }
+    },
+    emitUp() {
+      this.$emit('params-changed', this.insertingValue);
     }
   }
 }
